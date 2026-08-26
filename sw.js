@@ -1,5 +1,37 @@
-const CACHE='odyssey-v3.9';
-const ASSETS=['./','./index.html','./manifest.json'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{const copy=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return resp;}).catch(()=>caches.match('./index.html')))));
+const CACHE='odyssey-v4.0';
+const CORE=['./manifest.json'];
+self.addEventListener('install',e=>{
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));
+});
+self.addEventListener('activate',e=>{
+  e.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener('message',e=>{if(e.data&&e.data.type==='SKIP_WAITING')self.skipWaiting();});
+self.addEventListener('fetch',e=>{
+  if(e.request.method!=='GET') return;
+  const req=e.request;
+  const url=new URL(req.url);
+  // HTML/navigation is network-first so GitHub updates appear immediately.
+  if(req.mode==='navigate' || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/')){
+    e.respondWith((async()=>{
+      try{
+        const fresh=await fetch(req,{cache:'no-store'});
+        const c=await caches.open(CACHE); c.put(req,fresh.clone());
+        return fresh;
+      }catch(err){
+        return (await caches.match(req)) || (await caches.match('./index.html')) || Response.error();
+      }
+    })());
+    return;
+  }
+  e.respondWith((async()=>{
+    const cached=await caches.match(req);
+    const network=fetch(req).then(async resp=>{if(resp&&resp.ok){const c=await caches.open(CACHE);c.put(req,resp.clone());}return resp;}).catch(()=>null);
+    return cached || (await network) || Response.error();
+  })());
+});
