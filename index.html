@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.6</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.7</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -146,13 +146,13 @@
             <input id="ocrImages" type="file" accept="image/*" multiple style="display:none">
             <div class="btnRow"><button class="btn secondary" id="pickOcrImages" type="button">画像を選ぶ</button><button class="btn secondary" id="clearOcr" type="button">認識結果を消す</button></div>
             <div class="ocrProgress"><span id="ocrProgressBar"></span></div>
-            <div class="ocrStatus" id="ocrStatus">銀行名が画像内に出ていなくても、八十二銀行（屋代支店）やMIZUHOロゴを判定します。失敗時は「画像の種類」を指定して1枚ずつ読み取ってください。</div>
+            <div class="ocrStatus" id="ocrStatus">「自動判定」のまま複数画像をまとめて選べます。画像ごとに銀行・カードの種類を判定して、必要な金額だけを抽出します。失敗した画像だけ種類を指定して再読み取りできます。</div>
             <div class="ocrResult" id="ocrResult">
               <div class="ocrDetected" id="ocrDetected"></div>
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.6ではみずほ残高を画面上部の残高エリアだけ切り出して再認識するため、入出金の145,000円などを残高と誤認しにくくしました。MIZUHOロゴ・屋代支店にも対応しています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.7では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -317,6 +317,33 @@ function renderPayments(){
 const ocrFieldLabels={bank82Balance:'八十二銀行残高',jibunBalance:'auじぶん銀行残高',auNextBill:'au PAYゴールド次回請求',aeonNextBill:'イオンカード次回請求',apolloNextBill:'apollostation次回請求',mizuho:'みずほ銀行残高'};
 let ocrCandidates={};
 let ocrRawChunks=[];
+let ocrClassifications=[];
+const screenTypeLabels={bank82Balance:'八十二銀行 残高',mizuho:'みずほ銀行 残高',jibunBalance:'auじぶん銀行 残高',auNextBill:'au PAYゴールド 次回請求',aeonNextBill:'イオンカード 次回請求',apolloNextBill:'apollostation 次回請求',unknown:'判定できず'};
+function detectScreenType(raw){
+  const t=jpNormalize(raw).replace(/\s+/g,' ');
+  const score={bank82Balance:0,mizuho:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:0};
+  const add=(k,n)=>score[k]+=n;
+  if(/八十二銀行|82\s*BANK/i.test(t))add('bank82Balance',8);
+  if(/屋代支店/i.test(t))add('bank82Balance',9);
+  if(/普通\s*559420|559420/i.test(t))add('bank82Balance',6);
+  if(/トウキヨウカイジヨ|NHK|支払機\s*手数料/i.test(t))add('bank82Balance',2);
+  if(/MIZUHO|みずほ銀行/i.test(t))add('mizuho',10);
+  if(/草加支店/i.test(t))add('mizuho',7);
+  if(/302[-ー]3124458|3124458/i.test(t))add('mizuho',6);
+  if(/入出金明細を見る/i.test(t))add('mizuho',3);
+  if(/au\s*(?:自分|じぶん)銀行|JIBUN/i.test(t))add('jibunBalance',10);
+  if(/そら支店/i.test(t))add('jibunBalance',6);
+  if(/外貨普通/i.test(t))add('jibunBalance',2);
+  if(/au\s*PAY\s*カード|au\s*PAYゴールド/i.test(t))add('auNextBill',10);
+  if(/ご請求額[・･]ご利用明細|ご利用可能枠/i.test(t))add('auNextBill',5);
+  if(/お支払日[\s\S]{0,40}(?:4日|10月5日)/i.test(t))add('auNextBill',2);
+  if(/AEON\s*Pay|イオンカード|WAON\s*POINT/i.test(t))add('aeonNextBill',10);
+  if(/お支払い額変更|締切まで残り/i.test(t))add('aeonNextBill',4);
+  if(/apollostation|出光カード|idemitsu/i.test(t))add('apolloNextBill',10);
+  if(/ご利用期間[\s\S]{0,50}ショッピング|まとめてリボ変更/i.test(t))add('apolloNextBill',4);
+  const entries=Object.entries(score).sort((a,b)=>b[1]-a[1]);
+  return entries[0][1]>=4?entries[0][0]:'unknown';
+}
 function jpNormalize(t){
   const fw='０１２３４５６７８９，．￥－'; const hw='0123456789,.¥-';
   let out=String(t||''); for(let i=0;i<fw.length;i++) out=out.split(fw[i]).join(hw[i]);
@@ -401,7 +428,13 @@ function extractOcrCandidates(raw,sourceName,target='auto'){
 }
 function showOcrCandidates(){
   const box=document.getElementById('ocrResult'),det=document.getElementById('ocrDetected');
-  const lines=[]; Object.entries(ocrCandidates).forEach(([k,o])=>{
+  const lines=[];
+  if(ocrClassifications.length){
+    lines.push('【画像の自動判定】');
+    ocrClassifications.forEach(x=>lines.push(x.file+' → '+(screenTypeLabels[x.type]||x.type)));
+    lines.push('');
+  }
+  Object.entries(ocrCandidates).forEach(([k,o])=>{
     if(k==='_auUsed') lines.push('参考：au PAYゴールド利用枠の使用額 '+yen(o.value)+'（請求未確定の可能性）');
     else lines.push((ocrFieldLabels[k]||k)+' → '+yen(o.value)+' 〔'+o.source+'〕');
   });
@@ -418,9 +451,16 @@ async function preprocessImage(file,preset='default'){
     if(preset==='mizuhoBalance'){
       sx=Math.round(bmp.width*0.38); sy=Math.round(bmp.height*0.10);
       sw=Math.round(bmp.width*0.62); sh=Math.round(bmp.height*0.24);
+    }else if(preset==='bank82Balance'){
+      sx=Math.round(bmp.width*0.05); sy=Math.round(bmp.height*0.08);
+      sw=Math.round(bmp.width*0.90); sh=Math.round(bmp.height*0.31);
+    }else if(preset==='jibunBalance'){
+      sx=Math.round(bmp.width*0.02); sy=Math.round(bmp.height*0.10);
+      sw=Math.round(bmp.width*0.96); sh=Math.round(bmp.height*0.38);
     }
-    const maxW=preset==='mizuhoBalance'?2200:1800;
-    const scale=Math.min(preset==='mizuhoBalance'?3:2,maxW/sw);
+    const specialized=preset==='mizuhoBalance'||preset==='bank82Balance'||preset==='jibunBalance';
+    const maxW=specialized?2200:1800;
+    const scale=Math.min(specialized?3:2,maxW/sw);
     const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
     const c=document.createElement('canvas'); c.width=w;c.height=h; const x=c.getContext('2d');
     x.drawImage(bmp,sx,sy,sw,sh,0,0,w,h);
@@ -430,6 +470,8 @@ async function preprocessImage(file,preset='default'){
       if(preset==='mizuhoBalance'){
         // 青背景に白文字なので、白文字を黒・背景を白にして数字を読みやすくする。
         const z=y>135?0:255; d[i]=d[i+1]=d[i+2]=z;
+      }else if(preset==='bank82Balance'||preset==='jibunBalance'){
+        const z=y>165?0:255; d[i]=d[i+1]=d[i+2]=z;
       }else{
         const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;
       }
@@ -440,34 +482,52 @@ async function preprocessImage(file,preset='default'){
 }
 async function runOcr(files){
   if(!window.Tesseract){alert('OCR機能を読み込めませんでした。インターネット接続を確認して再度開いてください。');return;}
-  ocrCandidates={};ocrRawChunks=[]; const status=document.getElementById('ocrStatus'),bar=document.getElementById('ocrProgressBar');
+  ocrCandidates={};ocrRawChunks=[];ocrClassifications=[];
+  const status=document.getElementById('ocrStatus'),bar=document.getElementById('ocrProgressBar');
   document.getElementById('ocrResult').classList.remove('show');
   let worker;
   try{
     status.textContent='OCRエンジンを準備しています…';bar.style.width='3%';
     worker=await Tesseract.createWorker(['jpn','eng'],1,{logger:m=>{if(m.progress!=null){const base=8;bar.style.width=Math.min(95,base+m.progress*80)+'%';status.textContent=(m.status==='recognizing text'?'文字を読み取っています…':'OCR準備中…')+' '+Math.round(m.progress*100)+'%';}}});
     for(let i=0;i<files.length;i++){
-      const target=document.getElementById('ocrTarget').value;
-      status.textContent=`${i+1}/${files.length}枚目を読み取っています…`;
-      if(target==='mizuho'){
-        // 指定時は残高表示部分を優先OCR。これで取引明細の +145,000円 等を残高と誤認しにくい。
+      const selected=document.getElementById('ocrTarget').value;
+      status.textContent=`${i+1}/${files.length}枚目を判定・読み取り中…`;
+      // まず全体をOCRして画像種類を自動判定する。手動指定時も診断用に全体OCRする。
+      const img=await preprocessImage(files[i]);
+      const r=await worker.recognize(img); const txt=r?.data?.text||'';
+      ocrRawChunks.push('['+files[i].name+' / 全体]\n'+txt);
+      const detected=selected==='auto'?detectScreenType(txt):selected;
+      ocrClassifications.push({file:files[i].name,type:detected});
+
+      if(detected==='mizuho'){
+        // みずほは取引明細の入金額を誤認しやすいため、残高エリアを必ず再OCR。
         const crop=await preprocessImage(files[i],'mizuhoBalance');
         const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
         ocrRawChunks.push('['+files[i].name+' / みずほ残高エリア]\n'+cropTxt);
-        extractOcrCandidates(cropTxt,files[i].name,target);
-        // 切り出しで取れなかった場合だけ全体OCRも追加する。
-        if(!ocrCandidates.mizuho){
-          const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||'';
-          ocrRawChunks.push('['+files[i].name+' / 全体]\n'+txt); extractOcrCandidates(txt,files[i].name,target);
-        }
+        forcedTargetFallback(jpNormalize(cropTxt),'mizuho',files[i].name);
+        if(!ocrCandidates.mizuho) extractOcrCandidates(txt,files[i].name,'mizuho');
+      }else if(detected==='bank82Balance'){
+        const crop=await preprocessImage(files[i],'bank82Balance');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / 八十二残高エリア]\n'+cropTxt);
+        forcedTargetFallback(jpNormalize(cropTxt),'bank82Balance',files[i].name);
+        if(!ocrCandidates.bank82Balance) extractOcrCandidates(txt,files[i].name,'bank82Balance');
+      }else if(detected==='jibunBalance'){
+        const crop=await preprocessImage(files[i],'jibunBalance');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / auじぶん残高エリア]\n'+cropTxt);
+        forcedTargetFallback(jpNormalize(cropTxt),'jibunBalance',files[i].name);
+        if(!ocrCandidates.jibunBalance) extractOcrCandidates(txt,files[i].name,'jibunBalance');
+      }else if(detected!=='unknown'){
+        extractOcrCandidates(txt,files[i].name,detected);
       }else{
-        const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||'';
-        ocrRawChunks.push('['+files[i].name+']\n'+txt); extractOcrCandidates(txt,files[i].name,target);
+        // 判定不能でも従来ロジックで拾えるものは拾う。
+        extractOcrCandidates(txt,files[i].name,'auto');
       }
       bar.style.width=Math.round(((i+1)/files.length)*96)+'%';
     }
-    bar.style.width='100%';status.textContent='読み取り完了。下の候補を確認して「認識結果を反映」を押してください。';showOcrCandidates();
-  }catch(e){console.error(e);status.textContent='読み取りに失敗しました。画像を1枚ずつ試すか、ネット接続を確認してください。';bar.style.width='0%';}
+    bar.style.width='100%';status.textContent='自動判定と読み取りが完了しました。画像ごとの判定と金額を確認してから「認識結果を反映」を押してください。';showOcrCandidates();
+  }catch(e){console.error(e);status.textContent='読み取りに失敗しました。失敗した画像だけ種類を指定して1枚ずつ試してください。';bar.style.width='0%';}
   finally{if(worker)try{await worker.terminate()}catch{}}
 }
 function applyOcrCandidates(){
@@ -504,7 +564,7 @@ const now=new Date();document.getElementById('monthKey').value=now.toISOString()
 document.getElementById('pickOcrImages').addEventListener('click',()=>document.getElementById('ocrImages').click());
 document.getElementById('ocrImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runOcr(fs)});
 document.getElementById('applyOcr').addEventListener('click',applyOcrCandidates);
-document.getElementById('clearOcr').addEventListener('click',()=>{ocrCandidates={};ocrRawChunks=[];document.getElementById('ocrResult').classList.remove('show');document.getElementById('ocrProgressBar').style.width='0%';document.getElementById('ocrStatus').textContent='銀行名が画像内に出ていなくても、八十二銀行（屋代支店）やMIZUHOロゴを判定します。失敗時は「画像の種類」を指定して1枚ずつ読み取ってください。';document.getElementById('ocrImages').value=''});
+document.getElementById('clearOcr').addEventListener('click',()=>{ocrCandidates={};ocrRawChunks=[];ocrClassifications=[];document.getElementById('ocrResult').classList.remove('show');document.getElementById('ocrProgressBar').style.width='0%';document.getElementById('ocrStatus').textContent='「自動判定」のまま複数画像をまとめて選べます。画像ごとに銀行・カードの種類を判定して、必要な金額だけを抽出します。失敗した画像だけ種類を指定して再読み取りできます。';document.getElementById('ocrImages').value=''});
 document.querySelectorAll('[data-payment]').forEach(el=>el.addEventListener('input',()=>{payments[el.dataset.payment]=Number(el.value||0);renderPayments()}));
 document.getElementById('savePayments').addEventListener('click',()=>{document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();alert('支払管理を保存しました')});
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}render();alert('保存しました')});
