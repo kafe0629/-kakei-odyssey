@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.7</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.8</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -142,7 +142,7 @@
           </div>
           <div class="ocrBox">
             <div class="ocrHead"><div><strong>📷 スクショから自動入力</strong><div class="sub">銀行・カードのスクリーンショットを選択</div></div><span class="pill">端末内OCR</span></div>
-            <div class="field full" style="margin-top:12px"><label>画像の種類（自動で失敗する場合に指定）</label><select id="ocrTarget"><option value="auto">自動判定</option><option value="bank82Balance">八十二銀行 残高</option><option value="mizuho">みずほ銀行 残高</option><option value="jibunBalance">auじぶん銀行 残高</option><option value="auNextBill">au PAYゴールド 次回請求</option><option value="aeonNextBill">イオンカード 次回請求</option><option value="apolloNextBill">apollostation 次回請求</option></select></div>
+            <div class="field full" style="margin-top:12px"><label>画像の種類（自動で失敗する場合に指定）</label><select id="ocrTarget"><option value="auto">自動判定</option><option value="bank82Balance">八十二銀行 残高</option><option value="mizuho">みずほ銀行 残高</option><option value="jibunBalance">auじぶん銀行 残高</option><option value="rakutenBalance">楽天銀行 残高</option><option value="auNextBill">au PAYゴールド 次回請求</option><option value="aeonNextBill">イオンカード 次回請求</option><option value="apolloNextBill">apollostation 次回請求</option></select></div>
             <input id="ocrImages" type="file" accept="image/*" multiple style="display:none">
             <div class="btnRow"><button class="btn secondary" id="pickOcrImages" type="button">画像を選ぶ</button><button class="btn secondary" id="clearOcr" type="button">認識結果を消す</button></div>
             <div class="ocrProgress"><span id="ocrProgressBar"></span></div>
@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.7では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.8では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v1.6：みずほ銀行の残高OCRを改善し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v1.8：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -314,14 +314,14 @@ function renderPayments(){
   const free=document.getElementById('free82'); free.textContent=p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82); free.className='value '+(p.free82>=0?'good':'bad');
   const ja=document.getElementById('jibunAfter'); ja.textContent=p.jibunAfter>=0?yen(p.jibunAfter):'不足 '+yen(-p.jibunAfter); ja.className='value '+(p.jibunAfter>=0?'good':'warn');
 }
-const ocrFieldLabels={bank82Balance:'八十二銀行残高',jibunBalance:'auじぶん銀行残高',auNextBill:'au PAYゴールド次回請求',aeonNextBill:'イオンカード次回請求',apolloNextBill:'apollostation次回請求',mizuho:'みずほ銀行残高'};
+const ocrFieldLabels={bank82Balance:'八十二銀行残高',jibunBalance:'auじぶん銀行残高',rakutenBalance:'楽天銀行残高',auNextBill:'au PAYゴールド次回請求',aeonNextBill:'イオンカード次回請求',apolloNextBill:'apollostation次回請求',mizuho:'みずほ銀行残高'};
 let ocrCandidates={};
 let ocrRawChunks=[];
 let ocrClassifications=[];
-const screenTypeLabels={bank82Balance:'八十二銀行 残高',mizuho:'みずほ銀行 残高',jibunBalance:'auじぶん銀行 残高',auNextBill:'au PAYゴールド 次回請求',aeonNextBill:'イオンカード 次回請求',apolloNextBill:'apollostation 次回請求',unknown:'判定できず'};
+const screenTypeLabels={bank82Balance:'八十二銀行 残高',mizuho:'みずほ銀行 残高',jibunBalance:'auじぶん銀行 残高',rakutenBalance:'楽天銀行 残高',auNextBill:'au PAYゴールド 次回請求',aeonNextBill:'イオンカード 次回請求',apolloNextBill:'apollostation 次回請求',unknown:'判定できず'};
 function detectScreenType(raw){
   const t=jpNormalize(raw).replace(/\s+/g,' ');
-  const score={bank82Balance:0,mizuho:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:0};
+  const score={bank82Balance:0,mizuho:0,jibunBalance:0,rakutenBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:0};
   const add=(k,n)=>score[k]+=n;
   if(/八十二銀行|82\s*BANK/i.test(t))add('bank82Balance',8);
   if(/屋代支店/i.test(t))add('bank82Balance',9);
@@ -331,13 +331,14 @@ function detectScreenType(raw){
   if(/草加支店/i.test(t))add('mizuho',7);
   if(/302[-ー]3124458|3124458/i.test(t))add('mizuho',6);
   if(/入出金明細を見る/i.test(t))add('mizuho',3);
-  if(/au\s*(?:自分|じぶん)銀行|JIBUN/i.test(t))add('jibunBalance',10);
+  if(/au\s*(?:自分|じぶん)銀行|JIBUN|じぶんプラス|円普通預金残高|スマホATM/i.test(t))add('jibunBalance',10);
+  if(/楽天銀行|Rakuten|ハッピープログラム|預金残高/i.test(t))add('rakutenBalance',10);
   if(/そら支店/i.test(t))add('jibunBalance',6);
   if(/外貨普通/i.test(t))add('jibunBalance',2);
-  if(/au\s*PAY\s*カード|au\s*PAYゴールド/i.test(t))add('auNextBill',10);
+  if(/au\s*PAY\s*カード|au\s*PAYゴールド|au PAY Card|ご請求予定額/i.test(t))add('auNextBill',10);
   if(/ご請求額[・･]ご利用明細|ご利用可能枠/i.test(t))add('auNextBill',5);
   if(/お支払日[\s\S]{0,40}(?:4日|10月5日)/i.test(t))add('auNextBill',2);
-  if(/AEON\s*Pay|イオンカード|WAON\s*POINT/i.test(t))add('aeonNextBill',10);
+  if(/AEON\s*Pay|イオンカード|WAON\s*POINT|シネマ特典|お支払い額変更/i.test(t))add('aeonNextBill',10);
   if(/お支払い額変更|締切まで残り/i.test(t))add('aeonNextBill',4);
   if(/apollostation|出光カード|idemitsu/i.test(t))add('apolloNextBill',10);
   if(/ご利用期間[\s\S]{0,50}ショッピング|まとめてリボ変更/i.test(t))add('apolloNextBill',4);
@@ -380,6 +381,7 @@ function forcedTargetFallback(text,target,sourceName){
   if(target==='bank82Balance'||target==='mizuho'||target==='jibunBalance'){
     v=bestCurrencyAmount(text,'max');
   }else if(target==='auNextBill'||target==='aeonNextBill'||target==='apolloNextBill'){
+    if(target==='aeonNextBill'&&/(?:お支払い額|お支払額)[\s\S]{0,50}?(?:¥|￥)\s*(?:--|-|ー)/.test(text)){setOcrCandidate(target,0,sourceName,15);return;}
     // 請求画面は「支払/請求」の近くを優先し、見つからなければ通貨候補の最大額
     let m=/(?:お支払(?:い)?(?:金額|額)|ご請求額|請求(?:金)?額)[\s\S]{0,140}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(text);
     v=m?moneyNum(m[1]||m[2]):bestCurrencyAmount(text,'max');
@@ -402,19 +404,29 @@ function extractOcrCandidates(raw,sourceName,target='auto'){
     if(v===null)v=bestCurrencyAmount(compact,'max');
     if(v!==null)setOcrCandidate('mizuho',v,sourceName,8);
   }
-  if(/au\s*(?:自分|じぶん)銀行|JIBUN/i.test(compact)){
+  if(/au\s*(?:自分|じぶん)銀行|JIBUN|じぶんプラス|円普通預金残高|スマホATM/i.test(compact)){
     let m=/(?:au\s*(?:自分|じぶん)銀行)[\s\S]{0,300}?(?:普通|普通預金)[\s\S]{0,100}?(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/.exec(compact);
     if(!m)m=/(?:残高|現在残高)[\s\S]{0,90}?(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/.exec(compact);
     v=m?moneyNum(m[1]):bestCurrencyAmount(compact,'max');
     if(v!==null)setOcrCandidate('jibunBalance',v,sourceName,7);
   }
+  if(/楽天銀行|Rakuten|ハッピープログラム|預金残高/i.test(compact)){
+    let m=/(?:預金残高|普通預金|残高)[\s\S]{0,100}?([0-9]{1,3}(?:,[0-9]{3})*|0)\s*円/.exec(compact);
+    v=m?moneyNum(m[1]):null;
+    if(v!==null)setOcrCandidate('rakutenBalance',v,sourceName,12);
+  }
   if(/apollostation|出光カード|idemitsu/i.test(compact)){
-    let m=/(?:お支払(?:い)?金額|お支払額)[\s\S]{0,90}?([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(compact);
-    if(m)setOcrCandidate('apolloNextBill',moneyNum(m[1]),sourceName,8);
+    let m=/(?:お支払い日|確定)[\s\S]{0,180}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(compact);
+    if(!m)m=/(?:お支払(?:い)?金額|お支払額)[\s\S]{0,100}?([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(compact);
+    if(m)setOcrCandidate('apolloNextBill',moneyNum(m[1]),sourceName,14);
   }
   if(/イオンカード|AEON\s*Pay|AEON/i.test(compact)){
-    let m=/(?:お支払い額|お支払額|請求(?:金)?額)[\s\S]{0,110}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(compact);
-    if(m)setOcrCandidate('aeonNextBill',moneyNum(m[1]||m[2]),sourceName,8);
+    if(/(?:お支払い額|お支払額)[\s\S]{0,50}?(?:¥|￥)\s*(?:--|-|ー)/.test(compact)){
+      setOcrCandidate('aeonNextBill',0,sourceName,15);
+    }else{
+      let m=/(?:お支払い額|お支払額|請求(?:金)?額)[\s\S]{0,90}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(compact);
+      if(m)setOcrCandidate('aeonNextBill',moneyNum(m[1]||m[2]),sourceName,14);
+    }
   }
   if(/au\s*PAY\s*カード|au\s*PAYゴールド/i.test(compact)){
     let m=/(?:お支払額|ご請求額|請求(?:金)?額)[\s\S]{0,130}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(compact);
@@ -454,11 +466,11 @@ async function preprocessImage(file,preset='default'){
     }else if(preset==='bank82Balance'){
       sx=Math.round(bmp.width*0.05); sy=Math.round(bmp.height*0.08);
       sw=Math.round(bmp.width*0.90); sh=Math.round(bmp.height*0.31);
-    }else if(preset==='jibunBalance'){
+    }else if(preset==='jibunBalance'||preset==='rakutenBalance'){
       sx=Math.round(bmp.width*0.02); sy=Math.round(bmp.height*0.10);
       sw=Math.round(bmp.width*0.96); sh=Math.round(bmp.height*0.38);
     }
-    const specialized=preset==='mizuhoBalance'||preset==='bank82Balance'||preset==='jibunBalance';
+    const specialized=preset==='mizuhoBalance'||preset==='bank82Balance'||preset==='jibunBalance'||preset==='rakutenBalance'||preset==='cardTop';
     const maxW=specialized?2200:1800;
     const scale=Math.min(specialized?3:2,maxW/sw);
     const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
@@ -518,6 +530,8 @@ async function runOcr(files){
         ocrRawChunks.push('['+files[i].name+' / auじぶん残高エリア]\n'+cropTxt);
         forcedTargetFallback(jpNormalize(cropTxt),'jibunBalance',files[i].name);
         if(!ocrCandidates.jibunBalance) extractOcrCandidates(txt,files[i].name,'jibunBalance');
+      }else if(detected==='rakutenBalance'){
+        extractOcrCandidates(txt,files[i].name,'rakutenBalance');
       }else if(detected!=='unknown'){
         extractOcrCandidates(txt,files[i].name,detected);
       }else{
@@ -534,6 +548,7 @@ function applyOcrCandidates(){
   Object.entries(ocrCandidates).forEach(([k,o])=>{
     if(k.startsWith('_'))return;
     if(k==='mizuho'){settings.mizuho=o.value;localStorage.setItem('odyssey_settings',JSON.stringify(settings));return;}
+    if(k==='rakutenBalance'){localStorage.setItem('odyssey_rakuten_balance',String(o.value));return;}
     if(k in payments)payments[k]=o.value;
   });
   localStorage.setItem('odyssey_payments',JSON.stringify(payments));render();alert('認識した金額を反映しました。金額に間違いがないか確認してください。');
