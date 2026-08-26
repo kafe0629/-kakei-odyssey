@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.5</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.6</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.5では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高とカード請求額は、各アプリの金額表示位置を固定座標で切り出し、数字専用OCRと通常OCRの2段階で読み取ります。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.6では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v2.5：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v2.6：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -410,7 +410,7 @@ function extractDedicatedCrop(text,target,sourceName){
     let m=/(?:お支払い額|お支払額|9月お支払い額)[\s\S]{0,80}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(t);
     v=m?moneyNum(m[1]||m[2]):null;
   }else if(target==='auNextBill'){
-    // v2.5: 専用クロップは「お支払金額」の数字部分だけ。0円を最優先し、日付・利用可能額は採用しない。
+    // v2.6: 専用クロップは「お支払金額」の数字部分だけ。0円を最優先し、日付・利用可能額は採用しない。
     if(/(?:^|\D)0\s*円(?:\D|$)/.test(t) || /^\s*0\s*$/.test(t)){
       setOcrCandidate(target,0,sourceName+'（支払金額0円）',80);return;
     }
@@ -428,7 +428,7 @@ function extractDedicatedCrop(text,target,sourceName){
   }else if(target==='mizuho'){
     v=zeroAwareMoney(t);
   }else if(target==='jibunBalance'){
-    // v2.5: 残高数字だけの専用クロップ。0円を最優先し、口座番号・銀行コード・メニュー番号は採用しない。
+    // v2.6: 残高数字だけの専用クロップ。0円を最優先し、口座番号・銀行コード・メニュー番号は採用しない。
     if(/(?:^|\D)0\s*円(?:\D|$)/.test(t) || /^\s*0\s*$/.test(t)){
       setOcrCandidate(target,0,sourceName+'（円普通預金残高0円）',80);return;
     }
@@ -540,12 +540,20 @@ async function preprocessImage(file,preset='default'){
     }else if(preset==='jibunBalance'){
       sx=Math.round(bmp.width*0.32); sy=Math.round(bmp.height*0.365);
       sw=Math.round(bmp.width*0.38); sh=Math.round(bmp.height*0.105);
+    }else if(preset==='jibunDigit'){
+      // 円普通預金残高の大きな数字だけ。口座番号やメニュー数値を完全に外す。
+      sx=Math.round(bmp.width*0.465); sy=Math.round(bmp.height*0.372);
+      sw=Math.round(bmp.width*0.115); sh=Math.round(bmp.height*0.065);
     }else if(preset==='rakutenBalance'){
       sx=Math.round(bmp.width*0.58); sy=Math.round(bmp.height*0.27);
       sw=Math.round(bmp.width*0.38); sh=Math.round(bmp.height*0.20);
     }else if(preset==='auBill'){
       sx=Math.round(bmp.width*0.035); sy=Math.round(bmp.height*0.365);
       sw=Math.round(bmp.width*0.40); sh=Math.round(bmp.height*0.085);
+    }else if(preset==='auDigit'){
+      // au PAYカード「お支払金額」の大きな数字だけ。利用可能額・日付を外す。
+      sx=Math.round(bmp.width*0.045); sy=Math.round(bmp.height*0.385);
+      sw=Math.round(bmp.width*0.125); sh=Math.round(bmp.height*0.060);
     }else if(preset==='aeonBill'){
       sx=Math.round(bmp.width*0.055); sy=Math.round(bmp.height*0.292);
       sw=Math.round(bmp.width*0.88); sh=Math.round(bmp.height*0.075);
@@ -553,7 +561,7 @@ async function preprocessImage(file,preset='default'){
       sx=Math.round(bmp.width*0.50); sy=Math.round(bmp.height*0.13);
       sw=Math.round(bmp.width*0.45); sh=Math.round(bmp.height*0.16);
     }
-    const specialized=['mizuhoBalance','bank82Balance','jibunBalance','rakutenBalance','auBill','aeonBill','apolloBill'].includes(preset);
+    const specialized=['mizuhoBalance','bank82Balance','jibunBalance','jibunDigit','rakutenBalance','auBill','auDigit','aeonBill','apolloBill'].includes(preset);
     const maxW=specialized?2200:1800;
     const scale=Math.min(specialized?3:2,maxW/sw);
     const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
@@ -565,7 +573,7 @@ async function preprocessImage(file,preset='default'){
       if(preset==='mizuhoBalance'){
         // 青背景に白文字なので、白文字を黒・背景を白にして数字を読みやすくする。
         const z=y>135?0:255; d[i]=d[i+1]=d[i+2]=z;
-      }else if(['bank82Balance','jibunBalance','rakutenBalance','auBill','aeonBill','apolloBill'].includes(preset)){
+      }else if(['bank82Balance','jibunBalance','jibunDigit','rakutenBalance','auBill','auDigit','aeonBill','apolloBill'].includes(preset)){
         const z=y>165?0:255; d[i]=d[i+1]=d[i+2]=z;
       }else{
         const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;
@@ -600,7 +608,7 @@ async function visualScreenHint(file){
 }
 
 async function unknownScreenProbe(worker,file,sourceName){
-  // v2.5: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
+  // v2.6: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
   // この領域は「お支払金額・確定・お支払日」が集中し、利用可能額100,000円は下部なので入りにくい。
   try{
     const crop=await preprocessImage(file,'auBill');
@@ -614,13 +622,46 @@ async function unknownScreenProbe(worker,file,sourceName){
   }catch(e){console.warn('unknownScreenProbe',e)}
   return 'unknown';
 }
+async function recognizeDigitOnly(worker,file,preset,target,sourceName){
+  // v2.6: 0円画面向け。金額の「数字だけ」を極小範囲で再認識する。
+  try{
+    const crop=await preprocessImage(file,preset);
+    const texts=[];
+    for(const psm of ['10','7','13']){
+      try{
+        await worker.setParameters({tessedit_pageseg_mode:psm,tessedit_char_whitelist:'0123456789'});
+        const r=await worker.recognize(crop); texts.push(r?.data?.text||'');
+      }catch(e){}
+    }
+    try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});}catch(e){}
+    const joined=texts.join(' ').replace(/[^0-9]/g,'');
+    ocrRawChunks.push('['+sourceName+' / v2.6数字単独 '+preset+']\n'+texts.join('\n'));
+    // 3回のうち一度でも単独0が取れれば0円を最優先。
+    if(texts.some(x=>String(x).replace(/\D/g,'')==='0')){
+      setOcrCandidate(target,0,sourceName+'（数字単独0）',160); return true;
+    }
+    // 数字単独クロップでは1〜7桁のみ許可。単独5などは0の誤認が多いので残高/請求0画面では採用しない。
+    const nums=texts.map(x=>String(x).replace(/\D/g,'')).filter(x=>/^\d{1,7}$/.test(x));
+    if(nums.length){
+      const counts={}; nums.forEach(x=>counts[x]=(counts[x]||0)+1);
+      const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+      if(best && Number(best[1])>=2){
+        const v=Number(best[0]);
+        if(!(v===5 && (target==='jibunBalance'||target==='auNextBill'))){
+          setOcrCandidate(target,v,sourceName+'（数字単独）',150); return true;
+        }
+      }
+    }
+  }catch(e){console.warn('recognizeDigitOnly',e)}
+  return false;
+}
 async function recognizeAmountCrop(worker,file,preset,target,sourceName){
   const crop=await preprocessImage(file,preset);
   let texts=[];
   try{await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:'0123456789,.-¥￥円'});const r1=await worker.recognize(crop);texts.push(r1?.data?.text||'');}catch(e){}
   try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});const r2=await worker.recognize(crop);texts.push(r2?.data?.text||'');}catch(e){}
   try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});}catch(e){}
-  const joined=texts.join('\n');ocrRawChunks.push('['+sourceName+' / v2.5固定金額欄 '+preset+']\n'+joined);const t=jpNormalize(joined).replace(/\s+/g,' ');
+  const joined=texts.join('\n');ocrRawChunks.push('['+sourceName+' / v2.6固定金額欄 '+preset+']\n'+joined);const t=jpNormalize(joined).replace(/\s+/g,' ');
   if(target==='jibunBalance'||target==='auNextBill'){
     if(/(?:^|\D)0\s*(?:円|$)/.test(t)||/^\s*0\s*$/.test(t)){setOcrCandidate(target,0,sourceName+'（固定欄0円）',120);return true;}
     let m=/(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*(?:円|$)/.exec(t);
@@ -654,7 +695,7 @@ async function runOcr(files){
       let detected=selected==='auto'?detectScreenType(txt):selected;
       if(selected==='auto'){
         const vh=await visualScreenHint(files[i]);
-        // v2.5: auじぶん銀行のPonta表記などでau PAYカードに誤分類されるのを防ぐ。
+        // v2.6: auじぶん銀行のPonta表記などでau PAYカードに誤分類されるのを防ぐ。
         // 強い画面色ヒント（橙=じぶん、赤=apollo、青=みずほ、紫=AEON、緑=八十二）を優先する。
         if(vh!=='unknown' && (detected==='unknown' || detected==='auNextBill' || detected==='aeonNextBill')) detected=vh;
       }
@@ -678,8 +719,10 @@ async function runOcr(files){
         extractDedicatedCrop(cropTxt,'bank82Balance',files[i].name);
         if(!ocrCandidates.bank82Balance) extractOcrCandidates(txt,files[i].name,'bank82Balance');
       }else if(detected==='jibunBalance'){
-        const ok=await recognizeAmountCrop(worker,files[i],'jibunBalance','jibunBalance',files[i].name);
-        if(!ok && !ocrCandidates.jibunBalance && /円普通預金残高|銀行コード\s*0039|そら支店|じぶんプラス/i.test(txt) && /(?:^|\D)0\s*円(?:\D|$)/m.test(jpNormalize(txt))) setOcrCandidate('jibunBalance',0,files[i].name+'（0円救済）',100);
+        // v2.6: まず大きな残高数字だけを読む。0の誤認(5など)を防止。
+        const digitOk=await recognizeDigitOnly(worker,files[i],'jibunDigit','jibunBalance',files[i].name);
+        const ok=digitOk||await recognizeAmountCrop(worker,files[i],'jibunBalance','jibunBalance',files[i].name);
+        if(!ok && !ocrCandidates.jibunBalance && /円普通預金残高|銀行コード\s*0039|そら支店|じぶんプラス/i.test(txt) && /(?:^|\D)0\s*円(?:\D|$)/m.test(jpNormalize(txt))) setOcrCandidate('jibunBalance',0,files[i].name+'（0円救済）',140);
         if(!ocrCandidates.jibunBalance) extractOcrCandidates(txt,files[i].name,'jibunBalance');
       }else if(detected==='rakutenBalance'){
         const crop=await preprocessImage(files[i],'rakutenBalance');
@@ -688,8 +731,12 @@ async function runOcr(files){
         extractDedicatedCrop(cropTxt,'rakutenBalance',files[i].name);
         if(!ocrCandidates.rakutenBalance) extractOcrCandidates(txt,files[i].name,'rakutenBalance');
       }else if(detected==='auNextBill'){
-        const ok=await recognizeAmountCrop(worker,files[i],'auBill','auNextBill',files[i].name);
-        if(!ok && !ocrCandidates.auNextBill && /お支払金額|お支払い金額|今月のお支払口座|お支払方法の変更/i.test(txt) && /(?:^|\D)0\s*円(?:\D|$)/m.test(jpNormalize(txt))) setOcrCandidate('auNextBill',0,files[i].name+'（支払額0円救済）',100);
+        // v2.6: お支払金額の大きな数字だけを先に読む。0円も必ず候補に出す。
+        const digitOk=await recognizeDigitOnly(worker,files[i],'auDigit','auNextBill',files[i].name);
+        const ok=digitOk||await recognizeAmountCrop(worker,files[i],'auBill','auNextBill',files[i].name);
+        if(!ok && !ocrCandidates.auNextBill && /お支払金額|お支払い金額|今月のお支払口座|お支払方法の変更/i.test(txt) && /(?:^|\D)0\s*円(?:\D|$)/m.test(jpNormalize(txt))) setOcrCandidate('auNextBill',0,files[i].name+'（支払額0円救済）',140);
+        // au PAY画面と判定済みなのに金額を読めない場合、利用可能額を採用せず安全側で0円候補を出す。
+        if(!ocrCandidates.auNextBill && /お支払金額|今月のお支払口座|お支払日/i.test(txt) && !/(?:お支払金額|お支払い金額)[\s\S]{0,100}[1-9][0-9,]*\s*円/.test(jpNormalize(txt))) setOcrCandidate('auNextBill',0,files[i].name+'（支払欄0円推定）',90);
         if(!ocrCandidates.auNextBill) extractOcrCandidates(txt,files[i].name,'auNextBill');
       }else if(detected==='aeonNextBill'){
         const ok=await recognizeAmountCrop(worker,files[i],'aeonBill','aeonNextBill',files[i].name);
