@@ -1,10 +1,10 @@
 {
   "name": "家計・オデッセイ資金管理",
   "short_name": "家計・車資金",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#111827",
+  "background_color": "#07101e",
+  "theme_color": "#07101e",
   "lang": "ja",
-  "description": "家計・カード・銀行スクショを画像ごとに自動判定して入力できる家計・オデッセイ資金管理アプリ v1.7"
+  "description": "家計・オデッセイ資金管理アプリ v2.5"
 }
