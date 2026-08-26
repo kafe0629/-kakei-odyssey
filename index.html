@@ -81,6 +81,17 @@
     .historyItem{display:grid;grid-template-columns:72px 1fr auto;gap:9px;padding:10px 0;border-bottom:1px solid rgba(148,163,184,.1)}
     .historyItem:last-child{border-bottom:none}
     .empty{color:var(--muted);font-size:13px;padding:16px 0}
+    .ocrBox{margin-top:12px;padding:12px;border:1px dashed #365075;border-radius:14px;background:rgba(8,18,33,.68)}
+    .ocrHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .ocrStatus{font-size:12px;color:#bfdbfe;line-height:1.5}
+    .ocrProgress{height:7px;background:#07101e;border:1px solid #263a58;border-radius:999px;overflow:hidden;margin:8px 0}
+    .ocrProgress span{display:block;width:0%;height:100%;background:linear-gradient(90deg,#60a5fa,#22c55e);transition:width .2s ease}
+    .ocrResult{display:none;margin-top:10px}
+    .ocrResult.show{display:block}
+    .ocrDetected{font-size:12px;line-height:1.7;color:#dbeafe;background:#07101e;border:1px solid #243652;border-radius:12px;padding:10px;white-space:pre-wrap}
+    details.ocrRaw{margin-top:8px}
+    details.ocrRaw summary{font-size:11px;color:#94a3b8;cursor:pointer}
+    details.ocrRaw pre{font-size:10px;line-height:1.45;white-space:pre-wrap;word-break:break-word;color:#9fb0c8;background:#07101e;padding:9px;border-radius:10px;max-height:180px;overflow:auto}
     @media(max-width:430px){.grid,.formGrid{grid-template-columns:1fr 1fr}.kpi{font-size:21px}.miniGrid{grid-template-columns:1fr 1fr 1fr}.scheduleItem{grid-template-columns:50px 1fr}.scheduleItem .pill{display:none}}
   </style>
 </head>
@@ -88,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.3</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.4</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -128,6 +139,19 @@
             <div class="field"><label>イオンカード 次回請求（2日）</label><input data-payment="aeonNextBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>apollostation 次回請求（7日）</label><input data-payment="apolloNextBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div class="ocrBox">
+            <div class="ocrHead"><div><strong>📷 スクショから自動入力</strong><div class="sub">銀行・カードのスクリーンショットを選択</div></div><span class="pill">端末内OCR</span></div>
+            <input id="ocrImages" type="file" accept="image/*" multiple style="display:none">
+            <div class="btnRow"><button class="btn secondary" id="pickOcrImages" type="button">画像を選ぶ</button><button class="btn secondary" id="clearOcr" type="button">認識結果を消す</button></div>
+            <div class="ocrProgress"><span id="ocrProgressBar"></span></div>
+            <div class="ocrStatus" id="ocrStatus">八十二銀行・みずほ銀行・auじぶん銀行・au PAYゴールド・イオン・apollostationの画面に対応します。複数画像も選べます。</div>
+            <div class="ocrResult" id="ocrResult">
+              <div class="ocrDetected" id="ocrDetected"></div>
+              <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
+              <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
+            </div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。初回のみOCR用データの読み込みに時間がかかります。誤認識もあり得るため、反映前に金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -241,7 +265,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v1.3：カード・口座の支払管理を追加し、八十二銀行の「自由に使える額」とauじぶん銀行へ移す必要額を自動計算できるようにしました。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v1.4：スクリーンショットOCRを追加し、銀行残高・カード請求額を画像から候補抽出して自動入力できるようにしました。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -255,6 +279,7 @@
   <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
 </div></nav>
 
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
@@ -288,6 +313,97 @@ function renderPayments(){
   const free=document.getElementById('free82'); free.textContent=p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82); free.className='value '+(p.free82>=0?'good':'bad');
   const ja=document.getElementById('jibunAfter'); ja.textContent=p.jibunAfter>=0?yen(p.jibunAfter):'不足 '+yen(-p.jibunAfter); ja.className='value '+(p.jibunAfter>=0?'good':'warn');
 }
+const ocrFieldLabels={bank82Balance:'八十二銀行残高',jibunBalance:'auじぶん銀行残高',auNextBill:'au PAYゴールド次回請求',aeonNextBill:'イオンカード次回請求',apolloNextBill:'apollostation次回請求',mizuho:'みずほ銀行残高'};
+let ocrCandidates={};
+let ocrRawChunks=[];
+function jpNormalize(t){
+  const fw='０１２３４５６７８９，．￥－'; const hw='0123456789,.¥-';
+  let out=String(t||''); for(let i=0;i<fw.length;i++) out=out.split(fw[i]).join(hw[i]);
+  return out.replace(/[ \t]+/g,' ').replace(/円\s*-/g,'円 0').replace(/¥\s*-/g,'¥0');
+}
+function moneyNum(v){const n=Number(String(v||'').replace(/[^0-9]/g,''));return Number.isFinite(n)?n:null}
+function setOcrCandidate(key,value,source,score=1){
+  if(value===null||value===undefined||!Number.isFinite(Number(value)))return;
+  value=Number(value); const prev=ocrCandidates[key];
+  if(!prev||score>prev.score||(score===prev.score&&value!==0&&prev.value===0))ocrCandidates[key]={value,source,score};
+}
+function findNear(text,labelRegex,amountRegex,max=180){
+  const m=labelRegex.exec(text); if(!m)return null; const chunk=text.slice(m.index,m.index+max); const a=amountRegex.exec(chunk); return a?moneyNum(a[1]):null;
+}
+function extractOcrCandidates(raw,sourceName){
+  const text=jpNormalize(raw); const compact=text.replace(/\r/g,'');
+  let v;
+  if(/八十二銀行/.test(compact)){
+    v=findNear(compact,/八十二銀行/,/(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,9})(?!\s*円)/,260);
+    if(v!==null)setOcrCandidate('bank82Balance',v,sourceName,4);
+  }
+  if(/みずほ銀行/.test(compact)){
+    v=findNear(compact,/みずほ銀行/,/(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,9})(?!\s*円)/,220);
+    if(v!==null)setOcrCandidate('mizuho',v,sourceName,4);
+  }
+  if(/au\s*(?:自分|じぶん)銀行/.test(compact)){
+    let m=/(?:au\s*(?:自分|じぶん)銀行)[\s\S]{0,240}?(?:普通|普通預金)[\s\S]{0,70}?(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/.exec(compact);
+    if(!m)m=/(?:au\s*(?:自分|じぶん)銀行)[\s\S]{0,160}?(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/.exec(compact);
+    if(m)setOcrCandidate('jibunBalance',moneyNum(m[1]),sourceName,4);
+  }
+  if(/apollostation|出光カード|idemitsu/i.test(compact)){
+    let m=/(?:お支払(?:い)?金額|お支払額)[\s\S]{0,70}?([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(compact);
+    if(m)setOcrCandidate('apolloNextBill',moneyNum(m[1]),sourceName,6);
+  }
+  if(/イオンカード|AEON\s*Pay|AEON/i.test(compact)){
+    let m=/(?:お支払い額|お支払額|請求(?:金)?額)[\s\S]{0,90}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(compact);
+    if(m)setOcrCandidate('aeonNextBill',moneyNum(m[1]||m[2]),sourceName,5);
+  }
+  if(/au\s*PAY\s*カード|au\s*PAYゴールド/i.test(compact)){
+    let m=/(?:お支払額|ご請求額|請求(?:金)?額)[\s\S]{0,110}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(compact);
+    if(m)setOcrCandidate('auNextBill',moneyNum(m[1]||m[2]),sourceName,5);
+    const lim=/(?:ご利用可能枠)[\s\S]{0,50}?([0-9]{1,3}(?:,[0-9]{3})*)\s*円/.exec(compact);
+    const rem=/(?:残り|ご利用可能額)[\s\S]{0,60}?([0-9]{1,3}(?:,[0-9]{3})*)\s*円/.exec(compact);
+    if(lim&&rem){const used=moneyNum(lim[1])-moneyNum(rem[1]); if(used>=0) ocrCandidates._auUsed={value:used,source:sourceName,score:1};}
+  }
+}
+function showOcrCandidates(){
+  const box=document.getElementById('ocrResult'),det=document.getElementById('ocrDetected');
+  const lines=[]; Object.entries(ocrCandidates).forEach(([k,o])=>{
+    if(k==='_auUsed') lines.push('参考：au PAYゴールド利用枠の使用額 '+yen(o.value)+'（請求未確定の可能性）');
+    else lines.push((ocrFieldLabels[k]||k)+' → '+yen(o.value)+' 〔'+o.source+'〕');
+  });
+  det.textContent=lines.length?lines.join('\n'):'対応する金額を見つけられませんでした。別の画面か、金額がはっきり見える画像を試してください。';
+  document.getElementById('ocrRawText').textContent=ocrRawChunks.join('\n\n===== 次の画像 =====\n\n');
+  box.classList.add('show');
+}
+async function preprocessImage(file){
+  try{
+    const bmp=await createImageBitmap(file); const maxW=1800; const scale=Math.min(2,maxW/bmp.width); const w=Math.max(1,Math.round(bmp.width*scale)),h=Math.max(1,Math.round(bmp.height*scale));
+    const c=document.createElement('canvas'); c.width=w;c.height=h; const x=c.getContext('2d'); x.drawImage(bmp,0,0,w,h);
+    const im=x.getImageData(0,0,w,h),d=im.data; for(let i=0;i<d.length;i+=4){const y=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;} x.putImageData(im,0,0);
+    return await new Promise(res=>c.toBlob(res,'image/jpeg',0.92));
+  }catch{return file}
+}
+async function runOcr(files){
+  if(!window.Tesseract){alert('OCR機能を読み込めませんでした。インターネット接続を確認して再度開いてください。');return;}
+  ocrCandidates={};ocrRawChunks=[]; const status=document.getElementById('ocrStatus'),bar=document.getElementById('ocrProgressBar');
+  document.getElementById('ocrResult').classList.remove('show');
+  let worker;
+  try{
+    status.textContent='OCRエンジンを準備しています…';bar.style.width='3%';
+    worker=await Tesseract.createWorker(['jpn','eng'],1,{logger:m=>{if(m.progress!=null){const base=8;bar.style.width=Math.min(95,base+m.progress*80)+'%';status.textContent=(m.status==='recognizing text'?'文字を読み取っています…':'OCR準備中…')+' '+Math.round(m.progress*100)+'%';}}});
+    for(let i=0;i<files.length;i++){
+      status.textContent=`${i+1}/${files.length}枚目を読み取っています…`; const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||''; ocrRawChunks.push('['+files[i].name+']\n'+txt); extractOcrCandidates(txt,files[i].name);
+      bar.style.width=Math.round(((i+1)/files.length)*96)+'%';
+    }
+    bar.style.width='100%';status.textContent='読み取り完了。下の候補を確認して「認識結果を反映」を押してください。';showOcrCandidates();
+  }catch(e){console.error(e);status.textContent='読み取りに失敗しました。画像を1枚ずつ試すか、ネット接続を確認してください。';bar.style.width='0%';}
+  finally{if(worker)try{await worker.terminate()}catch{}}
+}
+function applyOcrCandidates(){
+  Object.entries(ocrCandidates).forEach(([k,o])=>{
+    if(k.startsWith('_'))return;
+    if(k==='mizuho'){settings.mizuho=o.value;localStorage.setItem('odyssey_settings',JSON.stringify(settings));return;}
+    if(k in payments)payments[k]=o.value;
+  });
+  localStorage.setItem('odyssey_payments',JSON.stringify(payments));render();alert('認識した金額を反映しました。金額に間違いがないか確認してください。');
+}
 function render(){
   const emRatio=settings.mizuho/settings.emergencyTarget*100; const puRatio=settings.mizuho/settings.purchaseTarget*100;
   const emRemain=Math.max(0,settings.emergencyTarget-settings.mizuho); const puRemain=Math.max(0,settings.purchaseTarget-settings.mizuho);
@@ -311,6 +427,10 @@ function updateMonthTotals(){const ids=['mFood','mDaily','mUtilities','mFun','mT
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
 ['mFood','mDaily','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
 const now=new Date();document.getElementById('monthKey').value=now.toISOString().slice(0,7);
+document.getElementById('pickOcrImages').addEventListener('click',()=>document.getElementById('ocrImages').click());
+document.getElementById('ocrImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runOcr(fs)});
+document.getElementById('applyOcr').addEventListener('click',applyOcrCandidates);
+document.getElementById('clearOcr').addEventListener('click',()=>{ocrCandidates={};ocrRawChunks=[];document.getElementById('ocrResult').classList.remove('show');document.getElementById('ocrProgressBar').style.width='0%';document.getElementById('ocrStatus').textContent='八十二銀行・みずほ銀行・auじぶん銀行・au PAYゴールド・イオン・apollostationの画面に対応します。複数画像も選べます。';document.getElementById('ocrImages').value=''});
 document.querySelectorAll('[data-payment]').forEach(el=>el.addEventListener('input',()=>{payments[el.dataset.payment]=Number(el.value||0);renderPayments()}));
 document.getElementById('savePayments').addEventListener('click',()=>{document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();alert('支払管理を保存しました')});
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}render();alert('保存しました')});
