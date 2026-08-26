@@ -1,4 +1,4 @@
-const CACHE = 'kakei-odyssey-v3.5';
+const CACHE = 'kakei-odyssey-v3.6';
 const ASSETS = ['./', './index.html', './manifest.json'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
