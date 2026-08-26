@@ -1,11 +1,11 @@
 {
   "name": "家計・オデッセイ資金管理",
   "short_name": "家計・車資金",
-  "description": "家計・カード・口座・オデッセイ資金を管理するPWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0b1020",
   "theme_color": "#111827",
-  "lang": "ja-JP"
+  "lang": "ja",
+  "orientation": "portrait"
 }

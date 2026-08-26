@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v3.4</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v3.5</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -143,7 +143,8 @@
             <div class="field"><label>携帯料金（八十二・未引落し）</label><input data-payment="mobilePending82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>八十二銀行に残す生活予備費（任意）</label><input data-payment="safetyBuffer82" type="number" inputmode="numeric" placeholder="0"></div>
-            <div class="field"><label>1日あたり生活費（今日→次の15日）</label><input data-payment="dailyLivingCost" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>1日あたり生活費予算（au PAY中心）</label><input data-payment="dailyLivingCost" type="number" inputmode="numeric" placeholder="3000"></div>
+            <div class="field"><label>給料日前の現金・口座払い生活費（任意）</label><input data-payment="cashLivingUntilPayday" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>次サイクル1日あたり生活費（任意）</label><input data-payment="nextCycleDailyLivingCost" type="number" inputmode="numeric" placeholder="未入力なら上と同額"></div>
             <div class="field"><label>次サイクルのカード請求見込み（任意）</label><input data-payment="nextCycleCards" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>次サイクルのその他支出見込み（任意）</label><input data-payment="nextCycleOther" type="number" inputmode="numeric" placeholder="0"></div>
@@ -160,18 +161,22 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v3.4では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v3.5では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
           <div class="row"><div class="name">八十二に残すカード請求分</div><div class="value" id="reserveCards82">¥0</div></div>
+          <div class="row"><div class="name">au PAY生活費 利用済み</div><div class="value" id="auLivingSpent">¥0</div></div>
           <div class="row"><div class="name">au PAY生活費 残り利用枠</div><div class="value good" id="auLivingRemaining">¥0</div></div>
-           <div class="row"><div class="name">au PAY 将来引落し見込み</div><div class="value" id="auFutureBill">¥0</div></div>
+          <div class="row"><div class="name"><strong>今日使えるau PAY目安</strong></div><div class="value blue" id="auTodayAvailable">¥0</div></div>
+          <div class="row"><div class="name">給料日までのau PAY利用予定</div><div class="value" id="auPlannedUntilPayday">¥0</div></div>
+          <div class="row"><div class="name">au PAY 将来引落し見込み</div><div class="value" id="auFutureBill">¥0</div></div>
            <div class="row"><div class="name">携帯料金の確保</div><div class="value" id="mobilePendingOut">¥0</div></div>
           <div class="row"><div class="name">支払いに必要な確保額</div><div class="value" id="paymentNeed82">¥0</div></div>
           <div class="row"><div class="name">次の15日までの日数</div><div class="value blue" id="daysToPayday">0日</div></div>
-          <div class="row"><div class="name">給料日までの生活費確保</div><div class="value" id="livingUntilPayday">¥0</div></div>
+          <div class="row"><div class="name">給料日までのカード生活費予算</div><div class="value" id="livingUntilPayday">¥0</div></div>
+          <div class="row"><div class="name">給料日前の現金・口座生活費確保</div><div class="value" id="cashLivingUntilPaydayOut">¥0</div></div>
           <div class="row"><div class="name">八十二銀行に残す生活予備費</div><div class="value" id="safetyBufferOut">¥0</div></div>
           <div class="row"><div class="name"><strong>今日、八十二に残すべき最低額</strong></div><div class="value" id="reserveTotal82">¥0</div></div>
           <div class="row"><div class="name">八十二銀行で自由に使える額</div><div class="value good" id="free82">¥0</div></div>
@@ -199,7 +204,7 @@
           <div id="shortageBreakdown" class="note" style="margin-top:10px">現在の残高と確保額の内訳をここに表示します。</div>
           <div id="autoCalcMessage" class="note" style="margin-top:10px">OCR結果を反映すると、残高・請求額を保存して、必要振替額・確保額・自由資金・追加貯金可能額まで自動計算します。</div>
           <div class="btnRow" style="margin-top:12px"><button class="btn" id="savePayments">支払管理を保存</button></div>
-          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費」は今日から次の給料日（15日）までの日数×設定額を自動確保します。「次サイクル1日あたり生活費」は別に設定でき、未入力または0円なら現在の1日生活費を引き継ぎます。v3.3では、次回15日の振り分け後から翌月15日までの生活費と、15日の振り分けに含まれない自動車保険・NHK月平均・ガソリン・au固定的支出を自動で見込みます。次サイクルのカード請求やその他支出が分かっている場合は任意欄へ入力すると、「本当の余裕資金」に反映します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
+          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費予算」はau PAYカード中心の利用目安として使い、八十二銀行から現金として二重確保しません。現金・口座払いが必要な分だけ「給料日前の現金・口座払い生活費」に入力してください。「次サイクル1日あたり生活費」は別に設定でき、未入力または0円なら現在の1日生活費を引き継ぎます。v3.5では、次回15日の振り分け後から翌月15日までの生活費と、15日の振り分けに含まれない自動車保険・NHK月平均・ガソリン・au固定的支出を自動で見込みます。次サイクルのカード請求やその他支出が分かっている場合は任意欄へ入力すると、「本当の余裕資金」に反映します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
         </div>
       </div>
     </section>
@@ -304,7 +309,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v3.4：au PAYカードの確定請求と未確定利用額を分け、生活費予算・残り利用枠・将来引落し見込みを管理します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v3.5：au PAYカード中心の生活費管理に対応し、確定請求・未確定利用額・給料日までの利用予定を分けて、今日使える目安と将来請求見込みを自動計算します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -323,7 +328,7 @@
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
 let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
-const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0};
+const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0};
 let payments={...paymentDefaults,...JSON.parse(localStorage.getItem('odyssey_payments')||'{}')};
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
@@ -340,8 +345,8 @@ function paymentSummary(){
   const reserveCards82=Number(payments.aeonNextBill||0)+Number(payments.apolloNextBill||0);
    const auUnconfirmed=Math.max(0,Number(payments.auUnconfirmed||0));
    const auLivingBudget=Math.max(0,Number(payments.auLivingBudget||0));
-   const auLivingRemaining=Math.max(0,auLivingBudget-auUnconfirmed);
-   const auFutureBill=Math.max(0,Number(payments.auNextBill||0)+auUnconfirmed);
+   const auLivingSpent=auUnconfirmed;
+   const auLivingRemaining=Math.max(0,auLivingBudget-auLivingSpent);
   const mobilePending82=Math.max(0,Number(payments.mobilePending82||0));
   const other82Reserve=Math.max(0,Number(payments.other82Reserve||0));
   const paymentNeed82=needToJibun+reserveCards82+mobilePending82+other82Reserve;
@@ -352,7 +357,13 @@ function paymentSummary(){
   const daysToPayday=Math.max(0,Math.ceil((nextPayday-today)/86400000));
   const dailyLivingCost=Math.max(0,Number(payments.dailyLivingCost||0));
   const livingUntilPayday=daysToPayday*dailyLivingCost;
-  const reserveTotal82=paymentNeed82+safetyBuffer82+livingUntilPayday;
+  const auPlannedUntilPayday=Math.min(auLivingRemaining,livingUntilPayday);
+  const auTodayAvailable=daysToPayday>0?Math.max(0,Math.min(dailyLivingCost,Math.floor(auLivingRemaining/daysToPayday))):0;
+  const cashLivingUntilPayday=Math.max(0,Number(payments.cashLivingUntilPayday||0));
+  const auFutureBill=Math.max(0,Number(payments.auNextBill||0)+auUnconfirmed+auPlannedUntilPayday);
+  // 買い物はau PAYカード中心のため、カード生活費予算は今日の八十二銀行残高からは二重に確保しない。
+  // 現金・口座払いで必要な生活費だけを現在残高から確保する。
+  const reserveTotal82=paymentNeed82+safetyBuffer82+cashLivingUntilPayday;
   const bank82Balance=Number(payments.bank82Balance||0);
   const free82=bank82Balance-reserveTotal82;
   const extraSavePossible=Math.max(0,free82);
@@ -372,24 +383,28 @@ function paymentSummary(){
   // 15日の振り分けに含まれない、毎月の既知支出を次サイクルの固定費として自動見込み。
   // ガソリンは別枠で管理しているためここに含める。NHKは2か月ごとの月平均で計算。
   const nextCycleFixed=Math.max(0,Number(settings.insurance||0))+nhkMonthly()+Math.max(0,Number(settings.fuelNow||0))+Math.max(0,Number(settings.auFixed||0));
-  const nextCycleCards=Math.max(0,Number(payments.nextCycleCards||0))+auUnconfirmed;
+  const nextCycleCards=Math.max(0,Number(payments.nextCycleCards||0))+auUnconfirmed+auPlannedUntilPayday;
   const nextCycleOther=Math.max(0,Number(payments.nextCycleOther||0));
   const nextCycleReserve=nextCycleLiving+nextCycleFixed+nextCycleCards+nextCycleOther;
   const trueSurplus=balanceAfterAllocation-nextCycleReserve;
   const safeExtraSave=Math.max(0,trueSurplus);
-  return {needToJibun,reserveCards82,auUnconfirmed,auLivingBudget,auLivingRemaining,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
+  return {needToJibun,reserveCards82,auUnconfirmed,auLivingBudget,auLivingSpent,auLivingRemaining,auTodayAvailable,auPlannedUntilPayday,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,cashLivingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
 }
 function renderPayments(){
   document.querySelectorAll('[data-payment]').forEach(el=>el.value=payments[el.dataset.payment]??0);
   const p=paymentSummary();
   document.getElementById('needToJibun').textContent=yen(p.needToJibun);
   document.getElementById('reserveCards82').textContent=yen(p.reserveCards82);
+  const als=document.getElementById('auLivingSpent'); if(als)als.textContent=yen(p.auLivingSpent);
   const alr=document.getElementById('auLivingRemaining'); if(alr){alr.textContent=yen(p.auLivingRemaining);alr.className='value '+(p.auLivingRemaining>0?'good':'warn')}
-   const afb=document.getElementById('auFutureBill'); if(afb)afb.textContent=yen(p.auFutureBill);
+  const ata=document.getElementById('auTodayAvailable'); if(ata){ata.textContent=yen(p.auTodayAvailable);ata.className='value '+(p.auTodayAvailable>0?'blue':'warn')}
+  const app=document.getElementById('auPlannedUntilPayday'); if(app)app.textContent=yen(p.auPlannedUntilPayday);
+  const afb=document.getElementById('auFutureBill'); if(afb)afb.textContent=yen(p.auFutureBill);
    document.getElementById('mobilePendingOut').textContent=yen(p.mobilePending82);
   document.getElementById('paymentNeed82').textContent=yen(p.paymentNeed82);
   document.getElementById('daysToPayday').textContent=p.daysToPayday+'日';
   document.getElementById('livingUntilPayday').textContent=yen(p.livingUntilPayday);
+  const clp=document.getElementById('cashLivingUntilPaydayOut'); if(clp)clp.textContent=yen(p.cashLivingUntilPayday);
   document.getElementById('safetyBufferOut').textContent=yen(p.safetyBuffer82);
   document.getElementById('reserveTotal82').textContent=yen(p.reserveTotal82);
   const free=document.getElementById('free82'); free.textContent=p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82); free.className='value '+(p.free82>=0?'good':'bad');
@@ -421,11 +436,14 @@ function renderPayments(){
       '携帯 '+yen(p.mobilePending82),
       p.needToJibun>0?'auじぶん補充 '+yen(p.needToJibun):null,
       p.other82Reserve>0?'その他 '+yen(p.other82Reserve):null,
-      '給料日まで生活費 '+yen(p.livingUntilPayday),
+      p.cashLivingUntilPayday>0?'現金・口座生活費 '+yen(p.cashLivingUntilPayday):null,
       p.safetyBuffer82>0?'生活予備費 '+yen(p.safetyBuffer82):null
     ].filter(Boolean);
     const result=p.free82>=0?'残り '+yen(p.free82):'不足 '+yen(-p.free82);
-    bd.innerHTML='<strong>給料日前の内訳</strong><br>'+parts.join(' − ')+' ＝ <strong>'+result+'</strong><br><span style="color:#94a3b8">'+(p.shortage>0?'この不足は '+((p.nextPayday.getMonth()+1)+'/'+p.nextPayday.getDate())+' までに補充が必要です。':'給料日前の必要額は現在残高で確保できています。')+'</span><br><br><strong>次サイクルの見通し</strong><br><span style="color:#94a3b8">給与 '+yen(p.nextIncome)+' 入金 → 15日振り分け '+yen(p.paydayAllocation)+' → 次サイクル最低確保 '+yen(p.nextCycleReserve)+'。安全に貯金へ移せる額は '+yen(p.safeExtraSave)+' の予測です。</span>';
+    bd.innerHTML='<strong>給料日前の内訳</strong><br>'+parts.join(' − ')+' ＝ <strong>'+result+'</strong>'+
+      '<br><span style="color:#94a3b8">au PAY生活費は口座残高から二重に確保せず、給料日まで利用予定 '+yen(p.auPlannedUntilPayday)+' を将来カード請求として見込みます。今日の利用目安は '+yen(p.auTodayAvailable)+' です。</span>'+
+      '<br><span style="color:#94a3b8">'+(p.shortage>0?'この不足は '+((p.nextPayday.getMonth()+1)+'/'+p.nextPayday.getDate())+' までに補充が必要です。':'給料日前の必要額は現在残高で確保できています。')+'</span>'+
+      '<br><br><strong>次サイクルの見通し</strong><br><span style="color:#94a3b8">給与 '+yen(p.nextIncome)+' 入金 → 15日振り分け '+yen(p.paydayAllocation)+' → 次サイクル最低確保 '+yen(p.nextCycleReserve)+'。安全に貯金へ移せる額は '+yen(p.safeExtraSave)+' の予測です。</span>';
   }
 }
 const ocrFieldLabels={bank82Balance:'八十二銀行残高',jibunBalance:'auじぶん銀行残高',rakutenBalance:'楽天銀行残高',auNextBill:'au PAYゴールド次回請求',aeonNextBill:'イオンカード次回請求',apolloNextBill:'apollostation次回請求',mizuho:'みずほ銀行残高'};
@@ -618,7 +636,10 @@ function extractOcrCandidates(raw,sourceName,target='auto'){
     // 利用可能額は参考値としてのみ計算し、請求額には絶対反映しない
     const lim=/(?:ご利用可能枠)[\s\S]{0,60}?([0-9]{1,3}(?:,[0-9]{3})*)\s*円/.exec(compact);
     const rem=/(?:残り|ご利用可能額)[\s\S]{0,80}?([0-9]{1,3}(?:,[0-9]{3})*)\s*円/.exec(compact);
-    if(lim&&rem){const used=moneyNum(lim[1])-moneyNum(rem[1]); if(used>=0) ocrCandidates._auUsed={value:used,source:sourceName,score:1};}
+    if(lim&&rem){const used=moneyNum(lim[1])-moneyNum(rem[1]); if(used>=0) ocrCandidates._auUsed={value:used,source:sourceName,score:30};}
+    // au PAYカードアプリで「94,303円 / 100,000円」のように利用可能額と上限が並ぶ画面にも対応。
+    const availPair=/(?:ご利用可能額[\s\S]{0,120}?)?([0-9]{1,3}(?:,[0-9]{3})*)\s*円?\s*[\/／]\s*([0-9]{1,3}(?:,[0-9]{3})*)\s*円?/.exec(compact);
+    if(availPair){const available=moneyNum(availPair[1]),limit=moneyNum(availPair[2]);const used=limit-available;if(limit>0&&used>=0&&used<=limit)ocrCandidates._auUsed={value:used,source:sourceName+'（利用可能額から算出）',score:35};}
   }
   // 自動判定で何も取れなくても、選択画像の種類が指定されていれば必ず候補抽出を試す
   if(target&&target!=='auto'&&!ocrCandidates[target]) forcedTargetFallback(compact,target,sourceName);
@@ -632,7 +653,7 @@ function showOcrCandidates(){
     lines.push('');
   }
   Object.entries(ocrCandidates).forEach(([k,o])=>{
-    if(k==='_auUsed') lines.push('参考：au PAYゴールド利用枠の使用額 '+yen(o.value)+'（請求未確定の可能性）');
+    if(k==='_auUsed') lines.push('au PAYゴールド 未確定利用額候補 '+yen(o.value)+'（利用可能額から算出）');
     else lines.push((ocrFieldLabels[k]||k)+' → '+yen(o.value)+' 〔'+o.source+'〕');
   });
   det.textContent=lines.length?lines.join('\n'):'対応する金額を見つけられませんでした。別の画面か、金額がはっきり見える画像を試してください。';
@@ -885,6 +906,7 @@ async function runOcr(files){
 }
 function applyOcrCandidates(){
   Object.entries(ocrCandidates).forEach(([k,o])=>{
+    if(k==='_auUsed'){payments.auUnconfirmed=o.value;return;}
     if(k.startsWith('_'))return;
     if(k==='mizuho'){settings.mizuho=o.value;return;}
     if(k==='rakutenBalance'){localStorage.setItem('odyssey_rakuten_balance',String(o.value));return;}
@@ -896,7 +918,7 @@ function applyOcrCandidates(){
   const p=paymentSummary();
   const msg=document.getElementById('autoCalcMessage');
   if(msg){
-    msg.innerHTML='✅ OCR結果を反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 給料日まで生活費：<strong>'+yen(p.livingUntilPayday)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong> ／ 追加貯金上限：<strong>'+yen(p.extraSavePossible)+'</strong>';
+    msg.innerHTML='✅ OCR結果を反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 今日のau PAY目安：<strong>'+yen(p.auTodayAvailable)+'</strong> ／ 給料日までカード予算：<strong>'+yen(p.auPlannedUntilPayday)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong> ／ 追加貯金上限：<strong>'+yen(p.extraSavePossible)+'</strong>';
   }
   alert('認識結果を反映・保存しました。必要振替額と自由資金も自動計算しました。');
 }
