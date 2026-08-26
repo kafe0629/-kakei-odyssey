@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.8</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.9</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.8では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.9では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v1.8：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v1.9：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -376,15 +376,41 @@ function bestCurrencyAmount(text,mode='max'){
   if(mode==='first')return vals[0].value;
   return vals.reduce((a,b)=>b.value>a.value?b:a).value;
 }
+function zeroAwareMoney(text){
+  const t=jpNormalize(text).replace(/\s+/g,' ');
+  let m=/(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(t);
+  if(m)return moneyNum(m[1]);
+  // 専用クロップでは大きな数字単体も金額として扱う（日時・口座番号が入りにくい領域のみ）
+  const nums=[...t.matchAll(/(?:^|\D)([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{1,7})(?:\D|$)/g)].map(x=>moneyNum(x[1])).filter(x=>x!==null);
+  if(!nums.length)return null;
+  return nums.sort((a,b)=>b-a)[0];
+}
+function extractDedicatedCrop(text,target,sourceName){
+  const t=jpNormalize(text).replace(/\r/g,'');
+  let v=null;
+  if(target==='aeonNextBill'){
+    // 今月分が「未確定 ¥--」なら請求確定前として0円候補にする。
+    if(/未確定|(?:¥|￥)\s*(?:--|ー|-)/.test(t)){setOcrCandidate(target,0,sourceName+'（未確定）',30);return;}
+    v=zeroAwareMoney(t);
+  }else if(target==='auNextBill'){
+    // 「お支払金額」専用クロップなので利用可能額は入らない。
+    v=zeroAwareMoney(t);
+  }else if(target==='apolloNextBill'){
+    v=zeroAwareMoney(t);
+  }else if(target==='bank82Balance'||target==='mizuho'||target==='jibunBalance'||target==='rakutenBalance'){
+    v=zeroAwareMoney(t);
+  }
+  if(v!==null)setOcrCandidate(target,v,sourceName,30);
+}
 function forcedTargetFallback(text,target,sourceName){
   let v=null;
   if(target==='bank82Balance'||target==='mizuho'||target==='jibunBalance'){
-    v=bestCurrencyAmount(text,'max');
+    v=zeroAwareMoney(text);
   }else if(target==='auNextBill'||target==='aeonNextBill'||target==='apolloNextBill'){
     if(target==='aeonNextBill'&&/(?:お支払い額|お支払額)[\s\S]{0,50}?(?:¥|￥)\s*(?:--|-|ー)/.test(text)){setOcrCandidate(target,0,sourceName,15);return;}
     // 請求画面は「支払/請求」の近くを優先し、見つからなければ通貨候補の最大額
     let m=/(?:お支払(?:い)?(?:金額|額)|ご請求額|請求(?:金)?額)[\s\S]{0,140}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(text);
-    v=m?moneyNum(m[1]||m[2]):bestCurrencyAmount(text,'max');
+    v=m?moneyNum(m[1]||m[2]):null;
   }
   if(v!==null)setOcrCandidate(target,v,sourceName,10);
 }
@@ -466,11 +492,23 @@ async function preprocessImage(file,preset='default'){
     }else if(preset==='bank82Balance'){
       sx=Math.round(bmp.width*0.05); sy=Math.round(bmp.height*0.08);
       sw=Math.round(bmp.width*0.90); sh=Math.round(bmp.height*0.31);
-    }else if(preset==='jibunBalance'||preset==='rakutenBalance'){
-      sx=Math.round(bmp.width*0.02); sy=Math.round(bmp.height*0.10);
-      sw=Math.round(bmp.width*0.96); sh=Math.round(bmp.height*0.38);
+    }else if(preset==='jibunBalance'){
+      sx=Math.round(bmp.width*0.34); sy=Math.round(bmp.height*0.30);
+      sw=Math.round(bmp.width*0.42); sh=Math.round(bmp.height*0.18);
+    }else if(preset==='rakutenBalance'){
+      sx=Math.round(bmp.width*0.58); sy=Math.round(bmp.height*0.27);
+      sw=Math.round(bmp.width*0.38); sh=Math.round(bmp.height*0.20);
+    }else if(preset==='auBill'){
+      sx=Math.round(bmp.width*0.04); sy=Math.round(bmp.height*0.30);
+      sw=Math.round(bmp.width*0.52); sh=Math.round(bmp.height*0.18);
+    }else if(preset==='aeonBill'){
+      sx=Math.round(bmp.width*0.06); sy=Math.round(bmp.height*0.27);
+      sw=Math.round(bmp.width*0.88); sh=Math.round(bmp.height*0.22);
+    }else if(preset==='apolloBill'){
+      sx=Math.round(bmp.width*0.50); sy=Math.round(bmp.height*0.13);
+      sw=Math.round(bmp.width*0.45); sh=Math.round(bmp.height*0.16);
     }
-    const specialized=preset==='mizuhoBalance'||preset==='bank82Balance'||preset==='jibunBalance'||preset==='rakutenBalance'||preset==='cardTop';
+    const specialized=['mizuhoBalance','bank82Balance','jibunBalance','rakutenBalance','auBill','aeonBill','apolloBill'].includes(preset);
     const maxW=specialized?2200:1800;
     const scale=Math.min(specialized?3:2,maxW/sw);
     const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
@@ -482,7 +520,7 @@ async function preprocessImage(file,preset='default'){
       if(preset==='mizuhoBalance'){
         // 青背景に白文字なので、白文字を黒・背景を白にして数字を読みやすくする。
         const z=y>135?0:255; d[i]=d[i+1]=d[i+2]=z;
-      }else if(preset==='bank82Balance'||preset==='jibunBalance'){
+      }else if(['bank82Balance','jibunBalance','rakutenBalance','auBill','aeonBill','apolloBill'].includes(preset)){
         const z=y>165?0:255; d[i]=d[i+1]=d[i+2]=z;
       }else{
         const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;
@@ -516,22 +554,44 @@ async function runOcr(files){
         const crop=await preprocessImage(files[i],'mizuhoBalance');
         const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
         ocrRawChunks.push('['+files[i].name+' / みずほ残高エリア]\n'+cropTxt);
-        forcedTargetFallback(jpNormalize(cropTxt),'mizuho',files[i].name);
+        extractDedicatedCrop(cropTxt,'mizuho',files[i].name);
         if(!ocrCandidates.mizuho) extractOcrCandidates(txt,files[i].name,'mizuho');
       }else if(detected==='bank82Balance'){
         const crop=await preprocessImage(files[i],'bank82Balance');
         const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
         ocrRawChunks.push('['+files[i].name+' / 八十二残高エリア]\n'+cropTxt);
-        forcedTargetFallback(jpNormalize(cropTxt),'bank82Balance',files[i].name);
+        extractDedicatedCrop(cropTxt,'bank82Balance',files[i].name);
         if(!ocrCandidates.bank82Balance) extractOcrCandidates(txt,files[i].name,'bank82Balance');
       }else if(detected==='jibunBalance'){
         const crop=await preprocessImage(files[i],'jibunBalance');
         const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
         ocrRawChunks.push('['+files[i].name+' / auじぶん残高エリア]\n'+cropTxt);
-        forcedTargetFallback(jpNormalize(cropTxt),'jibunBalance',files[i].name);
+        extractDedicatedCrop(cropTxt,'jibunBalance',files[i].name);
         if(!ocrCandidates.jibunBalance) extractOcrCandidates(txt,files[i].name,'jibunBalance');
       }else if(detected==='rakutenBalance'){
-        extractOcrCandidates(txt,files[i].name,'rakutenBalance');
+        const crop=await preprocessImage(files[i],'rakutenBalance');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / 楽天銀行残高エリア]\n'+cropTxt);
+        extractDedicatedCrop(cropTxt,'rakutenBalance',files[i].name);
+        if(!ocrCandidates.rakutenBalance) extractOcrCandidates(txt,files[i].name,'rakutenBalance');
+      }else if(detected==='auNextBill'){
+        const crop=await preprocessImage(files[i],'auBill');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / au PAYお支払金額エリア]\n'+cropTxt);
+        extractDedicatedCrop(cropTxt,'auNextBill',files[i].name);
+        if(!ocrCandidates.auNextBill) extractOcrCandidates(txt,files[i].name,'auNextBill');
+      }else if(detected==='aeonNextBill'){
+        const crop=await preprocessImage(files[i],'aeonBill');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / イオンお支払い額エリア]\n'+cropTxt);
+        extractDedicatedCrop(cropTxt,'aeonNextBill',files[i].name);
+        if(!ocrCandidates.aeonNextBill) extractOcrCandidates(txt,files[i].name,'aeonNextBill');
+      }else if(detected==='apolloNextBill'){
+        const crop=await preprocessImage(files[i],'apolloBill');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / apollostationお支払額エリア]\n'+cropTxt);
+        extractDedicatedCrop(cropTxt,'apolloNextBill',files[i].name);
+        if(!ocrCandidates.apolloNextBill) extractOcrCandidates(txt,files[i].name,'apolloNextBill');
       }else if(detected!=='unknown'){
         extractOcrCandidates(txt,files[i].name,detected);
       }else{
