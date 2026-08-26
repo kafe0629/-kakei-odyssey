@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="家計・オデッセイ" />
+  <link rel="manifest" href="manifest.json" />
+  <title>家計・オデッセイ資金管理</title>
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#121a2b; --panel2:#182235; --text:#f8fafc; --muted:#94a3b8;
+      --line:#263247; --accent:#60a5fa; --accent2:#22c55e; --warn:#f59e0b; --danger:#fb7185;
+      --radius:18px; --shadow:0 10px 35px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:linear-gradient(180deg,#07101e 0%,#0b1020 45%,#0a0f1c 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100%}
+    body{padding:env(safe-area-inset-top) 0 calc(86px + env(safe-area-inset-bottom));}
+    button,input,select{font:inherit}
+    .app{max-width:720px;margin:0 auto;min-height:100vh}
+    header{position:sticky;top:0;z-index:20;background:rgba(7,16,30,.88);backdrop-filter:blur(18px);padding:16px 18px 12px;border-bottom:1px solid rgba(148,163,184,.12)}
+    header .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    header h1{font-size:23px;margin:4px 0 0}
+    main{padding:16px}
+    section{display:none;animation:fade .18s ease}
+    section.active{display:block}
+    @keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .card{background:linear-gradient(180deg,rgba(24,34,53,.96),rgba(18,26,43,.96));border:1px solid rgba(148,163,184,.13);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow)}
+    .card.full{grid-column:1/-1}
+    .label{font-size:12px;color:var(--muted)}
+    .kpi{font-size:25px;font-weight:750;margin-top:7px;letter-spacing:-.02em}
+    .sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+    .progress{height:9px;background:#0a1220;border-radius:999px;overflow:hidden;margin-top:10px;border:1px solid #1d2a3e}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#818cf8);border-radius:999px}
+    .progress.green > span{background:linear-gradient(90deg,#22c55e,#14b8a6)}
+    h2{font-size:18px;margin:6px 0 12px}
+    h3{font-size:15px;margin:0 0 10px}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(148,163,184,.1)}
+    .row:last-child{border-bottom:none}
+    .row .name{font-size:14px}
+    .row .value{font-weight:700;text-align:right;white-space:nowrap}
+    .good{color:#86efac}.warn{color:#fbbf24}.bad{color:#fda4af}.blue{color:#93c5fd}
+    .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:5px 8px;border-radius:999px;background:#0d1728;color:#bfdbfe;border:1px solid #243652}
+    .sectionTitle{display:flex;align-items:center;justify-content:space-between;margin:8px 2px 10px}
+    .sectionTitle h2{margin:0}
+    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field.full{grid-column:1/-1}
+    label{font-size:12px;color:var(--muted)}
+    input,select{width:100%;background:#0a1220;color:var(--text);border:1px solid #2a3953;border-radius:12px;padding:12px 13px;outline:none}
+    input:focus,select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.12)}
+    .btn{border:0;border-radius:13px;padding:12px 14px;background:#2563eb;color:white;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#172235;border:1px solid #30415f;color:#dbeafe}
+    .btn.danger{background:#3b1420;border:1px solid #6e2435;color:#fecdd3}
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap}
+    .note{font-size:12px;line-height:1.65;color:#cbd5e1;background:#0d1728;border:1px solid #243652;border-radius:14px;padding:12px}
+    .schedule{display:grid;gap:9px}
+    .scheduleItem{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;background:#0d1728;border:1px solid #243652;border-radius:14px;padding:11px}
+    .day{font-size:18px;font-weight:800;color:#bfdbfe;text-align:center}
+    .schedTitle{font-size:13px;font-weight:700}
+    .schedSub{font-size:11px;color:var(--muted);margin-top:3px}
+    .moneyIn{color:#86efac}.moneyOut{color:#fda4af}
+    .tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(8,14,25,.94);backdrop-filter:blur(22px);border-top:1px solid rgba(148,163,184,.16);padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+    .tabsInner{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+    .tab{background:transparent;border:0;color:#7f8da5;font-size:10px;padding:7px 2px;border-radius:12px;cursor:pointer}
+    .tab span{display:block;font-size:20px;margin-bottom:2px}
+    .tab.active{color:#dbeafe;background:#142037}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,.12)}
+    th{color:#94a3b8;font-weight:600}
+    td:last-child,th:last-child{text-align:right}
+    .bigHero{padding:18px;background:radial-gradient(circle at 15% 10%,rgba(96,165,250,.22),transparent 34%),linear-gradient(145deg,#182b4c,#111a2b);border:1px solid #29446b;border-radius:22px;box-shadow:var(--shadow);margin-bottom:14px}
+    .heroTitle{font-size:13px;color:#bfdbfe}.heroMoney{font-size:34px;font-weight:800;margin:8px 0 4px}.heroSub{font-size:12px;color:#cbd5e1}
+    .separator{height:1px;background:rgba(148,163,184,.12);margin:13px 0}
+    .miniGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .mini{background:rgba(7,16,30,.55);border:1px solid rgba(148,163,184,.12);border-radius:13px;padding:10px}
+    .mini .v{font-weight:750;margin-top:4px;font-size:13px}
+    .historyItem{display:grid;grid-template-columns:72px 1fr auto;gap:9px;padding:10px 0;border-bottom:1px solid rgba(148,163,184,.1)}
+    .historyItem:last-child{border-bottom:none}
+    .empty{color:var(--muted);font-size:13px;padding:16px 0}
+    @media(max-width:430px){.grid,.formGrid{grid-template-columns:1fr 1fr}.kpi{font-size:21px}.miniGrid{grid-template-columns:1fr 1fr 1fr}.scheduleItem{grid-template-columns:50px 1fr}.scheduleItem .pill{display:none}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
+    <h1>家計・オデッセイ資金管理</h1>
+  </header>
+  <main>
+    <section id="home" class="active">
+      <div class="bigHero">
+        <div class="heroTitle">みずほ銀行 / 守るお金＋車資金</div>
+        <div class="heroMoney" id="heroMizuho">¥0</div>
+        <div class="heroSub" id="heroDate"></div>
+        <div class="progress green"><span id="purchaseProgress" style="width:0%"></span></div>
+        <div class="miniGrid">
+          <div class="mini"><div class="label">防衛資金まで</div><div class="v" id="remainEmergency">—</div></div>
+          <div class="mini"><div class="label">購入目標まで</div><div class="v" id="remainPurchase">—</div></div>
+          <div class="mini"><div class="label">購入目安</div><div class="v" id="purchaseEta">—</div></div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card"><div class="label">生活防衛資金 達成率</div><div class="kpi" id="emergencyPct">0%</div><div class="progress"><span id="emergencyProgress"></span></div></div>
+        <div class="card"><div class="label">購入目標 達成率</div><div class="kpi" id="purchasePct">0%</div><div class="progress green"><span id="purchaseProgress2"></span></div></div>
+        <div class="card"><div class="label">銀行ローン月額</div><div class="kpi" id="loanMonthly">¥0</div><div class="sub">7年・ボーナスなしを基準</div></div>
+        <div class="card"><div class="label">購入後の既知項目後</div><div class="kpi" id="afterRemain">¥0</div><div class="sub">食費・日用品・光熱費・娯楽・タバコ等の枠</div></div>
+        <div class="card full">
+          <h3>15日の家計ルール</h3>
+          <div class="row"><div class="name">八十二 → みずほ</div><div class="value blue">¥97,500</div></div>
+          <div class="row"><div class="name">└ 貯金</div><div class="value">¥50,000</div></div>
+          <div class="row"><div class="name">└ 家賃</div><div class="value">¥45,000</div></div>
+          <div class="row"><div class="name">└ 県民共済</div><div class="value">¥2,500</div></div>
+          <div class="row"><div class="name">八十二 → 楽天銀行（教育資金）</div><div class="value">¥10,000</div></div>
+          <div class="row"><div class="name">NISA（12月開始予定）</div><div class="value">¥10,000</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="monthly">
+      <div class="sectionTitle"><h2>月次記録</h2><span class="pill">Money Forward補助</span></div>
+      <div class="card">
+        <div class="formGrid">
+          <div class="field full"><label>対象月</label><input type="month" id="monthKey"></div>
+          <div class="field"><label>食費</label><input type="number" id="mFood" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>日用品</label><input type="number" id="mDaily" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>光熱費</label><input type="number" id="mUtilities" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>外食・娯楽</label><input type="number" id="mFun" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>タバコ</label><input type="number" id="mTobacco" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>その他</label><input type="number" id="mOther" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>au PAYゴールド利用</label><input type="number" id="mAu" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>みずほ月末残高</label><input type="number" id="mMizuho" inputmode="numeric" placeholder="0"></div>
+        </div>
+        <div class="separator"></div>
+        <div class="row"><div class="name">変動生活費 合計</div><div class="value" id="monthlyVariable">¥0</div></div>
+        <div class="row"><div class="name">うちタバコ</div><div class="value warn" id="monthlyTobacco">¥0</div></div>
+        <div class="btnRow" style="margin-top:12px"><button class="btn" id="saveMonth">この月を保存</button><button class="btn secondary" id="exportCsv">CSV書き出し</button></div>
+      </div>
+      <div class="sectionTitle" style="margin-top:18px"><h2>履歴</h2></div>
+      <div class="card" id="history"></div>
+    </section>
+
+    <section id="car">
+      <div class="sectionTitle"><h2>オデッセイ計画</h2><span class="pill">e:HEV ABSOLUTE・EX</span></div>
+      <div class="card">
+        <div class="row"><div class="name">乗り出し想定</div><div class="value" id="carTotalOut">¥0</div></div>
+        <div class="row"><div class="name">頭金</div><div class="value" id="carDownOut">¥0</div></div>
+        <div class="row"><div class="name">借入額</div><div class="value" id="carLoanOut">¥0</div></div>
+        <div class="row"><div class="name">金利</div><div class="value" id="carRateOut">0%</div></div>
+        <div class="row"><div class="name">期間</div><div class="value" id="carYearsOut">0年</div></div>
+        <div class="row"><div class="name">月返済</div><div class="value blue" id="carMonthlyOut">¥0</div></div>
+      </div>
+      <div class="grid" style="margin-top:12px">
+        <div class="card"><div class="label">購入前の既知支出後</div><div class="kpi" id="beforeRemain">¥0</div></div>
+        <div class="card"><div class="label">購入後の既知支出後</div><div class="kpi" id="afterRemain2">¥0</div></div>
+        <div class="card full"><h3>購入条件</h3><div id="purchaseChecks"></div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h3>貯金シナリオ</h3>
+        <table><thead><tr><th>毎月純増</th><th>350万円まで</th><th>目安</th></tr></thead><tbody id="scenarioRows"></tbody></table>
+      </div>
+    </section>
+
+    <section id="schedule">
+      <div class="sectionTitle"><h2>口座・カード予定</h2><span class="pill">カレンダー基準</span></div>
+      <div class="schedule">
+        <div class="scheduleItem"><div class="day">2日</div><div><div class="schedTitle">イオンカード 引落</div><div class="schedSub">八十二銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">4日</div><div><div class="schedTitle">au PAYゴールド 引落</div><div class="schedSub">auじぶん銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">7日</div><div><div class="schedTitle">apollostation 引落</div><div class="schedSub">八十二銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">10日</div><div><div class="schedTitle">3カード締め日</div><div class="schedSub">au PAY・イオン・apollostation</div></div><span class="pill">締め</span></div>
+        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub">みずほ97,500円 / 教育1万円 / NISA</div></div><span class="pill">振分</span></div>
+        <div class="scheduleItem"><div class="day">18日</div><div><div class="schedTitle">au PAY確定＋apollostation確認</div><div class="schedSub">auは確定後、八十二→auじぶんへ一括移動</div></div><span class="pill">確認</span></div>
+        <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認</div></div><span class="pill">確認</span></div>
+        <div class="scheduleItem"><div class="day">27日</div><div><div class="schedTitle">自動車保険</div><div class="schedSub">八十二銀行 / 現在15,270円</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">Money Forward ME 月次確認</div><div class="schedSub">支出・未分類・タバコ・貯金進捗を確認</div></div><span class="pill">点検</span></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>口座の役割</h3>
+        <div class="row"><div class="name">八十二銀行</div><div class="value">給与・生活・カード</div></div>
+        <div class="row"><div class="name">みずほ銀行</div><div class="value">防衛資金＋車</div></div>
+        <div class="row"><div class="name">楽天銀行</div><div class="value">教育資金</div></div>
+        <div class="row"><div class="name">auじぶん銀行</div><div class="value">au PAY引落</div></div>
+      </div>
+    </section>
+
+    <section id="settings">
+      <div class="sectionTitle"><h2>設定</h2><span class="pill">端末内保存</span></div>
+      <div class="card">
+        <div class="formGrid">
+          <div class="field"><label>手取り月収</label><input data-setting="income" type="number" inputmode="numeric"></div>
+          <div class="field"><label>みずほ現在残高</label><input data-setting="mizuho" type="number" inputmode="numeric"></div>
+          <div class="field"><label>購入前みずほ純増/月</label><input data-setting="saveMonthly" type="number" inputmode="numeric"></div>
+          <div class="field"><label>生活防衛資金目標</label><input data-setting="emergencyTarget" type="number" inputmode="numeric"></div>
+          <div class="field"><label>オデッセイ頭金目標</label><input data-setting="downPayment" type="number" inputmode="numeric"></div>
+          <div class="field"><label>みずほ総目標</label><input data-setting="purchaseTarget" type="number" inputmode="numeric"></div>
+          <div class="field"><label>オデッセイ乗り出し想定</label><input data-setting="carTotal" type="number" inputmode="numeric"></div>
+          <div class="field"><label>銀行ローン金利（%）</label><input data-setting="ratePct" type="number" step="0.01" inputmode="decimal"></div>
+          <div class="field"><label>ローン期間（年）</label><input data-setting="loanYears" type="number" inputmode="numeric"></div>
+          <div class="field"><label>家賃本人負担</label><input data-setting="rent" type="number" inputmode="numeric"></div>
+          <div class="field"><label>県民共済</label><input data-setting="kyosai" type="number" inputmode="numeric"></div>
+          <div class="field"><label>教育資金（本人分）</label><input data-setting="education" type="number" inputmode="numeric"></div>
+          <div class="field"><label>NISA</label><input data-setting="nisa" type="number" inputmode="numeric"></div>
+          <div class="field"><label>自動車保険</label><input data-setting="insurance" type="number" inputmode="numeric"></div>
+          <div class="field"><label>現在ガソリン</label><input data-setting="fuelNow" type="number" inputmode="numeric"></div>
+          <div class="field"><label>au固定的支出</label><input data-setting="auFixed" type="number" inputmode="numeric"></div>
+          <div class="field"><label>購入後みずほ積立</label><input data-setting="afterSave" type="number" inputmode="numeric"></div>
+          <div class="field"><label>購入後ガソリン</label><input data-setting="fuelAfter" type="number" inputmode="numeric"></div>
+        </div>
+        <div class="separator"></div>
+        <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
+      </div>
+      <div class="note" style="margin-top:12px">データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:10px">iPhoneでホーム画面アプリとして使うには、このフォルダをHTTPSで公開してSafariで開き、共有 →「ホーム画面に追加」を選びます。GitHub Pages等の静的ホスティングにそのまま置ける構成です。</div>
+    </section>
+  </main>
+</div>
+
+<nav class="tabs"><div class="tabsInner">
+  <button class="tab active" data-tab="home"><span>🏠</span>ホーム</button>
+  <button class="tab" data-tab="monthly"><span>🧾</span>月次</button>
+  <button class="tab" data-tab="car"><span>🚙</span>車計画</button>
+  <button class="tab" data-tab="schedule"><span>📅</span>予定</button>
+  <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
+</div></nav>
+
+<script>
+const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,nisa:10000,insurance:15270,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
+let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
+let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
+const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
+const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
+function loanMonthly(){const principal=Math.max(0,settings.carTotal-settings.downPayment);const n=settings.loanYears*12;const r=(settings.ratePct/100)/12;if(!n)return 0;if(r===0)return principal/n;return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
+function addMonths(date,months){const d=new Date(date);d.setMonth(d.getMonth()+months);return d}
+function ym(d){return d.toLocaleDateString('ja-JP',{year:'numeric',month:'short'})}
+function knownBefore(){return settings.rent+settings.kyosai+settings.saveMonthly+settings.education+settings.nisa+settings.insurance+settings.fuelNow+settings.auFixed}
+function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+settings.fuelAfter+settings.auFixed+loanMonthly()}
+function render(){
+  const emRatio=settings.mizuho/settings.emergencyTarget*100; const puRatio=settings.mizuho/settings.purchaseTarget*100;
+  const emRemain=Math.max(0,settings.emergencyTarget-settings.mizuho); const puRemain=Math.max(0,settings.purchaseTarget-settings.mizuho);
+  const emMonths=Math.ceil(emRemain/Math.max(1,settings.saveMonthly)); const puMonths=Math.ceil(puRemain/Math.max(1,settings.saveMonthly));
+  document.getElementById('heroMizuho').textContent=yen(settings.mizuho); document.getElementById('heroDate').textContent='毎月 '+yen(settings.saveMonthly)+' 純増を基本に計算';
+  document.getElementById('remainEmergency').textContent=yen(emRemain); document.getElementById('remainPurchase').textContent=yen(puRemain); document.getElementById('purchaseEta').textContent=puRemain===0?'達成済':ym(addMonths(new Date(),puMonths));
+  document.getElementById('emergencyPct').textContent=Math.min(100,emRatio).toFixed(1)+'%'; document.getElementById('purchasePct').textContent=Math.min(100,puRatio).toFixed(1)+'%';
+  document.getElementById('emergencyProgress').style.width=Math.min(100,emRatio)+'%'; document.getElementById('purchaseProgress').style.width=Math.min(100,puRatio)+'%'; document.getElementById('purchaseProgress2').style.width=Math.min(100,puRatio)+'%';
+  document.getElementById('loanMonthly').textContent=yen(loanMonthly()); document.getElementById('afterRemain').textContent=yen(settings.income-knownAfter());
+  document.getElementById('beforeRemain').textContent=yen(settings.income-knownBefore()); document.getElementById('afterRemain2').textContent=yen(settings.income-knownAfter());
+  document.getElementById('carTotalOut').textContent=yen(settings.carTotal); document.getElementById('carDownOut').textContent=yen(settings.downPayment); document.getElementById('carLoanOut').textContent=yen(settings.carTotal-settings.downPayment); document.getElementById('carRateOut').textContent=settings.ratePct.toFixed(2)+'%'; document.getElementById('carYearsOut').textContent=settings.loanYears+'年'; document.getElementById('carMonthlyOut').textContent=yen(loanMonthly());
+  const checks=[['みずほ残高350万円以上',settings.mizuho>=settings.purchaseTarget],['頭金後も150万円残る',settings.mizuho-settings.downPayment>=settings.emergencyTarget],['銀行ローン7年・ボーナスなし',true],['NISA月1万円を継続',settings.nisa>=10000],['教育資金月1万円を継続',settings.education>=10000],['購入後みずほ月3万円以上',settings.afterSave>=30000]];
+  document.getElementById('purchaseChecks').innerHTML=checks.map(([t,ok])=>`<div class="row"><div class="name">${t}</div><div class="value ${ok?'good':'warn'}">${ok?'OK':'未達'}</div></div>`).join('');
+  const scenarios=[50000,70000,100000]; document.getElementById('scenarioRows').innerHTML=scenarios.map(v=>{const m=Math.ceil(puRemain/v);return `<tr><td>${yen(v)}</td><td>${m}か月</td><td>${ym(addMonths(new Date(),m))}</td></tr>`}).join('');
+  document.querySelectorAll('[data-setting]').forEach(el=>el.value=settings[el.dataset.setting]);
+  renderHistory(); updateMonthTotals();
+}
+function renderHistory(){const h=document.getElementById('history');const keys=Object.keys(months).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k];const total=['food','daily','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">タバコ ${yen(m.tobacco)} / auカード ${yen(m.au)}</div></div><div class="value">${yen(m.mizuho)}</div></div>`}).join('')}
+function updateMonthTotals(){const ids=['mFood','mDaily','mUtilities','mFun','mTobacco','mOther'];const total=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyTobacco').textContent=yen(document.getElementById('mTobacco')?.value||0)}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
+['mFood','mDaily','mUtilities','mFun','mTobacco','mOther'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
+const now=new Date();document.getElementById('monthKey').value=now.toISOString().slice(0,7);
+document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}render();alert('保存しました')});
+document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));localStorage.setItem('odyssey_settings',JSON.stringify(settings));render();alert('設定を保存しました')});
+document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({settings,months},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
+document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','光熱費','外食・娯楽','タバコ','その他','au PAYゴールド利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.utilities,m.fun,m.tobacco,m.other,m.au,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name":"家計・オデッセイ資金管理",
+  "short_name":"家計・車資金",
+  "start_url":"./index.html",
+  "display":"standalone",
+  "background_color":"#0b1020",
+  "theme_color":"#111827",
+  "lang":"ja",
+  "description":"家計、生活防衛資金、教育資金、NISA、オデッセイ購入計画をまとめて管理するアプリ"
+}
