@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.9</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v3.0</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -141,6 +141,7 @@
             <div class="field"><label>携帯料金（八十二・未引落し）</label><input data-payment="mobilePending82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>八十二銀行に残す生活予備費（任意）</label><input data-payment="safetyBuffer82" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>1日あたり生活費（給料日まで）</label><input data-payment="dailyLivingCost" type="number" inputmode="numeric" placeholder="0"></div>
           </div>
           <div class="ocrBox">
             <div class="ocrHead"><div><strong>📷 スクショから自動入力</strong><div class="sub">銀行・カードのスクリーンショットを選択</div></div><span class="pill">端末内OCR</span></div>
@@ -154,13 +155,15 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.9では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v3.0では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
           <div class="row"><div class="name">八十二に残すカード請求分</div><div class="value" id="reserveCards82">¥0</div></div>
           <div class="row"><div class="name">携帯料金の確保</div><div class="value" id="mobilePendingOut">¥0</div></div>
           <div class="row"><div class="name">支払いに必要な確保額</div><div class="value" id="paymentNeed82">¥0</div></div>
+          <div class="row"><div class="name">次の15日までの日数</div><div class="value blue" id="daysToPayday">0日</div></div>
+          <div class="row"><div class="name">給料日までの生活費確保</div><div class="value" id="livingUntilPayday">¥0</div></div>
           <div class="row"><div class="name">生活予備費</div><div class="value" id="safetyBufferOut">¥0</div></div>
           <div class="row"><div class="name">八十二の確保総額</div><div class="value" id="reserveTotal82">¥0</div></div>
           <div class="row"><div class="name">八十二銀行で自由に使える額</div><div class="value good" id="free82">¥0</div></div>
@@ -169,7 +172,7 @@
           <div class="row"><div class="name">現在の判定</div><div class="value good" id="paymentStatus">余裕あり</div></div>
           <div id="autoCalcMessage" class="note" style="margin-top:10px">OCR結果を反映すると、残高・請求額を保存して、必要振替額・確保額・自由資金・追加貯金可能額まで自動計算します。</div>
           <div class="btnRow" style="margin-top:12px"><button class="btn" id="savePayments">支払管理を保存</button></div>
-          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「生活予備費」は自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
+          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費」は次の給料日（15日）までの日数×設定額を自動確保します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
         </div>
       </div>
     </section>
@@ -274,7 +277,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v2.9：OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v3.0：次の給料日（毎月15日）までの生活費を日数×1日あたり生活費で自動確保します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -293,7 +296,7 @@
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
 let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
-const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0};
+const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000};
 let payments={...paymentDefaults,...JSON.parse(localStorage.getItem('odyssey_payments')||'{}')};
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
@@ -311,12 +314,18 @@ function paymentSummary(){
   const mobilePending82=Math.max(0,Number(payments.mobilePending82||0));
   const paymentNeed82=needToJibun+reserveCards82+mobilePending82+Number(payments.other82Reserve||0);
   const safetyBuffer82=Math.max(0,Number(payments.safetyBuffer82||0));
-  const reserveTotal82=paymentNeed82+safetyBuffer82;
+  const today=new Date(); today.setHours(0,0,0,0);
+  let nextPayday=new Date(today.getFullYear(),today.getMonth(),15);
+  if(today.getDate()>=15) nextPayday=new Date(today.getFullYear(),today.getMonth()+1,15);
+  const daysToPayday=Math.max(0,Math.ceil((nextPayday-today)/86400000));
+  const dailyLivingCost=Math.max(0,Number(payments.dailyLivingCost||0));
+  const livingUntilPayday=daysToPayday*dailyLivingCost;
+  const reserveTotal82=paymentNeed82+safetyBuffer82+livingUntilPayday;
   const free82=Number(payments.bank82Balance||0)-reserveTotal82;
   const extraSavePossible=Math.max(0,free82);
   const shortage=Math.max(0,-free82);
   const jibunAfter=Number(payments.jibunBalance||0)-Number(payments.auNextBill||0);
-  return {needToJibun,reserveCards82,mobilePending82,paymentNeed82,safetyBuffer82,reserveTotal82,free82,extraSavePossible,shortage,jibunAfter};
+  return {needToJibun,reserveCards82,mobilePending82,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,reserveTotal82,free82,extraSavePossible,shortage,jibunAfter};
 }
 function renderPayments(){
   document.querySelectorAll('[data-payment]').forEach(el=>el.value=payments[el.dataset.payment]??0);
@@ -325,6 +334,8 @@ function renderPayments(){
   document.getElementById('reserveCards82').textContent=yen(p.reserveCards82);
   document.getElementById('mobilePendingOut').textContent=yen(p.mobilePending82);
   document.getElementById('paymentNeed82').textContent=yen(p.paymentNeed82);
+  document.getElementById('daysToPayday').textContent=p.daysToPayday+'日';
+  document.getElementById('livingUntilPayday').textContent=yen(p.livingUntilPayday);
   document.getElementById('safetyBufferOut').textContent=yen(p.safetyBuffer82);
   document.getElementById('reserveTotal82').textContent=yen(p.reserveTotal82);
   const free=document.getElementById('free82'); free.textContent=p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82); free.className='value '+(p.free82>=0?'good':'bad');
@@ -801,7 +812,7 @@ function applyOcrCandidates(){
   const p=paymentSummary();
   const msg=document.getElementById('autoCalcMessage');
   if(msg){
-    msg.innerHTML='✅ OCR結果を反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong> ／ 追加貯金上限：<strong>'+yen(p.extraSavePossible)+'</strong>';
+    msg.innerHTML='✅ OCR結果を反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 給料日まで生活費：<strong>'+yen(p.livingUntilPayday)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong> ／ 追加貯金上限：<strong>'+yen(p.extraSavePossible)+'</strong>';
   }
   alert('認識結果を反映・保存しました。必要振替額と自由資金も自動計算しました。');
 }
