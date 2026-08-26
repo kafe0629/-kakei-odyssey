@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.1では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.2では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v2.0：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v2.2：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -345,8 +345,8 @@ function detectScreenType(raw){
 
   // au PAYカード：ブランド文字がOCRされなくても、画面固有文言で判定
   if(/au\s*PAY\s*カード|au\s*PAYゴールド|au PAY Card/i.test(t))add('auNextBill',14);
-  if(/フィッシング詐欺にあわないために|今月のお支払口座|Pontaポイント|お支払方法の変更|ご利用可能額/i.test(t))add('auNextBill',7);
-  if(/お支払金額[\s\S]{0,100}確定|お支払日[\s\S]{0,80}(?:9月4日|4日)/i.test(t))add('auNextBill',6);
+  if(/フィッシング詐欺にあわないために|今月のお支払口座|Pontaポイント|お支払方法の変更|ご利用可能額|ご利用可能ポイント|Ponta/i.test(t))add('auNextBill',7);
+  if(/お支払金額[\s\S]{0,120}確定|お支払日[\s\S]{0,100}(?:9月4日|4日)|2回払い|5000\s*Ponta|Pontaポイントプレゼント/i.test(t))add('auNextBill',7);
 
   // イオンカード
   if(/AEON\s*Pay|イオンカード|WAON\s*POINT/i.test(t))add('aeonNextBill',14);
@@ -593,6 +593,22 @@ async function visualScreenHint(file){
   }catch{}
   return 'unknown';
 }
+
+async function unknownScreenProbe(worker,file,sourceName){
+  // v2.2: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
+  // この領域は「お支払金額・確定・お支払日」が集中し、利用可能額100,000円は下部なので入りにくい。
+  try{
+    const crop=await preprocessImage(file,'auBill');
+    const rc=await worker.recognize(crop); const ct=jpNormalize(rc?.data?.text||'').replace(/\s+/g,' ');
+    ocrRawChunks.push('['+sourceName+' / 未判定→au PAY救済OCR]\n'+(rc?.data?.text||''));
+    const auCue=/(お支払|支払金額|確定|お支払日|明細確認|今月のお支払口座|Ponta|9月4日|4日)/i.test(ct);
+    let m=/(?:お支払金額|お支払い金額|お支払額|ご請求額|請求(?:金)?額)[\s\S]{0,100}?(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(ct);
+    if(auCue && m){ setOcrCandidate('auNextBill',moneyNum(m[1]),sourceName+'（au PAY救済）',45); return 'auNextBill'; }
+    // OCRがラベルを落としても、請求欄専用クロップ内に「0円」と支払日らしき文字があれば0円として救済。
+    if(auCue && /(?:^|\s)0\s*円(?:\s|$)/.test(ct)){ setOcrCandidate('auNextBill',0,sourceName+'（au PAY救済）',44); return 'auNextBill'; }
+  }catch(e){console.warn('unknownScreenProbe',e)}
+  return 'unknown';
+}
 async function runOcr(files){
   if(!window.Tesseract){alert('OCR機能を読み込めませんでした。インターネット接続を確認して再度開いてください。');return;}
   ocrCandidates={};ocrRawChunks=[];ocrClassifications=[];
@@ -613,6 +629,10 @@ async function runOcr(files){
       if(selected==='auto'&&detected==='unknown'){
         const vh=await visualScreenHint(files[i]);
         if(vh!=='unknown')detected=vh;
+      }
+      // 全体OCR・色判定でも不明なら、au PAY請求欄を専用再OCRして判定を救済する。
+      if(selected==='auto'&&detected==='unknown'){
+        detected=await unknownScreenProbe(worker,files[i],files[i].name);
       }
       ocrClassifications.push({file:files[i].name,type:detected});
 
