@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.8</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.9</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -138,6 +138,7 @@
             <div class="field"><label>au PAYゴールド 次回請求（4日）</label><input data-payment="auNextBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>イオンカード 次回請求（2日）</label><input data-payment="aeonNextBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>apollostation 次回請求（7日）</label><input data-payment="apolloNextBill" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>携帯料金（八十二・未引落し）</label><input data-payment="mobilePending82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>八十二銀行に残す生活予備費（任意）</label><input data-payment="safetyBuffer82" type="number" inputmode="numeric" placeholder="0"></div>
           </div>
@@ -153,11 +154,12 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.8では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.9では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
           <div class="row"><div class="name">八十二に残すカード請求分</div><div class="value" id="reserveCards82">¥0</div></div>
+          <div class="row"><div class="name">携帯料金の確保</div><div class="value" id="mobilePendingOut">¥0</div></div>
           <div class="row"><div class="name">支払いに必要な確保額</div><div class="value" id="paymentNeed82">¥0</div></div>
           <div class="row"><div class="name">生活予備費</div><div class="value" id="safetyBufferOut">¥0</div></div>
           <div class="row"><div class="name">八十二の確保総額</div><div class="value" id="reserveTotal82">¥0</div></div>
@@ -167,7 +169,7 @@
           <div class="row"><div class="name">現在の判定</div><div class="value good" id="paymentStatus">余裕あり</div></div>
           <div id="autoCalcMessage" class="note" style="margin-top:10px">OCR結果を反映すると、残高・請求額を保存して、必要振替額・確保額・自由資金・追加貯金可能額まで自動計算します。</div>
           <div class="btnRow" style="margin-top:12px"><button class="btn" id="savePayments">支払管理を保存</button></div>
-          <div class="note" style="margin-top:10px">「その他 八十二銀行で確保する額」には、カード以外でこれから落ちる保険・NHK・旧支払方法のau料金など、その時点で残しておきたい金額だけ入力します。「生活予備費」は自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
+          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「生活予備費」は自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
         </div>
       </div>
     </section>
@@ -272,7 +274,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v2.8：OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v2.9：OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -291,7 +293,7 @@
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
 let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
-const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:20197,other82Reserve:0,safetyBuffer82:0};
+const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0};
 let payments={...paymentDefaults,...JSON.parse(localStorage.getItem('odyssey_payments')||'{}')};
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
@@ -306,20 +308,22 @@ function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+se
 function paymentSummary(){
   const needToJibun=Math.max(0,Number(payments.auNextBill||0)-Number(payments.jibunBalance||0));
   const reserveCards82=Number(payments.aeonNextBill||0)+Number(payments.apolloNextBill||0);
-  const paymentNeed82=needToJibun+reserveCards82+Number(payments.other82Reserve||0);
+  const mobilePending82=Math.max(0,Number(payments.mobilePending82||0));
+  const paymentNeed82=needToJibun+reserveCards82+mobilePending82+Number(payments.other82Reserve||0);
   const safetyBuffer82=Math.max(0,Number(payments.safetyBuffer82||0));
   const reserveTotal82=paymentNeed82+safetyBuffer82;
   const free82=Number(payments.bank82Balance||0)-reserveTotal82;
   const extraSavePossible=Math.max(0,free82);
   const shortage=Math.max(0,-free82);
   const jibunAfter=Number(payments.jibunBalance||0)-Number(payments.auNextBill||0);
-  return {needToJibun,reserveCards82,paymentNeed82,safetyBuffer82,reserveTotal82,free82,extraSavePossible,shortage,jibunAfter};
+  return {needToJibun,reserveCards82,mobilePending82,paymentNeed82,safetyBuffer82,reserveTotal82,free82,extraSavePossible,shortage,jibunAfter};
 }
 function renderPayments(){
   document.querySelectorAll('[data-payment]').forEach(el=>el.value=payments[el.dataset.payment]??0);
   const p=paymentSummary();
   document.getElementById('needToJibun').textContent=yen(p.needToJibun);
   document.getElementById('reserveCards82').textContent=yen(p.reserveCards82);
+  document.getElementById('mobilePendingOut').textContent=yen(p.mobilePending82);
   document.getElementById('paymentNeed82').textContent=yen(p.paymentNeed82);
   document.getElementById('safetyBufferOut').textContent=yen(p.safetyBuffer82);
   document.getElementById('reserveTotal82').textContent=yen(p.reserveTotal82);
@@ -425,7 +429,7 @@ function extractDedicatedCrop(text,target,sourceName){
     let m=/(?:お支払い額|お支払額|9月お支払い額)[\s\S]{0,80}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(t);
     v=m?moneyNum(m[1]||m[2]):null;
   }else if(target==='auNextBill'){
-    // v2.8: 専用クロップは「お支払金額」の数字部分だけ。0円を最優先し、日付・利用可能額は採用しない。
+    // v2.9: 専用クロップは「お支払金額」の数字部分だけ。0円を最優先し、日付・利用可能額は採用しない。
     if(/(?:^|\D)0\s*円(?:\D|$)/.test(t) || /^\s*0\s*$/.test(t)){
       setOcrCandidate(target,0,sourceName+'（支払金額0円）',80);return;
     }
@@ -443,7 +447,7 @@ function extractDedicatedCrop(text,target,sourceName){
   }else if(target==='mizuho'){
     v=zeroAwareMoney(t);
   }else if(target==='jibunBalance'){
-    // v2.8: 残高数字だけの専用クロップ。0円を最優先し、口座番号・銀行コード・メニュー番号は採用しない。
+    // v2.9: 残高数字だけの専用クロップ。0円を最優先し、口座番号・銀行コード・メニュー番号は採用しない。
     if(/(?:^|\D)0\s*円(?:\D|$)/.test(t) || /^\s*0\s*$/.test(t)){
       setOcrCandidate(target,0,sourceName+'（円普通預金残高0円）',80);return;
     }
@@ -623,7 +627,7 @@ async function visualScreenHint(file){
 }
 
 async function unknownScreenProbe(worker,file,sourceName){
-  // v2.8: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
+  // v2.9: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
   // この領域は「お支払金額・確定・お支払日」が集中し、利用可能額100,000円は下部なので入りにくい。
   try{
     const crop=await preprocessImage(file,'auBill');
@@ -638,7 +642,7 @@ async function unknownScreenProbe(worker,file,sourceName){
   return 'unknown';
 }
 async function recognizeDigitOnly(worker,file,preset,target,sourceName){
-  // v2.8: 0円画面向け。金額の「数字だけ」を極小範囲で再認識する。
+  // v2.9: 0円画面向け。金額の「数字だけ」を極小範囲で再認識する。
   try{
     const crop=await preprocessImage(file,preset);
     const texts=[];
@@ -650,7 +654,7 @@ async function recognizeDigitOnly(worker,file,preset,target,sourceName){
     }
     try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});}catch(e){}
     const joined=texts.join(' ').replace(/[^0-9]/g,'');
-    ocrRawChunks.push('['+sourceName+' / v2.8数字単独 '+preset+']\n'+texts.join('\n'));
+    ocrRawChunks.push('['+sourceName+' / v2.9数字単独 '+preset+']\n'+texts.join('\n'));
     // 3回のうち一度でも単独0が取れれば0円を最優先。
     if(texts.some(x=>String(x).replace(/\D/g,'')==='0')){
       setOcrCandidate(target,0,sourceName+'（数字単独0）',160); return true;
@@ -676,7 +680,7 @@ async function recognizeAmountCrop(worker,file,preset,target,sourceName){
   try{await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:'0123456789,.-¥￥円'});const r1=await worker.recognize(crop);texts.push(r1?.data?.text||'');}catch(e){}
   try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});const r2=await worker.recognize(crop);texts.push(r2?.data?.text||'');}catch(e){}
   try{await worker.setParameters({tessedit_pageseg_mode:'6',tessedit_char_whitelist:''});}catch(e){}
-  const joined=texts.join('\n');ocrRawChunks.push('['+sourceName+' / v2.8固定金額欄 '+preset+']\n'+joined);const t=jpNormalize(joined).replace(/\s+/g,' ');
+  const joined=texts.join('\n');ocrRawChunks.push('['+sourceName+' / v2.9固定金額欄 '+preset+']\n'+joined);const t=jpNormalize(joined).replace(/\s+/g,' ');
   if(target==='jibunBalance'||target==='auNextBill'){
     if(/(?:^|\D)0\s*(?:円|$)/.test(t)||/^\s*0\s*$/.test(t)){setOcrCandidate(target,0,sourceName+'（固定欄0円）',120);return true;}
     let m=/(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*(?:円|$)/.exec(t);
@@ -710,7 +714,7 @@ async function runOcr(files){
       let detected=selected==='auto'?detectScreenType(txt):selected;
       if(selected==='auto'){
         const vh=await visualScreenHint(files[i]);
-        // v2.8: auじぶん銀行のPonta表記などでau PAYカードに誤分類されるのを防ぐ。
+        // v2.9: auじぶん銀行のPonta表記などでau PAYカードに誤分類されるのを防ぐ。
         // 強い画面色ヒント（橙=じぶん、赤=apollo、青=みずほ、紫=AEON、緑=八十二）を優先する。
         if(vh!=='unknown' && (detected==='unknown' || detected==='auNextBill' || detected==='aeonNextBill')) detected=vh;
       }
@@ -734,7 +738,7 @@ async function runOcr(files){
         extractDedicatedCrop(cropTxt,'bank82Balance',files[i].name);
         if(!ocrCandidates.bank82Balance) extractOcrCandidates(txt,files[i].name,'bank82Balance');
       }else if(detected==='jibunBalance'){
-        // v2.8: auじぶん銀行は中央の大きな残高欄を最優先。
+        // v2.9: auじぶん銀行は中央の大きな残高欄を最優先。
         // iPhone端末内OCRでは大きな「0」が「5」に誤認される例があるため、
         // 専用クロップで5だけが取れた場合は0円表示として補正し、全体OCRへ戻さない。
         const digitOk=await recognizeDigitOnly(worker,files[i],'jibunDigit','jibunBalance',files[i].name);
@@ -755,7 +759,7 @@ async function runOcr(files){
         extractDedicatedCrop(cropTxt,'rakutenBalance',files[i].name);
         if(!ocrCandidates.rakutenBalance) extractOcrCandidates(txt,files[i].name,'rakutenBalance');
       }else if(detected==='auNextBill'){
-        // v2.8: お支払金額の大きな数字だけを先に読む。0円も必ず候補に出す。
+        // v2.9: お支払金額の大きな数字だけを先に読む。0円も必ず候補に出す。
         const digitOk=await recognizeDigitOnly(worker,files[i],'auDigit','auNextBill',files[i].name);
         const ok=digitOk||await recognizeAmountCrop(worker,files[i],'auBill','auNextBill',files[i].name);
         if(!ok && !ocrCandidates.auNextBill && /お支払金額|お支払い金額|今月のお支払口座|お支払方法の変更/i.test(txt) && /(?:^|\D)0\s*円(?:\D|$)/m.test(jpNormalize(txt))) setOcrCandidate('auNextBill',0,files[i].name+'（支払額0円救済）',140);
