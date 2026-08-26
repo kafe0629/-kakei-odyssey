@@ -88,7 +88,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理</h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -115,7 +115,9 @@
           <div class="row"><div class="name">└ 家賃</div><div class="value">¥45,000</div></div>
           <div class="row"><div class="name">└ 県民共済</div><div class="value">¥2,500</div></div>
           <div class="row"><div class="name">八十二 → 楽天銀行（教育資金）</div><div class="value">¥10,000</div></div>
-          <div class="row"><div class="name">NISA（12月開始予定）</div><div class="value">¥10,000</div></div>
+          <div class="row"><div class="name">NISA（2026年12月開始予定）</div><div class="value">¥10,000</div></div>
+          <div class="row"><div class="name">東京海上日動 自動車保険</div><div class="value">¥15,270 / 26日</div></div>
+          <div class="row"><div class="name">NHK</div><div class="value">¥2,200 / 2か月ごと</div></div>
         </div>
       </div>
     </section>
@@ -132,11 +134,15 @@
           <div class="field"><label>タバコ</label><input type="number" id="mTobacco" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>その他</label><input type="number" id="mOther" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>au PAYゴールド利用</label><input type="number" id="mAu" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>イオンカード利用</label><input type="number" id="mAeon" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>apollostation利用</label><input type="number" id="mApollo" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>みずほ月末残高</label><input type="number" id="mMizuho" inputmode="numeric" placeholder="0"></div>
         </div>
         <div class="separator"></div>
         <div class="row"><div class="name">変動生活費 合計</div><div class="value" id="monthlyVariable">¥0</div></div>
-        <div class="row"><div class="name">うちタバコ</div><div class="value warn" id="monthlyTobacco">¥0</div></div>
+        <div class="row"><div class="name">生活費（タバコ除く）</div><div class="value good" id="monthlyWithoutTobacco">¥0</div></div>
+        <div class="row"><div class="name">タバコ</div><div class="value warn" id="monthlyTobacco">¥0</div></div>
+        <div class="row"><div class="name">カード利用 合計</div><div class="value blue" id="monthlyCards">¥0</div></div>
         <div class="btnRow" style="margin-top:12px"><button class="btn" id="saveMonth">この月を保存</button><button class="btn secondary" id="exportCsv">CSV書き出し</button></div>
       </div>
       <div class="sectionTitle" style="margin-top:18px"><h2>履歴</h2></div>
@@ -171,10 +177,11 @@
         <div class="scheduleItem"><div class="day">4日</div><div><div class="schedTitle">au PAYゴールド 引落</div><div class="schedSub">auじぶん銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">7日</div><div><div class="schedTitle">apollostation 引落</div><div class="schedSub">八十二銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">10日</div><div><div class="schedTitle">3カード締め日</div><div class="schedSub">au PAY・イオン・apollostation</div></div><span class="pill">締め</span></div>
-        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub">みずほ97,500円 / 教育1万円 / NISA</div></div><span class="pill">振分</span></div>
+        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub">みずほ97,500円 / 教育1万円 / NISAは2026年12月開始</div></div><span class="pill">振分</span></div>
         <div class="scheduleItem"><div class="day">18日</div><div><div class="schedTitle">au PAY確定＋apollostation確認</div><div class="schedSub">auは確定後、八十二→auじぶんへ一括移動</div></div><span class="pill">確認</span></div>
-        <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認</div></div><span class="pill">確認</span></div>
-        <div class="scheduleItem"><div class="day">27日</div><div><div class="schedTitle">自動車保険</div><div class="schedSub">八十二銀行 / 現在15,270円</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認 / 妻の給料日</div></div><span class="pill">確認</span></div>
+        <div class="scheduleItem"><div class="day">26日</div><div><div class="schedTitle">東京海上日動 自動車保険</div><div class="schedSub">八十二銀行 / 15,270円</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">26日</div><div><div class="schedTitle">NHK 2,200円</div><div class="schedSub">2か月に1回（8月・10月・12月…を基準）</div></div><span class="pill">隔月</span></div>
         <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">Money Forward ME 月次確認</div><div class="schedSub">支出・未分類・タバコ・貯金進捗を確認</div></div><span class="pill">点検</span></div>
       </div>
       <div class="card" style="margin-top:14px">
@@ -202,8 +209,11 @@
           <div class="field"><label>家賃本人負担</label><input data-setting="rent" type="number" inputmode="numeric"></div>
           <div class="field"><label>県民共済</label><input data-setting="kyosai" type="number" inputmode="numeric"></div>
           <div class="field"><label>教育資金（本人分）</label><input data-setting="education" type="number" inputmode="numeric"></div>
+          <div class="field"><label>教育資金（妻分・参考）</label><input data-setting="educationWife" type="number" inputmode="numeric"></div>
           <div class="field"><label>NISA</label><input data-setting="nisa" type="number" inputmode="numeric"></div>
+          <div class="field"><label>NISA開始月</label><input data-setting-text="nisaStart" type="month"></div>
           <div class="field"><label>自動車保険</label><input data-setting="insurance" type="number" inputmode="numeric"></div>
+          <div class="field"><label>NHK（2か月ごとの実額）</label><input data-setting="nhk" type="number" inputmode="numeric"></div>
           <div class="field"><label>現在ガソリン</label><input data-setting="fuelNow" type="number" inputmode="numeric"></div>
           <div class="field"><label>au固定的支出</label><input data-setting="auFixed" type="number" inputmode="numeric"></div>
           <div class="field"><label>購入後みずほ積立</label><input data-setting="afterSave" type="number" inputmode="numeric"></div>
@@ -213,7 +223,7 @@
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
       <div class="note" style="margin-top:12px">データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
-      <div class="note" style="margin-top:10px">iPhoneでホーム画面アプリとして使うには、このフォルダをHTTPSで公開してSafariで開き、共有 →「ホーム画面に追加」を選びます。GitHub Pages等の静的ホスティングにそのまま置ける構成です。</div>
+      <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
 </div>
@@ -227,7 +237,7 @@
 </div></nav>
 
 <script>
-const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,nisa:10000,insurance:15270,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
+const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
 let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
@@ -235,8 +245,11 @@ const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
 function loanMonthly(){const principal=Math.max(0,settings.carTotal-settings.downPayment);const n=settings.loanYears*12;const r=(settings.ratePct/100)/12;if(!n)return 0;if(r===0)return principal/n;return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
 function addMonths(date,months){const d=new Date(date);d.setMonth(d.getMonth()+months);return d}
 function ym(d){return d.toLocaleDateString('ja-JP',{year:'numeric',month:'short'})}
-function knownBefore(){return settings.rent+settings.kyosai+settings.saveMonthly+settings.education+settings.nisa+settings.insurance+settings.fuelNow+settings.auFixed}
-function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+settings.fuelAfter+settings.auFixed+loanMonthly()}
+function nhkMonthly(){return Number(settings.nhk||0)/2}
+function currentYM(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function nisaNow(){return !settings.nisaStart||currentYM()>=settings.nisaStart?Number(settings.nisa||0):0}
+function knownBefore(){return settings.rent+settings.kyosai+settings.saveMonthly+settings.education+nisaNow()+settings.insurance+nhkMonthly()+settings.fuelNow+settings.auFixed}
+function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed+loanMonthly()}
 function render(){
   const emRatio=settings.mizuho/settings.emergencyTarget*100; const puRatio=settings.mizuho/settings.purchaseTarget*100;
   const emRemain=Math.max(0,settings.emergencyTarget-settings.mizuho); const puRemain=Math.max(0,settings.purchaseTarget-settings.mizuho);
@@ -252,19 +265,20 @@ function render(){
   document.getElementById('purchaseChecks').innerHTML=checks.map(([t,ok])=>`<div class="row"><div class="name">${t}</div><div class="value ${ok?'good':'warn'}">${ok?'OK':'未達'}</div></div>`).join('');
   const scenarios=[50000,70000,100000]; document.getElementById('scenarioRows').innerHTML=scenarios.map(v=>{const m=Math.ceil(puRemain/v);return `<tr><td>${yen(v)}</td><td>${m}か月</td><td>${ym(addMonths(new Date(),m))}</td></tr>`}).join('');
   document.querySelectorAll('[data-setting]').forEach(el=>el.value=settings[el.dataset.setting]);
+  document.querySelectorAll('[data-setting-text]').forEach(el=>el.value=settings[el.dataset.settingText]||'');
   renderHistory(); updateMonthTotals();
 }
-function renderHistory(){const h=document.getElementById('history');const keys=Object.keys(months).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k];const total=['food','daily','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">タバコ ${yen(m.tobacco)} / auカード ${yen(m.au)}</div></div><div class="value">${yen(m.mizuho)}</div></div>`}).join('')}
-function updateMonthTotals(){const ids=['mFood','mDaily','mUtilities','mFun','mTobacco','mOther'];const total=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyTobacco').textContent=yen(document.getElementById('mTobacco')?.value||0)}
+function renderHistory(){const h=document.getElementById('history');const keys=Object.keys(months).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k];const total=['food','daily','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">タバコ ${yen(m.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho)}</div></div>`}).join('')}
+function updateMonthTotals(){const ids=['mFood','mDaily','mUtilities','mFun','mTobacco','mOther'];const total=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const tobacco=Number(document.getElementById('mTobacco')?.value||0);const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards)}
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
-['mFood','mDaily','mUtilities','mFun','mTobacco','mOther'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
+['mFood','mDaily','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
 const now=new Date();document.getElementById('monthKey').value=now.toISOString().slice(0,7);
-document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}render();alert('保存しました')});
-document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));localStorage.setItem('odyssey_settings',JSON.stringify(settings));render();alert('設定を保存しました')});
+document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}render();alert('保存しました')});
+document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');localStorage.setItem('odyssey_settings',JSON.stringify(settings));render();alert('設定を保存しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
 document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({settings,months},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
-document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','光熱費','外食・娯楽','タバコ','その他','au PAYゴールド利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.utilities,m.fun,m.tobacco,m.other,m.au,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','光熱費','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 render();
 </script>
