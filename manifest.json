@@ -1,7 +1,7 @@
 {
   "name": "家計・オデッセイ資金管理",
   "short_name": "家計・オデッセイ",
-  "start_url": "./index.html?v=3.9.1",
+  "start_url": "./index.html?v=4.1",
   "display": "standalone",
   "background_color": "#0b1020",
   "theme_color": "#111827",

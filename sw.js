@@ -1,4 +1,4 @@
-const CACHE='odyssey-v4.0';
+const CACHE='odyssey-v4.1';
 const CORE=['./manifest.json'];
 self.addEventListener('install',e=>{
   self.skipWaiting();
