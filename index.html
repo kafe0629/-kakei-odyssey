@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.0</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v2.3</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.2では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v2.3では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。銀行残高は画面上部を再認識して、取引明細を残高と誤認しにくくしています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v2.2：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v2.3：銀行・カードごとの専用OCR判定を追加し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -408,11 +408,14 @@ function extractDedicatedCrop(text,target,sourceName){
     // AEON Payホームで『9月お支払い額』が未確定のとき、下段の『10月以降 ¥0』の10を金額と誤認しない。
     if(/10月以降/.test(t) && /(?:¥|￥)\s*0|0\s*円/.test(t)){setOcrCandidate(target,0,sourceName+'（10月以降0円・当月未確定）',39);return;}
     let m=/(?:お支払い額|お支払額|9月お支払い額)[\s\S]{0,80}?(?:(?:¥|￥)\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)|([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(t);
-    v=m?moneyNum(m[1]||m[2]):zeroAwareMoney(t);
+    v=m?moneyNum(m[1]||m[2]):null;
   }else if(target==='auNextBill'){
-    // 「お支払金額」の近くの0円を含む金額だけを優先。
-    let m=/(?:お支払金額|お支払い金額|請求金額)[\s\S]{0,100}?(?:(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(t);
-    v=m?moneyNum(m[1]):zeroAwareMoney(t);
+    // v2.3: 支払金額カードだけを狭く切り出す。日付の「2026」を金額として扱わない。
+    if(/(?:お支払金額|お支払い金額|請求金額|確定)/.test(t) && /(?:^|\D)0\s*円(?:\D|$)/.test(t)){
+      setOcrCandidate(target,0,sourceName+'（支払金額0円）',60);return;
+    }
+    let m=/(?:お支払金額|お支払い金額|請求金額)[\s\S]{0,65}?(?:(?:¥|￥)?\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円)/.exec(t);
+    v=m?moneyNum(m[1]):null;
   }else if(target==='apolloNextBill'){
     let m=/(?:確定|お支払い日)[\s\S]{0,130}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(t);
     v=m?moneyNum(m[1]):zeroAwareMoney(t);
@@ -539,11 +542,11 @@ async function preprocessImage(file,preset='default'){
       sx=Math.round(bmp.width*0.58); sy=Math.round(bmp.height*0.27);
       sw=Math.round(bmp.width*0.38); sh=Math.round(bmp.height*0.20);
     }else if(preset==='auBill'){
-      sx=Math.round(bmp.width*0.04); sy=Math.round(bmp.height*0.285);
-      sw=Math.round(bmp.width*0.62); sh=Math.round(bmp.height*0.22);
+      sx=Math.round(bmp.width*0.035); sy=Math.round(bmp.height*0.335);
+      sw=Math.round(bmp.width*0.52); sh=Math.round(bmp.height*0.115);
     }else if(preset==='aeonBill'){
-      sx=Math.round(bmp.width*0.06); sy=Math.round(bmp.height*0.27);
-      sw=Math.round(bmp.width*0.88); sh=Math.round(bmp.height*0.22);
+      sx=Math.round(bmp.width*0.055); sy=Math.round(bmp.height*0.275);
+      sw=Math.round(bmp.width*0.88); sh=Math.round(bmp.height*0.105);
     }else if(preset==='apolloBill'){
       sx=Math.round(bmp.width*0.50); sy=Math.round(bmp.height*0.13);
       sw=Math.round(bmp.width*0.45); sh=Math.round(bmp.height*0.16);
@@ -595,7 +598,7 @@ async function visualScreenHint(file){
 }
 
 async function unknownScreenProbe(worker,file,sourceName){
-  // v2.2: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
+  // v2.3: 全体OCRでau PAYカードを判定できない場合、請求欄だけを再OCRして救済する。
   // この領域は「お支払金額・確定・お支払日」が集中し、利用可能額100,000円は下部なので入りにくい。
   try{
     const crop=await preprocessImage(file,'auBill');
@@ -626,9 +629,11 @@ async function runOcr(files){
       const r=await worker.recognize(img); const txt=r?.data?.text||'';
       ocrRawChunks.push('['+files[i].name+' / 全体]\n'+txt);
       let detected=selected==='auto'?detectScreenType(txt):selected;
-      if(selected==='auto'&&detected==='unknown'){
+      if(selected==='auto'){
         const vh=await visualScreenHint(files[i]);
-        if(vh!=='unknown')detected=vh;
+        // v2.3: auじぶん銀行のPonta表記などでau PAYカードに誤分類されるのを防ぐ。
+        // 強い画面色ヒント（橙=じぶん、赤=apollo、青=みずほ、紫=AEON、緑=八十二）を優先する。
+        if(vh!=='unknown' && (detected==='unknown' || detected==='auNextBill' || detected==='aeonNextBill')) detected=vh;
       }
       // 全体OCR・色判定でも不明なら、au PAY請求欄を専用再OCRして判定を救済する。
       if(selected==='auto'&&detected==='unknown'){
