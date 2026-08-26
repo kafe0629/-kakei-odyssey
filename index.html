@@ -99,7 +99,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.5</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v1.6</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -152,7 +152,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.5ではMIZUHOロゴ・屋代支店などの画面にも対応し、銀行名が読めない場合は画像種類を指定して残高候補を抽出できます。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v1.6ではみずほ残高を画面上部の残高エリアだけ切り出して再認識するため、入出金の145,000円などを残高と誤認しにくくしました。MIZUHOロゴ・屋代支店にも対応しています。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="row"><div class="name">八十二 → auじぶん 必要額</div><div class="value blue" id="needToJibun">¥0</div></div>
@@ -266,7 +266,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v1.5：スクリーンショットOCRを追加し、銀行残高・カード請求額を画像から候補抽出して自動入力できるようにしました。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v1.6：みずほ銀行の残高OCRを改善し、残高表示エリアを優先して読み取るようにしました。スクリーンショットから銀行残高・カード請求額を候補抽出できます。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -409,12 +409,33 @@ function showOcrCandidates(){
   document.getElementById('ocrRawText').textContent=ocrRawChunks.join('\n\n===== 次の画像 =====\n\n');
   box.classList.add('show');
 }
-async function preprocessImage(file){
+async function preprocessImage(file,preset='default'){
   try{
-    const bmp=await createImageBitmap(file); const maxW=1800; const scale=Math.min(2,maxW/bmp.width); const w=Math.max(1,Math.round(bmp.width*scale)),h=Math.max(1,Math.round(bmp.height*scale));
-    const c=document.createElement('canvas'); c.width=w;c.height=h; const x=c.getContext('2d'); x.drawImage(bmp,0,0,w,h);
-    const im=x.getImageData(0,0,w,h),d=im.data; for(let i=0;i<d.length;i+=4){const y=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;} x.putImageData(im,0,0);
-    return await new Promise(res=>c.toBlob(res,'image/jpeg',0.92));
+    const bmp=await createImageBitmap(file);
+    let sx=0,sy=0,sw=bmp.width,sh=bmp.height;
+    // みずほ残高は、取引明細の金額を拾わないよう画面上部右側だけを切り出す。
+    // iPhoneの縦長スクショを前提に、残高・更新日時がある領域を広めに残す。
+    if(preset==='mizuhoBalance'){
+      sx=Math.round(bmp.width*0.38); sy=Math.round(bmp.height*0.10);
+      sw=Math.round(bmp.width*0.62); sh=Math.round(bmp.height*0.24);
+    }
+    const maxW=preset==='mizuhoBalance'?2200:1800;
+    const scale=Math.min(preset==='mizuhoBalance'?3:2,maxW/sw);
+    const w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));
+    const c=document.createElement('canvas'); c.width=w;c.height=h; const x=c.getContext('2d');
+    x.drawImage(bmp,sx,sy,sw,sh,0,0,w,h);
+    const im=x.getImageData(0,0,w,h),d=im.data;
+    for(let i=0;i<d.length;i+=4){
+      const y=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+      if(preset==='mizuhoBalance'){
+        // 青背景に白文字なので、白文字を黒・背景を白にして数字を読みやすくする。
+        const z=y>135?0:255; d[i]=d[i+1]=d[i+2]=z;
+      }else{
+        const z=Math.max(0,Math.min(255,(y-128)*1.35+128)); d[i]=d[i+1]=d[i+2]=z;
+      }
+    }
+    x.putImageData(im,0,0);
+    return await new Promise(res=>c.toBlob(res,'image/jpeg',0.94));
   }catch{return file}
 }
 async function runOcr(files){
@@ -426,7 +447,23 @@ async function runOcr(files){
     status.textContent='OCRエンジンを準備しています…';bar.style.width='3%';
     worker=await Tesseract.createWorker(['jpn','eng'],1,{logger:m=>{if(m.progress!=null){const base=8;bar.style.width=Math.min(95,base+m.progress*80)+'%';status.textContent=(m.status==='recognizing text'?'文字を読み取っています…':'OCR準備中…')+' '+Math.round(m.progress*100)+'%';}}});
     for(let i=0;i<files.length;i++){
-      status.textContent=`${i+1}/${files.length}枚目を読み取っています…`; const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||''; ocrRawChunks.push('['+files[i].name+']\n'+txt); extractOcrCandidates(txt,files[i].name,document.getElementById('ocrTarget').value);
+      const target=document.getElementById('ocrTarget').value;
+      status.textContent=`${i+1}/${files.length}枚目を読み取っています…`;
+      if(target==='mizuho'){
+        // 指定時は残高表示部分を優先OCR。これで取引明細の +145,000円 等を残高と誤認しにくい。
+        const crop=await preprocessImage(files[i],'mizuhoBalance');
+        const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+' / みずほ残高エリア]\n'+cropTxt);
+        extractOcrCandidates(cropTxt,files[i].name,target);
+        // 切り出しで取れなかった場合だけ全体OCRも追加する。
+        if(!ocrCandidates.mizuho){
+          const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||'';
+          ocrRawChunks.push('['+files[i].name+' / 全体]\n'+txt); extractOcrCandidates(txt,files[i].name,target);
+        }
+      }else{
+        const img=await preprocessImage(files[i]); const r=await worker.recognize(img); const txt=r?.data?.text||'';
+        ocrRawChunks.push('['+files[i].name+']\n'+txt); extractOcrCandidates(txt,files[i].name,target);
+      }
       bar.style.width=Math.round(((i+1)/files.length)*96)+'%';
     }
     bar.style.width='100%';status.textContent='読み取り完了。下の候補を確認して「認識結果を反映」を押してください。';showOcrCandidates();
