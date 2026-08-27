@@ -219,6 +219,27 @@
     .homeCarActionV64{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px}
     .homeCarActionV64 .sub{margin:0;flex:1}
     .homeCarActionV64 button{flex:0 0 auto}
+    .autoSyncBoxV65{border:1px solid #22543d;border-radius:14px;padding:11px;background:rgba(34,84,61,.08);margin:10px 0 12px}
+    .autoSyncGridV65{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .autoSyncToggleV65{display:flex;gap:8px;align-items:center;border:1px solid #29446b;border-radius:11px;padding:9px;background:#091528;font-size:12px}
+    .autoSyncToggleV65 input{width:20px;height:20px}
+    .autoSyncStatusV65{font-size:11px;color:#9fb0c7;line-height:1.55;margin-top:8px}
+    .carRealityV65{margin-top:12px;border-color:#22543d}
+    .carCostGridV65{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+    .carCostCellV65{border:1px solid #29446b;border-radius:12px;padding:10px;background:#091528}
+    .carCostCellV65 .label{font-size:10px;color:#94a3b8}
+    .carCostCellV65 .v{font-size:17px;font-weight:900;margin-top:4px}
+    .goPanelV65{margin-top:12px;border:1px solid #35527c;border-radius:14px;padding:12px;background:#091528}
+    .goMainV65{font-size:24px;font-weight:950;margin:7px 0}
+    .goReasonsV65{display:grid;gap:6px;margin-top:9px}
+    .goReasonV65{display:flex;justify-content:space-between;gap:10px;border-top:1px solid rgba(148,163,184,.12);padding-top:7px;font-size:12px}
+    .stageGridV65{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .stageCardV65{border:1px solid #29446b;border-radius:13px;padding:10px;background:#091528}
+    .stageTitleV65{font-weight:900}
+    .stagePctV65{font-size:20px;font-weight:950;margin-top:4px}
+    .paceTableV65 td,.paceTableV65 th{font-size:11px}
+    .paceBadgeV65{display:inline-block;border:1px solid #35527c;border-radius:999px;padding:3px 7px;font-size:10px}
+
 
     @media(max-width:430px){.loanImproveGridV631{grid-template-columns:1fr}}
 
@@ -264,7 +285,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.4.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.5</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -563,6 +584,17 @@
           <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 カード月次デュアル管理</h3><span class="pill">利用月＋請求月</span></div>
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
+          <div class="autoSyncBoxV65">
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.5</span></div>
+            <div class="autoSyncGridV65">
+              <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
+              <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
+            </div>
+            <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="runFullAutoSyncV65" type="button">今すぐ利用月＋請求月を完全同期</button></div>
+            <div class="autoSyncStatusV65" id="autoSyncStatusV65">自動同期を準備しています。</div>
+            <div class="note" style="margin-top:8px">利用月の自動同期はカード明細のカテゴリと3カード利用額を更新します。光熱費とみずほ月末残高は上書きしません。現金支出を同じカテゴリへ手入力したい場合は利用月自動同期をOFFにしてください。</div>
+          </div>
+
           <div class="monthModeSwitch">
             <button class="monthModeBtn active" id="monthModeUsageV59" type="button">🛍️ 利用月</button>
             <button class="monthModeBtn" id="monthModeBillingV59" type="button">🏦 請求月</button>
@@ -633,7 +665,7 @@
           <div class="separator"></div>
           <div class="row"><div class="name"><strong>今月よく使った店 TOP5</strong></div><div class="value" id="monthlyMerchantCount">0店舗</div></div>
           <div class="merchantRank" id="monthlyMerchantRank"><div class="empty">明細を登録すると表示されます。</div></div>
-          <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="autoClassifyExisting" type="button">未分類明細を自動分類</button><button class="btn secondary" id="applyTransactionsToMonth" type="button">3カードを月次欄へ反映</button></div>
+          <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="autoClassifyExisting" type="button">未分類明細を自動分類</button><button class="btn secondary" id="applyTransactionsToMonth" type="button">利用月を今すぐ再反映</button></div>
           <div class="note" style="margin-top:10px">apollostationは利用日ベースで月次集計します。請求日にだけ置いた値引き・請求調整は利用月から除外し、請求月だけで管理します。v5.8.2の欠損明細個別補完も維持しています。</div>
           </div>
 
@@ -678,7 +710,7 @@
               <button class="btn" id="saveBillingMonthV59" type="button">請求月を保存</button>
               <button class="btn secondary" id="clearBillingMonthV59" type="button">この請求月をクリア</button>
             </div>
-            <div class="note" style="margin-top:10px">「支払管理から同期」は、次回確定請求と現在の未確定額を請求月へ割り当てます。apollostationは確定20,197円を9月、翌月未確定2,769円を10月として扱います。au PAYの未確定額は現在の締めサイクルから支払月を自動判定します。</div>
+            <div class="note" style="margin-top:10px">請求自動同期ONなら、OCRや支払管理で読み取った次回確定請求・未確定額を請求月へ自動割り当てします。「支払管理から同期」は手動で再同期したい時に使えます。apollostationは確定20,197円を9月、翌月未確定2,769円を10月として扱います。au PAYの未確定額は現在の締めサイクルから支払月を自動判定します。</div>
 
             <div class="separator"></div>
             <div class="row"><div class="name"><strong>請求月の履歴</strong></div><div class="value" id="billingHistoryCountV59">0か月</div></div>
@@ -711,6 +743,43 @@
         <div class="card"><div class="label">購入後の既知支出後</div><div class="kpi" id="afterRemain2">¥0</div></div>
         <div class="card full"><h3>購入条件</h3><div id="purchaseChecks"></div></div>
       </div>
+      <div class="card carRealityV65">
+        <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">🚙 購入後の総維持費・GO判定</h3><span class="pill">家計実負担</span></div>
+        <div class="sub">ローンだけでなく、保険・ガソリン・税金・車検・整備・タイヤ・駐車場まで月額換算して「本当に毎月いくらかかるか」を確認します。</div>
+        <div class="carCostGridV65">
+          <div class="carCostCellV65"><div class="label">ローン</div><div class="v blue" id="carCostLoanV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">自動車保険</div><div class="v" id="carCostInsuranceV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">ガソリン</div><div class="v" id="carCostFuelV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">自動車税（月換算）</div><div class="v" id="carCostTaxV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">車検積立</div><div class="v" id="carCostInspectionV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">整備・消耗品積立</div><div class="v" id="carCostMaintenanceV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">タイヤ積立</div><div class="v" id="carCostTireV65">¥0</div></div>
+          <div class="carCostCellV65"><div class="label">駐車場</div><div class="v" id="carCostParkingV65">¥0</div></div>
+        </div>
+        <div class="monthlyGrandTotal" style="margin-top:10px">
+          <div class="row"><div class="name">ローン以外の車維持費</div><div class="value" id="carNonLoanV65">¥0</div></div>
+          <div class="row"><div class="name"><strong>車全体の実質月負担</strong></div><div class="value good" id="carTotalMonthlyV65">¥0</div></div>
+          <div class="row"><div class="name">購入後の既知支出後余力</div><div class="value blue" id="carTrueMarginV65">¥0</div></div>
+        </div>
+        <div class="goPanelV65">
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🚦 車購入GO判定</h3><span class="pill" id="carGoScoreV65">0/5</span></div>
+          <div class="goMainV65 warn" id="carGoMainV65">判定中</div>
+          <div class="sub" id="carGoSubV65">資金・月余力・支払余力を確認します。</div>
+          <div class="goReasonsV65" id="carGoReasonsV65"></div>
+        </div>
+        <div class="separator"></div>
+        <strong>💰 車資金を段階で確認</strong>
+        <div class="stageGridV65">
+          <div class="stageCardV65"><div class="stageTitleV65">① 生活防衛資金</div><div class="stagePctV65 blue" id="stageEmergencyPctV65">0%</div><div class="sub" id="stageEmergencyTextV65">¥0 / ¥0</div><div class="progress"><span id="stageEmergencyBarV65" style="width:0%"></span></div></div>
+          <div class="stageCardV65"><div class="stageTitleV65">② 車の頭金</div><div class="stagePctV65 good" id="stageDownPctV65">0%</div><div class="sub" id="stageDownTextV65">¥0 / ¥0</div><div class="progress green"><span id="stageDownBarV65" style="width:0%"></span></div></div>
+        </div>
+        <div class="note" id="stageNextActionV65" style="margin-top:9px">次の目標を計算しています。</div>
+        <div class="separator"></div>
+        <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">📈 購入時期：予定ペース vs 実績ペース</h3><span class="pill">みずほ月末残高</span></div>
+        <div class="sub">月次記録のみずほ月末残高が2か月以上たまると、直近3回・6回の実際の増減ペースから購入時期を再計算します。</div>
+        <div class="tableWrap" style="margin-top:9px"><table class="paceTableV65"><thead><tr><th>ペース</th><th>月純増</th><th>残り</th><th>購入目安</th></tr></thead><tbody id="savingsPaceRowsV65"></tbody></table></div>
+      </div>
+
       <div class="card loanPlannerV60">
         <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">🚙 ローン月額を抑えるプラン</h3><span class="pill">ボーナス払いなし</span></div>
         <div class="sub">現在の車両総額・金利・生活防衛資金を使い、「月々いくらまでなら抑えたいか」から必要頭金と購入時期を逆算します。今のローン設定は勝手に変更しません。</div>
@@ -812,7 +881,7 @@
 
       <div class="card" style="margin-top:12px">
         <h3>貯金シナリオ</h3>
-        <table><thead><tr><th>毎月純増</th><th>350万円まで</th><th>目安</th></tr></thead><tbody id="scenarioRows"></tbody></table>
+        <table><thead><tr><th>毎月純増</th><th>採用プラン必要資金まで</th><th>目安</th></tr></thead><tbody id="scenarioRows"></tbody></table>
       </div>
     </section>
 
@@ -868,6 +937,12 @@
           <div class="field"><label>au固定的支出</label><input data-setting="auFixed" type="number" inputmode="numeric"></div>
           <div class="field"><label>購入後みずほ積立</label><input data-setting="afterSave" type="number" inputmode="numeric"></div>
           <div class="field"><label>購入後ガソリン</label><input data-setting="fuelAfter" type="number" inputmode="numeric"></div>
+          <div class="field"><label>自動車税 年額（概算・変更可）</label><input data-setting="carTaxAnnual" type="number" inputmode="numeric"></div>
+          <div class="field"><label>車検積立 / 月</label><input data-setting="carInspectionMonthly" type="number" inputmode="numeric"></div>
+          <div class="field"><label>整備・消耗品積立 / 月</label><input data-setting="carMaintenanceMonthly" type="number" inputmode="numeric"></div>
+          <div class="field"><label>タイヤ積立 / 月</label><input data-setting="carTireMonthly" type="number" inputmode="numeric"></div>
+          <div class="field"><label>駐車場 / 月</label><input data-setting="carParkingMonthly" type="number" inputmode="numeric"></div>
+          <div class="field"><label>車購入GO判定で残したい月余力</label><input data-setting="carGoMargin" type="number" inputmode="numeric"></div>
         </div>
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
@@ -881,6 +956,7 @@
           <div class="sub" style="margin-top:7px">アプリ更新後に不具合が出た場合でも、保存した時点の設定・支払管理・月次・カード明細へ戻せます。</div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
       <div class="note" style="margin-top:12px">v5.6.1：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
@@ -898,8 +974,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,rentLeave:50000,wifeLeaveActive:1,wifeLeaveEnd:'',kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
-const paymentDefaults={bank82Balance:93870,jibunBalance:866,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1};
+const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,rentLeave:50000,wifeLeaveActive:1,wifeLeaveEnd:'',kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000,carTaxAnnual:36000,carInspectionMonthly:5000,carMaintenanceMonthly:5000,carTireMonthly:2500,carParkingMonthly:0,carGoMargin:100000};
+const paymentDefaults={bank82Balance:93870,jibunBalance:866,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1,monthlyUsageAutoSyncV65:1,billingAutoSyncV65:1};
 
 function safeParseStorage(key,fallback){
   try{
@@ -996,7 +1072,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.4.1',at:new Date().toISOString(),reason,
+      version:'6.5',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1255,8 +1331,30 @@ function purchaseEtaForSavingsV60(target){
   if(m===0)return '現在可能';
   return ym(addMonths(new Date(),m));
 }
+
+function extraVehicleReserveV65(){
+  return Math.max(0,Number(settings.carTaxAnnual||0))/12+
+    Math.max(0,Number(settings.carInspectionMonthly||0))+
+    Math.max(0,Number(settings.carMaintenanceMonthly||0))+
+    Math.max(0,Number(settings.carTireMonthly||0))+
+    Math.max(0,Number(settings.carParkingMonthly||0));
+}
+function vehicleCostSummaryV65(){
+  const loan=Math.max(0,loanMonthly());
+  const insurance=Math.max(0,Number(settings.insurance||0));
+  const fuel=Math.max(0,Number(settings.fuelAfter||0));
+  const tax=Math.max(0,Number(settings.carTaxAnnual||0))/12;
+  const inspection=Math.max(0,Number(settings.carInspectionMonthly||0));
+  const maintenance=Math.max(0,Number(settings.carMaintenanceMonthly||0));
+  const tire=Math.max(0,Number(settings.carTireMonthly||0));
+  const parking=Math.max(0,Number(settings.carParkingMonthly||0));
+  const nonLoan=insurance+fuel+tax+inspection+maintenance+tire+parking;
+  const total=loan+nonLoan;
+  const trueMargin=Math.round(Number(settings.income||0)-knownAfter());
+  return {loan,insurance,fuel,tax,inspection,maintenance,tire,parking,nonLoan,total,trueMargin};
+}
 function knownAfterWithoutLoanV60(){
-  return effectiveRentV58()+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed;
+  return effectiveRentV58()+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed+extraVehicleReserveV65();
 }
 function loanPlanForTargetV60(targetMonthly,years,ratePct){
   const carTotal=Math.max(0,Number(settings.carTotal||0));
@@ -1849,6 +1947,132 @@ function syncPurchaseTargetV641(persist=false){
   }
   return target;
 }
+
+function monthIndexV65(k){
+  const [y,m]=String(k||'').split('-').map(Number);
+  return y&&m?y*12+(m-1):NaN;
+}
+function savingsDeltasV65(){
+  const rows=Object.keys(months)
+    .map(k=>({k,idx:monthIndexV65(k),balance:Number(months[k]?.mizuho||0)}))
+    .filter(x=>Number.isFinite(x.idx)&&x.balance>0)
+    .sort((a,b)=>a.idx-b.idx);
+  const deltas=[];
+  for(let i=1;i<rows.length;i++){
+    const gap=rows[i].idx-rows[i-1].idx;
+    if(gap<=0)continue;
+    deltas.push({month:rows[i].k,perMonth:(rows[i].balance-rows[i-1].balance)/gap});
+  }
+  return deltas;
+}
+function actualSavingsPaceV65(lastN=3){
+  const d=savingsDeltasV65().slice(-Math.max(1,lastN));
+  if(!d.length)return null;
+  return d.reduce((s,x)=>s+x.perMonth,0)/d.length;
+}
+function etaFromPaceV65(shortage,pace){
+  shortage=Math.max(0,Number(shortage||0));
+  pace=Number(pace||0);
+  if(shortage<=0)return {months:0,eta:'達成済'};
+  if(!(pace>0))return {months:null,eta:'—'};
+  const m=Math.ceil(shortage/pace);
+  return {months:m,eta:ym(addMonths(new Date(),m))};
+}
+function purchaseGoSummaryV65(){
+  const target=effectivePurchaseTargetV641();
+  const down=Number(settings.downPayment||0);
+  const emergency=Number(settings.emergencyTarget||0);
+  const funding=Number(settings.mizuho||0)>=target;
+  const emergencyAfter=Number(settings.mizuho||0)-down>=emergency;
+  const car=vehicleCostSummaryV65();
+  const marginGoal=Math.max(0,Number(settings.carGoMargin||100000));
+  const margin=car.trueMargin>=marginGoal;
+  const ps=paymentSummary();
+  const cashflow=Number(ps.shortage||0)<=0;
+  const fixed=!!activeAdoptedLoanV631();
+  const checks=[
+    {label:'頭金＋生活防衛資金を確保',ok:funding,detail:funding?'必要資金に到達':'あと '+yen(Math.max(0,target-Number(settings.mizuho||0)))},
+    {label:'頭金支払い後も防衛資金を維持',ok:emergencyAfter,detail:emergencyAfter?'防衛資金を確保':'まだ未達'},
+    {label:'購入後の月余力 '+yen(marginGoal)+'以上',ok:margin,detail:'現在試算 '+yen(car.trueMargin)},
+    {label:'直近の八十二銀行 支払確保',ok:cashflow,detail:cashflow?'不足なし':'不足 '+yen(ps.shortage||0)},
+    {label:'採用ローンプランを固定済み',ok:fixed,detail:fixed?'採用中':'未固定'}
+  ];
+  const score=checks.filter(x=>x.ok).length;
+  const ratio=target>0?Number(settings.mizuho||0)/target:1;
+  let level='wait',main='🔴 まだ待つ',sub='資金到達を優先してください。';
+  if(score===checks.length){
+    level='go';main='🟢 購入GO';sub='現在設定の条件では、購入条件をすべて満たしています。';
+  }else if(ratio>=0.8 && margin && cashflow && fixed){
+    level='near';main='🟡 もう少し';sub='家計余力はあります。購入資金の最終到達を待つ段階です。';
+  }
+  return {target,checks,score,ratio,level,main,sub,car};
+}
+function renderCarRealityV65(){
+  const c=vehicleCostSummaryV65();
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+  set('carCostLoanV65',yen(c.loan));
+  set('carCostInsuranceV65',yen(c.insurance));
+  set('carCostFuelV65',yen(c.fuel));
+  set('carCostTaxV65',yen(c.tax));
+  set('carCostInspectionV65',yen(c.inspection));
+  set('carCostMaintenanceV65',yen(c.maintenance));
+  set('carCostTireV65',yen(c.tire));
+  set('carCostParkingV65',yen(c.parking));
+  set('carNonLoanV65',yen(c.nonLoan));
+  set('carTotalMonthlyV65',yen(c.total));
+  set('carTrueMarginV65',yen(c.trueMargin));
+
+  const go=purchaseGoSummaryV65();
+  const main=document.getElementById('carGoMainV65');
+  if(main){
+    main.textContent=go.main;
+    main.className='goMainV65 '+(go.level==='go'?'good':go.level==='near'?'blue':'warn');
+  }
+  set('carGoScoreV65',go.score+'/'+go.checks.length);
+  set('carGoSubV65',go.sub);
+  const reasons=document.getElementById('carGoReasonsV65');
+  if(reasons){
+    reasons.innerHTML=go.checks.map(x=>`<div class="goReasonV65"><span>${x.ok?'✅':'⬜'} ${escapeHtml(x.label)}</span><strong class="${x.ok?'good':'warn'}">${escapeHtml(x.detail)}</strong></div>`).join('');
+  }
+
+  const mz=Math.max(0,Number(settings.mizuho||0));
+  const emergency=Math.max(0,Number(settings.emergencyTarget||0));
+  const down=Math.max(0,Number(settings.downPayment||0));
+  const emFunded=Math.min(mz,emergency);
+  const downFunded=Math.min(down,Math.max(0,mz-emergency));
+  const emPct=emergency>0?Math.min(100,emFunded/emergency*100):100;
+  const downPct=down>0?Math.min(100,downFunded/down*100):100;
+  set('stageEmergencyPctV65',emPct.toFixed(1)+'%');
+  set('stageEmergencyTextV65',yen(emFunded)+' / '+yen(emergency));
+  set('stageDownPctV65',downPct.toFixed(1)+'%');
+  set('stageDownTextV65',yen(downFunded)+' / '+yen(down));
+  const eb=document.getElementById('stageEmergencyBarV65');if(eb)eb.style.width=emPct+'%';
+  const db=document.getElementById('stageDownBarV65');if(db)db.style.width=downPct+'%';
+  const next=document.getElementById('stageNextActionV65');
+  if(next){
+    next.textContent=emPct<100
+      ?'現在は①生活防衛資金を優先。あと '+yen(Math.max(0,emergency-mz))+' で防衛資金目標に到達です。'
+      :downPct<100
+      ?'①生活防衛資金は達成。次は②車の頭金をあと '+yen(Math.max(0,down-downFunded))+' 貯める段階です。'
+      :'①防衛資金＋②頭金とも達成しています。';
+  }
+
+  const shortage=Math.max(0,go.target-mz);
+  const scenarios=[
+    {label:'予定ペース',pace:Math.max(0,Number(settings.saveMonthly||0)),badge:'基準'},
+    {label:'実績 直近3回',pace:actualSavingsPaceV65(3),badge:'実績'},
+    {label:'実績 直近6回',pace:actualSavingsPaceV65(6),badge:'実績'},
+    {label:'月7万円なら',pace:70000,badge:'比較'}
+  ];
+  const tbody=document.getElementById('savingsPaceRowsV65');
+  if(tbody){
+    tbody.innerHTML=scenarios.map(s=>{
+      const valid=Number(s.pace)>0;
+      const eta=etaFromPaceV65(shortage,s.pace);
+      return `<tr><td>${escapeHtml(s.label)} <span class="paceBadgeV65">${s.badge}</span></td><td>${valid?yen(s.pace):'実績不足'}</td><td>${eta.months===null?'—':eta.months+'か月'}</td><td>${eta.eta}</td></tr>`;
+    }).join('');
+  }
+}
 function renderHomeCarPlanV64(){
   const adopted=activeAdoptedLoanV631();
   let downPayment=Math.max(0,Number(settings.downPayment||0));
@@ -1963,9 +2187,9 @@ function utilitySummaryV58(monthKey=currentYM()){
   return result;
 }
 function knownBefore(){return effectiveRentV58()+settings.kyosai+settings.saveMonthly+settings.education+nisaNow()+settings.insurance+nhkMonthly()+settings.fuelNow+settings.auFixed}
-function knownAfter(){return effectiveRentV58()+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed+loanMonthly()}
+function knownAfter(){return effectiveRentV58()+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed+loanMonthly()+extraVehicleReserveV65()}
 function localDateKey(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function saveAuTransactions(){localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions))}
+function saveAuTransactions(){localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));if(typeof syncUsageRecordsV65==='function'&&Number(payments.monthlyUsageAutoSyncV65??1)!==0)syncUsageRecordsV65(false)}
 
 let importCardType=localStorage.getItem('odyssey_import_card')||'au';
 function importCardLabel(type){return type==='apollo'?'apollostation':type==='aeon'?'イオン':'au PAY'}
@@ -2067,6 +2291,7 @@ function syncStatementTotalAutomatic(){
   if(!Number(payments.statementAutoSync||0))return false;
   payments.auUnconfirmed=Math.round(currentCycleTransactions().reduce((sum,x)=>sum+Math.max(0,Number(x.amount||0)),0));
   localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+  if(typeof syncBillingAutoV65==='function'&&Number(payments.billingAutoSyncV65??1)!==0)syncBillingAutoV65(false);
   return true;
 }
 function deleteAuSpend(id){
@@ -2617,6 +2842,8 @@ function monthlyTransactionSummary(monthKey){
 }
 function renderMonthlyAuto(){
   const k=document.getElementById('monthKey')?.value||currentYM();
+  fillMonthlyFormV65(k);
+  renderAutoSyncStatusV65();
   const s=monthlyTransactionSummary(k);
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val};
 
@@ -2676,7 +2903,6 @@ function applyTransactionsToMonth(){
   if(!k)return;
   const s=monthlyTransactionSummary(k);
 
-  // 生活費カテゴリは3カード合算。apollostation値引きはガソリンから差し引く。
   document.getElementById('mFood').value=s.food;
   document.getElementById('mDaily').value=s.daily;
   document.getElementById('mConvenience').value=s.convenience;
@@ -2685,21 +2911,24 @@ function applyTransactionsToMonth(){
   document.getElementById('mTobacco').value=s.tobacco;
   document.getElementById('mOther').value=s.other;
 
-  // カード利用はカードごとに別欄へ。
   document.getElementById('mAu').value=s.cards.au.total;
   document.getElementById('mAeon').value=s.cards.aeon.total;
   document.getElementById('mApollo').value=s.cards.apollo.total;
 
+  if(Number(payments.monthlyUsageAutoSyncV65??1)!==0){
+    syncUsageMonthRecordV65(k);
+    localStorage.setItem('odyssey_months',JSON.stringify(months));
+  }
   updateMonthTotals();
+  renderHistory();
   alert(
-    '3カード明細を月次欄へ反映しました。\\n\\n'+
-    'au PAY：'+yen(s.cards.au.total)+'\\n'+
-    'イオン：'+yen(s.cards.aeon.total)+'\\n'+
-    'apollostation：'+yen(s.cards.apollo.total)+'\\n'+
+    '3カード明細を月次欄へ反映しました。\n\n'+
+    'au PAY：'+yen(s.cards.au.total)+'\n'+
+    'イオン：'+yen(s.cards.aeon.total)+'\n'+
+    'apollostation：'+yen(s.cards.apollo.total)+'\n'+
     '3カード合計：'+yen(s.total)
   );
 }
-
 function merchantSummary(monthKey){
   const map=new Map();
   auTransactions.filter(x=>String(x.date||'').slice(0,7)===monthKey).forEach(x=>{
@@ -3641,6 +3870,7 @@ function applyOcrCandidates(){
     if(k in payments)payments[k]=v;
   });
   protectedSaveV52('OCR反映後');
+  if(Number(payments.billingAutoSyncV65??1)!==0)syncBillingAutoV65(false);
   render();
 
   const p=paymentSummary();
@@ -3661,6 +3891,7 @@ function render(){
   document.getElementById('emergencyProgress').style.width=Math.min(100,emRatio)+'%'; document.getElementById('purchaseProgress').style.width=Math.min(100,puRatio)+'%'; document.getElementById('purchaseProgress2').style.width=Math.min(100,puRatio)+'%';
   document.getElementById('loanMonthly').textContent=yen(loanMonthly()); document.getElementById('afterRemain').textContent=yen(settings.income-knownAfter());
   renderHomeCarPlanV64();
+  renderCarRealityV65();
   document.getElementById('beforeRemain').textContent=yen(settings.income-knownBefore()); document.getElementById('afterRemain2').textContent=yen(settings.income-knownAfter());
   document.getElementById('carTotalOut').textContent=yen(settings.carTotal); document.getElementById('carDownOut').textContent=yen(settings.downPayment); document.getElementById('carLoanOut').textContent=yen(settings.carTotal-settings.downPayment); document.getElementById('carRateOut').textContent=settings.ratePct.toFixed(2)+'%'; document.getElementById('carYearsOut').textContent=settings.loanYears+'年'; document.getElementById('carMonthlyOut').textContent=yen(loanMonthly());
   const checks=[['みずほ残高'+yen(effectivePurchaseTargetV641Value)+'以上',settings.mizuho>=effectivePurchaseTargetV641Value],['頭金後も'+yen(settings.emergencyTarget)+'残る',settings.mizuho-settings.downPayment>=settings.emergencyTarget],['銀行ローン'+settings.loanYears+'年・ボーナスなし',true],['NISA月1万円を継続',settings.nisa>=10000],['教育資金月1万円を継続',settings.education>=10000],['購入後みずほ月3万円以上',settings.afterSave>=30000]];
@@ -3744,6 +3975,30 @@ document.getElementById('monthKey').value=
   localStorage.getItem('odyssey_usage_month_v591')||
   now.toISOString().slice(0,7);
 
+const monthlyUsageAutoSyncV65=document.getElementById('monthlyUsageAutoSyncV65');
+if(monthlyUsageAutoSyncV65){
+  monthlyUsageAutoSyncV65.checked=Number(payments.monthlyUsageAutoSyncV65??1)!==0;
+  monthlyUsageAutoSyncV65.addEventListener('change',()=>{
+    payments.monthlyUsageAutoSyncV65=monthlyUsageAutoSyncV65.checked?1:0;
+    localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+    if(monthlyUsageAutoSyncV65.checked)syncUsageRecordsV65(true);
+    else fillMonthlyFormV65(document.getElementById('monthKey')?.value||currentYM());
+    renderMonthlyAuto();renderAutoSyncStatusV65();
+  });
+}
+const billingAutoSyncV65=document.getElementById('billingAutoSyncV65');
+if(billingAutoSyncV65){
+  billingAutoSyncV65.checked=Number(payments.billingAutoSyncV65??1)!==0;
+  billingAutoSyncV65.addEventListener('change',()=>{
+    payments.billingAutoSyncV65=billingAutoSyncV65.checked?1:0;
+    localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+    if(billingAutoSyncV65.checked)syncBillingAutoV65(true);
+    renderMonthlyAuto();renderAutoSyncStatusV65();
+  });
+}
+const runFullAutoSyncV65Btn=document.getElementById('runFullAutoSyncV65');
+if(runFullAutoSyncV65Btn)runFullAutoSyncV65Btn.addEventListener('click',()=>runFullAutoSyncV65(true));
+
 document.querySelectorAll('[data-import-card]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     importCardType=btn.dataset.importCard;
@@ -3822,6 +4077,7 @@ if(!localStorage.getItem('odyssey_billing_month_v591')){
 }
 migrateV49Apollo();
 migrateV48Categories();
+runFullAutoSyncV65(false);
 if(stateIsHealthyV52())snapshotV52('v5.4起動時');
 document.getElementById('applyTransactionsToMonth').addEventListener('click',applyTransactionsToMonth);
 
@@ -3886,8 +4142,15 @@ document.getElementById('monthKey').addEventListener('change',()=>{
   updateMonthNavigationV591();
 });
 document.querySelectorAll('[data-payment]').forEach(el=>el.addEventListener('input',()=>{payments[el.dataset.payment]=Number(el.value||0);renderPayments()}));
-document.getElementById('savePayments').addEventListener('click',()=>{document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));snapshotV52('支払管理変更前');protectedSaveV52('支払管理保存');syncBillingFromPaymentsV59(false,false,new Date());renderPayments();renderMonthlyAuto();alert('支払管理を保存し、請求月も同期しました。正常バックアップも更新しました')});
-document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
+document.getElementById('savePayments').addEventListener('click',()=>{
+  document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));
+  snapshotV52('支払管理変更前');
+  protectedSaveV52('支払管理保存');
+  if(Number(payments.billingAutoSyncV65??1)!==0)syncBillingAutoV65(false);
+  renderPayments();renderMonthlyAuto();
+  alert('支払管理を保存しました。'+(Number(payments.billingAutoSyncV65??1)!==0?'請求月も自動同期しました。':'請求月自動同期はOFFです。')+' 正常バックアップも更新しました');
+});
+document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={...(months[k]||{}),food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0,autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{
   snapshotV52('設定変更前');
   document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));
@@ -3916,7 +4179,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.4.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.5',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
