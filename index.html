@@ -454,7 +454,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.0.2</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.0.3</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -826,7 +826,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.0.2</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.0.3</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1394,6 +1394,7 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v7.0.3：</strong>「分割」ボタンの表示対象をコンビニ明細に限定しました。ローソン・ファミリーマート・セブン-イレブン・ミニストップなど、カテゴリが「コンビニ」と判定された明細だけに表示します。apollostationのガソリン・値引き等には表示しません。すでに分割済みの明細は、あとから編集できるよう「分割編集」を維持します。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.2：</strong>au PAYなどのカード明細に「分割」機能を追加しました。コンビニでタバコと通常商品を一緒に買った場合、元のカード利用額を変えずに「タバコ／コンビニ／その他」へ内訳だけ分けられます。月次カテゴリには分割内訳を反映し、カード請求・締めサイクル・カード利用月額は元明細金額のまま維持します。分割合計が元明細と一致しない場合は保存できません。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.1：</strong>振込管理画面で状態・予定手数料・実手数料を変更すると即座に初期値へ戻ってしまう不具合を修正しました。振込額も編集して保存できます。2026年8月の妻への家賃は45,000円・振込済み、教育資金は2026年10月開始として8月・9月は対象なしに補正しています。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0：</strong>ホームに15日の振込期限アラートと「次の15日に必要なお金」を追加しました。妻・母・教育資金は、振込元金と「予定手数料／実手数料」を月ごとに分離管理します。予定手数料は15日の資金振り分けへ、実手数料は月次レポートの支出へ反映します。設定にはアプリ自己診断も追加しました。手数料額は推測せず初期値0円＝未設定です。</div>
@@ -1403,7 +1404,7 @@
       <div class="note" style="margin-top:12px"><strong>v6.6：</strong>月次に①カード請求額と登録明細の差額を確認する「請求突合チェック」、②カードと混ぜずに登録できる現金支出、③カード＋現金の「予算 vs 実績」を追加しました。請求突合はカードの締め日と明細のbillGroupを使って請求月へ割り当て、apollostationの請求値引きも含めて比較します。現金支出はカード自動同期ONのまま利用でき、月次合計・履歴・CSVへ加算します。全体生活費予算はau PAY生活費月間予算を参照し、カテゴリ別予算は設定画面で任意入力できます。現金支出も正常バックアップ・安定版・JSONへ保存します。</div>
       <div class="note" style="margin-top:12px"><strong>v6.8：生活防衛資金・購入資金のバッジ条件を新しく達成した時だけ「🎉 バッジ獲得！」の達成演出を1回表示するようにしました。更新前から達成済みのバッジは初回起動時に既達成として登録するため、過去分の演出が突然連続表示されません。複数ラインを一度に超えた場合も最上位のバッジを1回だけ表示します。v6.7：ホームに「貯金モチベーション」を追加しました。次の小目標（50万円→100万円→150万円→200万円→250万円→300万円→購入必要資金）、月末残高からの連続貯金、前月末と比べた今月の前進、生活防衛資金・購入資金の達成バッジを自動表示します。実績記録が足りない項目は無理に推測せず「判定待ち」と表示します。v6.6.1：家賃の送金ルートを「八十二銀行→自分のみずほ銀行→妻のみずほ銀行」に変更しました。15日は八十二から自分のみずほへ貯金・県民共済・家賃中継分をまとめて移し、その後、自分のみずほから妻のみずほへ家賃を送金します。家賃中継分はみずほの貯金純増には含めず、固定振り分け合計でも二重計上しません。予定表と口座の役割も新ルートへ変更しました。v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
       <div class="note" style="margin-top:12px">v5.6.1：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
-      <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。コンビニでタバコを一緒に買った場合は、ホームの登録済みカード明細から「分割」を使うと、カード金額を変えずにタバコ代を月次で分離できます。</div>
+      <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。コンビニでタバコを一緒に買った場合は、ホームの登録済みカード明細から「分割」を使うと、カード金額を変えずにタバコ代を月次で分離できます。「分割」はコンビニ明細だけに表示し、ガソリン・値引きなどには表示しません。</div>
     </section>
   
 
@@ -1622,7 +1623,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'7.0.2',at:new Date().toISOString(),reason,
+      version:'7.0.3',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1834,7 +1835,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'7.0.2',
+    version:'7.0.3',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -3293,7 +3294,10 @@ function renderTodayTransactions(){
       ? classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)
       : effectiveTxCategory(x);
     const splitLabel=transactionSplitLabelV702(x);
-    const canSplit=Number(x.amount||0)>0&&!x.billingAdjustment;
+    const currentSplitCategory=cardType==='apollo'
+      ?classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)
+      :effectiveTxCategory(x);
+    const canSplit=Number(x.amount||0)>0&&!x.billingAdjustment&&(!!splitLabel||currentSplitCategory==='convenience');
     return `<div class="statementItem">
       <div class="statementDate">${escapeHtml(x.date||'')}</div>
       <div>
@@ -4285,7 +4289,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.0.2',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.0.3',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -5944,7 +5948,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.0.2',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.0.3',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -5962,7 +5966,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.0.2',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.0.3',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
