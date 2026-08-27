@@ -207,6 +207,17 @@
     .loanImproveCardV631 button{width:100%;margin-top:8px}
     .adoptedPillV631{border-color:#22a06b!important;color:#86efac!important}
     .fixedNoteV631{font-size:11px;color:#9fb0c7;line-height:1.6;margin-top:9px}
+    .homeCarPlanV64{margin:0 0 14px;border:1px solid #22543d;background:rgba(34,84,61,.10)}
+    .homeCarPlanHeadV64{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .homeCarPlanMainV64{font-size:25px;font-weight:950;margin:9px 0 3px}
+    .homeCarPlanSubV64{font-size:12px;color:#aab8ca;line-height:1.55}
+    .homeCarPlanStatsV64{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:11px}
+    .homeCarStatV64{border:1px solid #29446b;border-radius:12px;padding:10px;background:#091528}
+    .homeCarStatV64 .label{font-size:10px;color:#94a3b8}
+    .homeCarStatV64 .value{font-size:17px;font-weight:900;margin-top:4px}
+    .homeCarProgressV64{margin-top:11px}
+    .homeCarPlanActionV64{width:100%;margin-top:10px}
+
     @media(max-width:430px){.loanImproveGridV631{grid-template-columns:1fr}}
 
     .downBoostCardV62.balancePick{border-color:#22a06b;background:rgba(34,160,107,.12)}
@@ -251,7 +262,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.3.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.4</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -266,6 +277,51 @@
           <div class="mini"><div class="label">購入目安</div><div class="v" id="purchaseEta">—</div></div>
         </div>
       </div>
+
+      <div class="card homeCarPlanV64">
+        <div class="homeCarPlanHeadV64">
+          <h3 style="margin:0">🚙 オデッセイ購入ナビ</h3>
+          <span class="pill" id="homeCarPlanBadgeV64">現在プラン</span>
+        </div>
+
+        <div class="homeCarPlanMainV64 good" id="homeCarPlanTitleV64">—</div>
+        <div class="homeCarPlanSubV64" id="homeCarPlanMonthlyV64">車計画から自動表示します。</div>
+
+        <div class="homeCarPlanStatsV64">
+          <div class="homeCarStatV64">
+            <div class="label">購入に必要な資金</div>
+            <div class="value" id="homeCarPlanRequiredV64">¥0</div>
+            <div class="sub">頭金＋生活防衛資金</div>
+          </div>
+          <div class="homeCarStatV64">
+            <div class="label">購入まであと</div>
+            <div class="value warn" id="homeCarPlanShortageV64">¥0</div>
+            <div class="sub">現在のみずほ残高から</div>
+          </div>
+          <div class="homeCarStatV64">
+            <div class="label">あと何か月</div>
+            <div class="value blue" id="homeCarPlanMonthsV64">—</div>
+            <div class="sub" id="homeCarPlanSavePaceV64">毎月の純増で計算</div>
+          </div>
+          <div class="homeCarStatV64">
+            <div class="label">購入時期目安</div>
+            <div class="value good" id="homeCarPlanEtaV64">—</div>
+            <div class="sub">目標資金到達ベース</div>
+          </div>
+        </div>
+
+        <div class="homeCarProgressV64">
+          <div class="row" style="padding:0 0 6px">
+            <div class="name">採用プラン購入資金 達成率</div>
+            <div class="value" id="homeCarPlanPctV64">0%</div>
+          </div>
+          <div class="progress green"><span id="homeCarPlanProgressV64" style="width:0%"></span></div>
+        </div>
+
+        <div class="note" id="homeCarPlanNoteV64" style="margin-top:10px">採用中プランを決めると、購入までの残額と時期をここに表示します。</div>
+        <button class="btn secondary homeCarPlanActionV64" id="openCarPlanV64" type="button">車計画を詳しく見る</button>
+      </div>
+
       <div class="card" style="margin-bottom:14px;border-color:#29446b">
         <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">💳 今日のお金ナビ</h3><span class="pill">au PAY中心</span></div>
         <div class="grid">
@@ -948,7 +1004,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.3.1',at:new Date().toISOString(),reason,
+      version:'6.4',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1113,7 +1169,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'6.3.1',
+    version:'6.4',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -3535,6 +3591,55 @@ function applyOcrCandidates(){
   }
   alert('確認した項目だけ反映しました。既存の非ゼロ値はOCRの0円では上書きされません。');
 }
+
+function renderHomeCarPlanV64(){
+  const title=document.getElementById('homeCarPlanTitleV64');
+  if(!title)return;
+
+  const adopted=activeAdoptedLoanV631();
+  const down=Math.max(0,Number(adopted?.downPayment ?? settings.downPayment ?? 0));
+  const years=Math.max(1,Math.round(Number(adopted?.years ?? settings.loanYears ?? 1)));
+  const rate=Math.max(0,Number(adopted?.ratePct ?? settings.ratePct ?? 0));
+  const principal=Math.max(0,Number(settings.carTotal||0)-down);
+  const monthly=loanPaymentV60(principal,rate,years);
+
+  // 購入条件は「頭金 + 生活防衛資金」を同時に確保すること。
+  const required=Math.max(0,down+Number(settings.emergencyTarget||0));
+  const current=Math.max(0,Number(settings.mizuho||0));
+  const shortage=Math.max(0,required-current);
+  const months=monthsToSavingsTargetV60(required);
+  const eta=purchaseEtaForSavingsV60(required);
+  const pct=required>0?Math.min(100,current/required*100):100;
+
+  const set=(id,value)=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=value;
+  };
+
+  set('homeCarPlanBadgeV64',adopted?'📌 採用中・固定':'現在プラン');
+  set('homeCarPlanTitleV64','頭金 '+yen(down)+' / '+years+'年');
+  set('homeCarPlanMonthlyV64','借入 '+yen(principal)+' ・ 月返済 約'+yen(monthly)+' ・ 金利 '+rate.toFixed(2)+'%');
+  set('homeCarPlanRequiredV64',yen(required));
+  set('homeCarPlanShortageV64',yen(shortage));
+  set('homeCarPlanMonthsV64',months===Infinity?'—':(months===0?'達成済':months+'か月'));
+  set('homeCarPlanEtaV64',eta);
+  set('homeCarPlanSavePaceV64','毎月 '+yen(settings.saveMonthly||0)+' 純増で計算');
+  set('homeCarPlanPctV64',pct.toFixed(1)+'%');
+
+  const bar=document.getElementById('homeCarPlanProgressV64');
+  if(bar)bar.style.width=pct+'%';
+
+  const note=document.getElementById('homeCarPlanNoteV64');
+  if(note){
+    if(shortage<=0){
+      note.textContent='✅ 頭金と生活防衛資金を同時に確保できる水準に到達しています。購入前に実際の諸費用・ローン条件を最終確認してください。';
+    }else if(adopted){
+      note.textContent='📌 採用中プランを基準に、あと '+yen(shortage)+'。現在の純増ペースなら '+(months===Infinity?'積立額の設定が必要です。':months+'か月、'+eta+'ごろが目安です。');
+    }else{
+      note.textContent='現在の車設定を基準に計算しています。車計画でプランを採用すると、そのプランを固定してここへ表示します。';
+    }
+  }
+}
 function render(){
   const emRatio=settings.mizuho/settings.emergencyTarget*100; const puRatio=settings.mizuho/settings.purchaseTarget*100;
   const emRemain=Math.max(0,settings.emergencyTarget-settings.mizuho); const puRemain=Math.max(0,settings.purchaseTarget-settings.mizuho);
@@ -3555,6 +3660,7 @@ function render(){
     loanRateCompareV60.dataset.initialized='1';
   }
   renderLoanPlannerV60();
+  renderHomeCarPlanV64();
   document.querySelectorAll('[data-setting]').forEach(el=>el.value=settings[el.dataset.setting]);
   document.querySelectorAll('[data-setting-text]').forEach(el=>el.value=settings[el.dataset.settingText]||'');
   loadUtilitiesToFormV58(); renderUtilitiesV58(); renderRulesV58();
@@ -3613,6 +3719,10 @@ document.querySelectorAll('.tab').forEach(btn=>{
     showPageV56(btn.dataset.tab,true);
   });
 });
+
+const openCarPlanV64=document.getElementById('openCarPlanV64');
+if(openCarPlanV64)openCarPlanV64.addEventListener('click',()=>showPageV56('car',true));
+
 
 // 更新後は最後に開いていたページを復元。
 // 初回または不明な値ならホーム。
@@ -3770,7 +3880,7 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.3.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.4',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費（本人負担）','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -3788,7 +3898,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.3.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.4',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
