@@ -314,6 +314,34 @@
     .monthCloseSummaryCellV72 .label{font-size:10px;color:#94a3b8}
     .monthCloseSummaryCellV72 .v{font-size:17px;font-weight:900;margin-top:4px}
     .monthCloseSummaryMessageV72{margin-top:10px;border:1px dashed #2d7a57;border-radius:13px;padding:10px;font-size:11px;line-height:1.65;color:#cbd5e1}
+    .dailyHubV73{border-color:#2b6b57;background:linear-gradient(180deg,rgba(26,105,76,.14),rgba(8,20,34,.97));margin-bottom:14px}
+    .dailyKeyGridV73{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .dailyKeyCellV73{border:1px solid #2c4d6f;border-radius:14px;background:#071322;padding:10px;min-width:0}
+    .dailyKeyCellV73 .label{font-size:9px;color:#94a3b8}
+    .dailyKeyCellV73 .v{font-size:18px;font-weight:950;margin-top:4px;overflow-wrap:anywhere}
+    .todayTasksV73{display:grid;gap:7px;margin-top:10px}
+    .todayTaskV73{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #2c4d6f;border-radius:13px;padding:9px 10px;background:#071322}
+    .todayTaskV73.ok{border-color:#22543d}.todayTaskV73.warn{border-color:#7b6329}.todayTaskV73.bad{border-color:#7b3434}
+    .todayTaskTitleV73{font-size:11px;font-weight:900}
+    .todayTaskMetaV73{font-size:9px;color:#94a3b8;margin-top:2px;line-height:1.4}
+    .todayTaskStateV73{font-size:9px;font-weight:900;border:1px solid #35527c;border-radius:999px;padding:4px 7px;white-space:nowrap}
+    .todayTaskV73.ok .todayTaskStateV73{color:#86efac;border-color:#22543d}
+    .todayTaskV73.warn .todayTaskStateV73{color:#fde68a;border-color:#7b6329}
+    .todayTaskV73.bad .todayTaskStateV73{color:#fca5a5;border-color:#7b3434}
+    .dailyActionsV73{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+    .dailyActionV73{border:1px solid #35527c;border-radius:12px;background:#0a1628;color:#dbeafe;padding:9px 5px;font-size:9px;font-weight:850;line-height:1.35}
+    .dailyModeRowV73{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px;border-top:1px solid #20344e;padding-top:9px}
+    .dailySecondaryV73.dailyCollapsedV73{display:none!important}
+    .apolloStatusV73{margin-top:9px;border:1px dashed #35527c;border-radius:13px;padding:10px;font-size:10px;line-height:1.65;color:#b9c7da}
+    .apolloStatusV73 strong{color:#dbeafe}
+    .apolloUnitPillV73{display:inline-block;margin-left:5px;border:1px solid #35527c;border-radius:999px;padding:3px 7px;color:#93c5fd;font-size:9px}
+    @media(max-width:560px){
+      .dailyKeyGridV73{grid-template-columns:1fr 1fr}
+      .dailyKeyCellV73:last-child{grid-column:1/-1}
+      .dailyActionsV73{grid-template-columns:1fr 1fr}
+      .dailyKeyCellV73 .v{font-size:16px}
+    }
+
     @media(max-width:560px){
       .statementItem.compactV72{grid-template-columns:48px minmax(0,1fr) auto!important}
       .statementItem.compactV72 .txActionV702{grid-column:2/4;justify-content:flex-end;flex-wrap:nowrap}
@@ -510,7 +538,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.2</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.3</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -523,6 +551,34 @@
           <div class="mini"><div class="label">防衛資金まで</div><div class="v" id="remainEmergency">—</div></div>
           <div class="mini"><div class="label">採用プラン購入まで</div><div class="v" id="remainPurchase">—</div></div>
           <div class="mini"><div class="label">購入目安</div><div class="v" id="purchaseEta">—</div></div>
+        </div>
+      </div>
+
+      <div class="card dailyHubV73">
+        <div class="sectionTitle" style="margin:0">
+          <h3 style="margin:0">📌 今日やること</h3>
+          <span class="pill" id="dailyHubPillV73">確認中</span>
+        </div>
+        <div class="sub">毎日はここだけ確認すればOKです。異常・未確認がある時だけ黄色や赤で表示します。</div>
+
+        <div class="dailyKeyGridV73">
+          <div class="dailyKeyCellV73"><div class="label">次の15日まで使える</div><div class="v good" id="dailyFree82V73">¥0</div></div>
+          <div class="dailyKeyCellV73"><div class="label">今月生活費 残り</div><div class="v good" id="dailyLivingRemainV73">¥0</div></div>
+          <div class="dailyKeyCellV73"><div class="label">要確認カード明細</div><div class="v blue" id="dailyPendingTxV73">0件</div></div>
+        </div>
+
+        <div class="todayTasksV73" id="todayTasksV73"></div>
+
+        <div class="dailyActionsV73">
+          <button class="dailyActionV73" id="dailyAddCardV73" type="button">💳<br>カード明細</button>
+          <button class="dailyActionV73" id="dailyPendingV73" type="button">⚠️<br>要確認だけ</button>
+          <button class="dailyActionV73" id="dailyAddCashV73" type="button">💵<br>現金支出</button>
+          <button class="dailyActionV73" id="dailyTransferV73" type="button">🏦<br>振込確認</button>
+        </div>
+
+        <div class="dailyModeRowV73">
+          <div><strong style="font-size:11px">毎日モード</strong><div class="sub" id="dailyModeSubV73">詳細を折りたたみ中</div></div>
+          <button class="tinyBtn" id="toggleDailyModeV73" type="button">詳細を表示</button>
         </div>
       </div>
 
@@ -563,14 +619,14 @@
         <div class="motivationMessageV67" id="motivationMessageV67">今の進み具合を確認しています。</div>
       </div>
 
-      <div class="card deadlineCardV70">
+      <div class="card deadlineCardV70 dailySecondaryV73">
         <div class="sectionTitle" style="margin:0"><h3 style="margin:0">⏰ 支払・振込アラート</h3><span class="pill" id="deadlinePillV70">確認中</span></div>
         <div class="sub">15日の妻・母・教育資金の振込状況を確認します。期限を過ぎて未確認のものは警告します。</div>
         <div class="deadlineListV70" id="deadlineListV70"></div>
         <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="openTransferManageV70" type="button">15日振込を確認</button></div>
       </div>
 
-      <div class="card fifteenCardV70">
+      <div class="card fifteenCardV70 dailySecondaryV73">
         <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💰 次の15日に必要なお金</h3><span class="pill" id="fifteenMonthPillV70">—</span></div>
         <div class="fifteenGridV70">
           <div class="fifteenCellV70"><div class="label">八十二から必要</div><div class="v good" id="fifteenBank82V70">¥0</div></div>
@@ -610,7 +666,7 @@
         <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="openMonthlyV69" type="button">月次・月末締めを見る</button><button class="btn secondary" id="openScheduleV69" type="button">振込予定を見る</button></div>
       </div>
 
-      <div class="card homeCarPlanV64">
+      <div class="card homeCarPlanV64 dailySecondaryV73">
         <div class="homeCarTopV64">
           <h3 id="homeCarTitleV64" style="margin:0">🚙 採用中の車プラン</h3>
           <span class="pill" id="homeCarStatusV64">採用中・固定</span>
@@ -803,7 +859,9 @@
             <div class="field"><label>apollostation 確定請求（7日）</label><input data-payment="apolloNextBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>apollostation 翌月未確定</label><input data-payment="apolloFollowingBill" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>apollo ガソリン利用額（値引前）</label><input data-payment="apolloFuelGross" type="number" inputmode="numeric" placeholder="0"></div>
-            <div class="field"><label>apollo 値引き合計</label><input data-payment="apolloDiscount" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollo 確定値引き合計</label><input data-payment="apolloDiscount" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>いつでも値引き 適用中単価（円/L）</label><input data-payment="apolloDiscountPerL" type="number" min="0" step="1" inputmode="numeric" placeholder="2"></div>
+            <div class="field"><label>値引き単価 更新目安日</label><input data-payment="apolloDiscountReflectDay" type="number" min="1" max="28" inputmode="numeric" placeholder="18"></div>
             <div class="field"><label>apollo ガソリン以外</label><input data-payment="apolloOther" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>携帯料金（八十二・未引落し）</label><input data-payment="mobilePending82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
@@ -817,7 +875,7 @@
           </div>
           <div class="note" style="margin-top:12px">
             <strong>⛽ apollostation請求内訳</strong><br>
-            <span style="color:#94a3b8">確定請求は値引き込みの最終請求額を最優先します。内訳は「ガソリン値引前 − 値引き + ガソリン以外」で照合します。</span>
+            <span style="color:#94a3b8">確定請求は値引き込みの最終請求額を最優先します。ご提示の「いつでも値引き」は通常ガソリン・軽油2円/L、入会特典期間は5円/L。アプリ等への値引き単価更新は毎月18日頃を目安として管理します。カード明細に給油量(L)が無い場合、円/Lから金額を推測せず、請求で確定した値引きだけを実額として扱います。</span>
             <div class="row" style="margin-top:8px"><div class="name">ガソリン値引前</div><div class="value" id="apolloFuelGrossOut">¥0</div></div>
             <div class="row"><div class="name">値引き</div><div class="value good" id="apolloDiscountOut">−¥0</div></div>
             <div class="row"><div class="name">ガソリン実質</div><div class="value" id="apolloFuelNetOut">¥0</div></div>
@@ -919,7 +977,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.2</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.3</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -976,12 +1034,13 @@
               <div class="monthlyCardHead"><strong>⛽ apollostation</strong><span class="monthlyCardTotal" id="autoApolloTotal">¥0</span></div>
               <div class="monthlyCardGrid">
                 <div class="monthlyCardStat"><div class="label">ガソリン値引前</div><div class="v" id="autoApolloFuelGross">¥0</div></div>
-                <div class="monthlyCardStat"><div class="label">値引き・請求調整</div><div class="v good" id="autoApolloDiscount">−¥0</div></div>
-                <div class="monthlyCardStat"><div class="label">ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">請求グループ値引き</div><div class="v good" id="autoApolloDiscount">−¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">月別ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">ガソリン以外</div><div class="v" id="autoApolloOther">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">登録件数</div><div class="v" id="autoApolloCount">0件</div></div>
                 <div class="monthlyCardStat"><div class="label">カード利用合計</div><div class="v" id="autoApolloTotal2">¥0</div></div>
               </div>
+              <div class="apolloStatusV73" id="apolloUsageStatusV73">apollostationの値引き状況を確認しています。</div>
             </div>
           </div>
 
@@ -990,7 +1049,7 @@
             <div class="row"><div class="name">食費</div><div class="value" id="autoFood">¥0</div></div>
             <div class="row"><div class="name">日用品</div><div class="value" id="autoDaily">¥0</div></div>
             <div class="row"><div class="name">コンビニ</div><div class="value" id="autoConvenience">¥0</div></div>
-            <div class="row"><div class="name">ガソリン（値引後）</div><div class="value" id="autoFuel">¥0</div></div>
+            <div class="row"><div class="name">ガソリン（確定分のみ値引反映）</div><div class="value" id="autoFuel">¥0</div></div>
             <div class="row"><div class="name">外食・娯楽</div><div class="value" id="autoFun">¥0</div></div>
             <div class="row"><div class="name">タバコ</div><div class="value" id="autoTobacco">¥0</div></div>
             <div class="row"><div class="name">その他</div><div class="value" id="autoOther">¥0</div></div>
@@ -1000,7 +1059,7 @@
           <div class="row"><div class="name"><strong>今月よく使った店 TOP5</strong></div><div class="value" id="monthlyMerchantCount">0店舗</div></div>
           <div class="merchantRank" id="monthlyMerchantRank"><div class="empty">明細を登録すると表示されます。</div></div>
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="autoClassifyExisting" type="button">未分類明細を自動分類</button><button class="btn secondary" id="applyTransactionsToMonth" type="button">利用月を今すぐ再反映</button></div>
-          <div class="note" style="margin-top:10px">apollostationは利用日ベースで月次集計します。請求日にだけ置いた値引き・請求調整は利用月から除外し、請求月だけで管理します。v5.8.2の欠損明細個別補完も維持しています。</div>
+          <div class="note" style="margin-top:10px">apollostationは利用日ベースで月次集計します。値引きは「率」ではなく円/Lで管理し、通常2円/L（入会特典期間は5円/L）を基準に表示します。給油量(L)が明細に無いので、円/Lから金額を推測しません。1つの請求グループが複数の利用月に跨る場合も勝手に月別配分せず、月別金額へ反映できる確定値引きだけを差し引きます。値引き単価の更新確認目安は毎月18日頃です。</div>
 
           <div class="cashBoxV66">
             <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💵 現金支出（カードと別管理）</h3><span class="pill" id="cashMonthTotalV66">¥0</span></div>
@@ -1520,6 +1579,7 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v7.3：</strong>毎日使いやすい「今日やること」をホーム最上部に追加し、次の15日まで使える額・今月生活費残り・要確認明細、未処理タスク、カード明細/要確認/現金/振込へのワンタップ導線をまとめました。毎日モードでは重複する支払アラート・15日詳細・車計画を折りたたみます。月締め後は翌月の家賃・母・教育資金・予定手数料を「予定」として自動準備します。apollostationは通常2円/L・入会特典5円/L、値引き単価更新目安18日頃として管理し、給油量が無い明細から金額や率を推測しない方式へ修正しました。</div>
       <div class="note" style="margin-top:12px"><strong>v7.2：</strong>月末締め（1日〜末日）と給料日サイクル（15日〜翌14日）を分離して併用できるようにしました。ホームに今回給与・15日振り分け・カード引落予定・次の15日まで使える額・サイクル実績・残り日数を表示します。カード明細は日付を短縮してコンパクト化し、「今月／要確認／タバコ／コンビニ／全件」のクイック絞り込みを追加。月を締めた後は確定値の月締め完了サマリーを表示します。</div>
       <div class="note" style="margin-top:12px"><strong>v7.1：</strong>明細検索・月/カード/カテゴリ/確認状態の絞り込み、読み込み明細の「要確認→確認済み」管理、タバコの今月実績・前月比、カード選択欄の表示改善、月締め前の「明細要確認0件」「振込実手数料確認」自動ゲートを追加しました。新しく読み込んだカード明細は要確認になり、カテゴリ変更・分割保存・確認済み操作で確認完了になります。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.3：</strong>「分割」ボタンの表示対象をコンビニ明細に限定しました。ローソン・ファミリーマート・セブン-イレブン・ミニストップなど、カテゴリが「コンビニ」と判定された明細だけに表示します。apollostationのガソリン・値引き等には表示しません。すでに分割済みの明細は、あとから編集できるよう「分割編集」を維持します。</div>
@@ -1590,7 +1650,7 @@
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,rentLeave:50000,wifeLeaveActive:1,wifeLeaveEnd:'',kyosai:2500,education:10000,educationWife:10000,educationStart:'2026-10',nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000,carTaxAnnual:36000,carInspectionMonthly:5000,carMaintenanceMonthly:5000,carTireMonthly:2500,carParkingMonthly:0,carGoMargin:100000,budgetFood:0,budgetDaily:0,budgetConvenience:0,budgetFuel:0,budgetUtilities:0,budgetFun:0,budgetTobacco:0,budgetOther:0,feeWifePlanned:0,feeMotherPlanned:0,feeEducationPlanned:0};
-const paymentDefaults={bank82Balance:93870,jibunBalance:866,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1,monthlyUsageAutoSyncV65:1,billingAutoSyncV65:1};
+const paymentDefaults={bank82Balance:93870,jibunBalance:866,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloDiscountPerL:2,apolloDiscountReflectDay:18,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1,monthlyUsageAutoSyncV65:1,billingAutoSyncV65:1};
 
 function safeParseStorage(key,fallback){
   try{
@@ -4029,6 +4089,73 @@ function restoreMonthModeV591(){
 function emptyCardSummaryV57(){
   return {food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,total:0,count:0};
 }
+
+function apolloDiscountUnitV73(){return Math.max(0,Number(payments.apolloDiscountPerL??2))}
+function apolloReflectDayV73(){return Math.max(1,Math.min(28,Number(payments.apolloDiscountReflectDay??18)))}
+function nextApolloReflectDateV73(from=new Date()){
+  const d=new Date(from);d.setHours(0,0,0,0);
+  let target=new Date(d.getFullYear(),d.getMonth(),apolloReflectDayV73());
+  if(target<d)target=new Date(d.getFullYear(),d.getMonth()+1,apolloReflectDayV73());
+  return target;
+}
+function apolloUsageDiscountInfoV73(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.transactionSummary?.apolloUsageDiscountV73){
+    return deepCloneV68(closed.transactionSummary.apolloUsageDiscountV73);
+  }
+  const rows=auTransactions.filter(x=>(x.cardType||'au')==='apollo');
+  const groups={};
+  rows.forEach(x=>{
+    const g=String(x.billGroup||'').trim();if(!g)return;
+    if(!groups[g])groups[g]={fuelRows:[],discount:0};
+    const cat=classifyMerchantForCard(x.memo,'apollo',x.amount,x.category);
+    if(!x.billingAdjustment&&Number(x.amount||0)>0&&cat==='fuel')groups[g].fuelRows.push(x);
+    if((x.billingAdjustment||cat==='discount'||Number(x.amount||0)<0)&&Number(x.amount||0)<0)groups[g].discount+=Math.abs(Number(x.amount||0));
+  });
+
+  let exactDiscount=0,mixedGroupDiscount=0,pendingFuel=0,monthFuelGross=0;
+  const confirmedGroups=[],mixedGroups=[],pendingGroups=[];
+  Object.entries(groups).forEach(([g,obj])=>{
+    const inMonth=obj.fuelRows.filter(x=>String(x.date||'').slice(0,7)===monthKey);
+    if(!inMonth.length)return;
+    const inMonthGross=inMonth.reduce((s,x)=>s+Math.max(0,Number(x.amount||0)),0);
+    monthFuelGross+=inMonthGross;
+    const months=[...new Set(obj.fuelRows.map(x=>String(x.date||'').slice(0,7)).filter(Boolean))];
+    if(obj.discount>0){
+      if(months.length===1&&months[0]===monthKey){
+        exactDiscount+=obj.discount;
+        confirmedGroups.push({group:g,discount:obj.discount,gross:inMonthGross});
+      }else{
+        mixedGroupDiscount+=obj.discount;
+        mixedGroups.push({group:g,discount:obj.discount,gross:inMonthGross,months});
+      }
+    }else{
+      pendingFuel+=inMonthGross;
+      pendingGroups.push({group:g,gross:inMonthGross});
+    }
+  });
+
+  // billGroupがない給油明細は未確定扱い。
+  const noGroupFuel=rows.filter(x=>{
+    if(String(x.date||'').slice(0,7)!==monthKey||x.billingAdjustment||String(x.billGroup||'').trim())return false;
+    return Number(x.amount||0)>0&&classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)==='fuel';
+  }).reduce((s,x)=>s+Number(x.amount||0),0);
+  monthFuelGross+=noGroupFuel;pendingFuel+=noGroupFuel;
+  if(noGroupFuel>0)pendingGroups.push({group:'未紐付け',gross:noGroupFuel});
+
+  const reflect=nextApolloReflectDateV73();
+  return {
+    monthKey,exactDiscount:Math.round(exactDiscount),mixedGroupDiscount:Math.round(mixedGroupDiscount),
+    pendingFuel:Math.round(pendingFuel),monthFuelGross:Math.round(monthFuelGross),
+    confirmedGroups,mixedGroups,pendingGroups,
+    unitPerL:apolloDiscountUnitV73(),introPerL:5,reflectDay:apolloReflectDayV73(),
+    nextReflectDate:localDateKey(reflect)
+  };
+}
+function apolloFuelNetForUsageMonthV73(monthKey,summary){
+  const info=summary?.apolloUsageDiscountV73||apolloUsageDiscountInfoV73(monthKey);
+  return Math.max(0,Number(summary?.fuel||0)-Math.max(0,Number(info?.exactDiscount||0)));
+}
 function monthlyTransactionSummary(monthKey){
   const closed=closedSnapshotV68(monthKey);
   if(!buildingClosureSnapshotV68&&closed?.transactionSummary)return deepCloneV68(closed.transactionSummary);
@@ -4062,6 +4189,7 @@ function monthlyTransactionSummary(monthKey){
 
     sums[ct]+=a;
   });
+  sums.apolloUsageDiscountV73=apolloUsageDiscountInfoV73(monthKey);
   return sums;
 }
 
@@ -4383,6 +4511,8 @@ function runSelfDiagnosisV70(){
   if(badSplits.length)add('bad','カテゴリ分割の合計が元明細と一致しないカード明細が '+badSplits.length+'件あります。分割を開いて修正してください。');
   const pendingReviewV71=cardReviewSummaryV71(current);
   if(pendingReviewV71.pending)add('warn',current+' のカード明細に要確認が '+pendingReviewV71.pending+'件あります。ホームの「要確認だけ見る」で確認してください。');
+  if(apolloDiscountUnitV73()<=0)add('warn','apollostationの「いつでも値引き」適用単価が0円/Lです。通常利用なら2円/L、入会特典期間なら5円/Lを確認してください。');
+  if(apolloReflectDayV73()!==18)add('warn','apollostation値引き単価の更新目安日が18日以外に設定されています。ご提示情報ではアプリ反映は18日頃です。');
   Object.keys(billingMonths||{}).forEach(k=>{
     try{const r=billingReconciliationV66(k);if(r.relevant>0&&Math.abs(Number(r.grandDiff||0))>0)add('warn',k+' のカード請求突合に差額 '+(r.grandDiff>0?'+':'−')+yen(Math.abs(r.grandDiff))+' があります。')}
     catch(e){add('bad',k+' のカード請求突合を診断できませんでした。')}
@@ -4600,7 +4730,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.2',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.3',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -4617,6 +4747,7 @@ function closeMonthV68(){
 
   localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));
   protectedSaveV52('月締め '+k);
+  prepareNextMonthPlanV73(k,true);
   render();
   renderMonthCloseSummaryV72();
   setTimeout(()=>document.getElementById('monthCloseSummaryV72')?.scrollIntoView({behavior:'smooth',block:'center'}),80);
@@ -4660,24 +4791,34 @@ function renderMonthlyAuto(){
   set('autoAeonOther',yen(s.cards.aeon.other+s.cards.aeon.fuel+s.cards.aeon.discount));
 
   // apollostation
-  const ap=s.cards.apollo;
-  const apDiscount=Math.abs(Math.min(0,ap.discount));
-  const apFuelNet=ap.fuel+ap.discount;
-  const apOther=ap.total-ap.fuel-ap.discount;
+  const ap=s.cards.apollo,apInfo=s.apolloUsageDiscountV73||apolloUsageDiscountInfoV73(k);
+  const apDisplayedDiscount=Math.max(0,Number(apInfo.exactDiscount||0))+Math.max(0,Number(apInfo.mixedGroupDiscount||0));
+  const apFuelNet=Math.max(0,ap.fuel-Math.max(0,Number(apInfo.exactDiscount||0)));
+  const apOther=ap.total-ap.fuel;
   set('autoApolloTotal',yen(ap.total));
   set('autoApolloTotal2',yen(ap.total));
   set('autoApolloFuelGross',yen(ap.fuel));
-  set('autoApolloDiscount','−'+yen(apDiscount));
+  set('autoApolloDiscount','−'+yen(apDisplayedDiscount));
   set('autoApolloFuelNet',yen(apFuelNet));
   set('autoApolloOther',yen(apOther));
   set('autoApolloCount',ap.count+'件');
+  const apStatus=document.getElementById('apolloUsageStatusV73');
+  if(apStatus){
+    const mixed=apInfo.mixedGroupDiscount>0
+      ?' 複数利用月に跨る請求グループの確定値引き '+yen(apInfo.mixedGroupDiscount)+' は、給油量(L)が無いため月別へ勝手に配分していません。'
+      :'';
+    const pending=apInfo.pendingFuel>0?' 値引き未確定の給油 '+yen(apInfo.pendingFuel)+'。':'';
+    const next=String(apInfo.nextReflectDate||'').slice(5).replace('-','/');
+    apStatus.innerHTML='<strong>いつでも値引き：</strong>適用中 '+Number(apInfo.unitPerL||0)+'円/L（入会特典期間は5円/L） / 値引き単価更新目安 '+next+'頃。'+
+      '月別へ正確に紐付けできる確定値引きだけ '+yen(apInfo.exactDiscount)+' を月次ガソリンへ反映しています。'+mixed+pending;
+  }
 
   // 3カード合算
   set('autoThreeCardTotal',yen(s.total));
   set('autoFood',yen(s.food));
   set('autoDaily',yen(s.daily));
   set('autoConvenience',yen(s.convenience));
-  set('autoFuel',yen(s.fuel+s.discount));
+  set('autoFuel',yen(apolloFuelNetForUsageMonthV73(k,s)));
   set('autoFun',yen(s.fun));
   set('autoTobacco',yen(s.tobacco));
   set('autoOther',yen(s.other));
@@ -4706,7 +4847,7 @@ function applyTransactionsToMonth(){
   document.getElementById('mFood').value=s.food;
   document.getElementById('mDaily').value=s.daily;
   document.getElementById('mConvenience').value=s.convenience;
-  document.getElementById('mFuel').value=s.fuel+s.discount;
+  document.getElementById('mFuel').value=apolloFuelNetForUsageMonthV73(k,s);
   document.getElementById('mFun').value=s.fun;
   document.getElementById('mTobacco').value=s.tobacco;
   document.getElementById('mOther').value=s.other;
@@ -4856,7 +4997,7 @@ function syncUsageMonthRecordV65(monthKey){
     food:s.food,
     daily:s.daily,
     convenience:s.convenience,
-    fuel:s.fuel+s.discount,
+    fuel:apolloFuelNetForUsageMonthV73(monthKey,s),
     fun:s.fun,
     tobacco:s.tobacco,
     other:s.other,
@@ -4900,7 +5041,7 @@ function fillMonthlyFormV65(monthKey){
     val('mFood',s.food);
     val('mDaily',s.daily);
     val('mConvenience',s.convenience);
-    val('mFuel',s.fuel+s.discount);
+    val('mFuel',apolloFuelNetForUsageMonthV73(k,s));
     val('mFun',s.fun);
     val('mTobacco',s.tobacco);
     val('mOther',s.other);
@@ -5283,6 +5424,104 @@ function renderPaydayCycleV72(){
     (feeUnknown?' ⚠️ 手数料0円/未設定の振込が '+feeUnknown+'件あります。':'')+
     '「次の15日まで使える」は現在の八十二残高から未引落し・必要確保額を除いた金額です。'
   );
+}
+
+function dailyModeOnV73(){return localStorage.getItem('odyssey_daily_mode_v73')!=='off'}
+function applyDailyModeV73(){
+  const on=dailyModeOnV73();
+  document.querySelectorAll('.dailySecondaryV73').forEach(e=>e.classList.toggle('dailyCollapsedV73',on));
+  const btn=document.getElementById('toggleDailyModeV73'),sub=document.getElementById('dailyModeSubV73');
+  if(btn)btn.textContent=on?'詳細を表示':'詳細を折りたたむ';
+  if(sub)sub.textContent=on?'重複する詳細カードを折りたたみ中':'すべての詳細カードを表示中';
+}
+function toggleDailyModeV73(){
+  localStorage.setItem('odyssey_daily_mode_v73',dailyModeOnV73()?'off':'on');
+  applyDailyModeV73();
+}
+function addMonthKeyV73(k,n=1){
+  const [y,m]=String(k).split('-').map(Number),d=new Date(y,m-1+n,1);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function prepareNextMonthPlanV73(baseMonthKey,silent=true){
+  const next=addMonthKeyV73(baseMonthKey,1);
+  if(!transferRecordsV70[next])transferRecordsV70[next]={};
+  let changed=false;
+  const mother=familyTransferRecordV69(next),education=educationForMonthV701(next);
+  const defs={
+    wife:{principal:Math.max(0,effectiveRentV58(monthDateForV68(next))),status:'pending',plannedFee:transferDefaultPlannedFeeV70('wife')},
+    mother:{principal:Math.max(0,Number(mother.amount||0)),status:mother.amount>0?'pending':'none',plannedFee:transferDefaultPlannedFeeV70('mother')},
+    education:{principal:education,status:education>0?'pending':'none',plannedFee:transferDefaultPlannedFeeV70('education')}
+  };
+  Object.entries(defs).forEach(([type,d])=>{
+    if(transferRecordsV70[next][type])return;
+    transferRecordsV70[next][type]={...d,actualFee:null,paidAt:'',preparedByV73:true};
+    changed=true;
+  });
+  if(changed){
+    localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));
+    protectedSaveV52('翌月予定を自動準備 '+next);
+  }
+  if(!silent&&changed)alert(next+' の家賃・母・教育資金・予定手数料を「予定」として準備しました。');
+  return {next,changed};
+}
+function dailyOpenCardV73(){
+  showPageV56('home',false);
+  setTimeout(()=>document.getElementById('pickStatementImages')?.scrollIntoView({behavior:'smooth',block:'center'}),60);
+}
+function dailyOpenPendingV73(){
+  showPageV56('home',false);
+  setTimeout(()=>{
+    const e=document.getElementById('txReviewFilterV71');if(e)e.value='pending';
+    readTransactionFiltersV71();renderTodayTransactions();
+    document.getElementById('txPendingPillV71')?.scrollIntoView({behavior:'smooth',block:'start'});
+  },60);
+}
+function dailyOpenCashV73(){
+  showPageV56('monthly',true);
+  setTimeout(()=>document.getElementById('cashAmountV66')?.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function dailyOpenTransferV73(){
+  showPageV56('schedule',true);
+  setTimeout(()=>document.getElementById('transferManageV70')?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+function renderDailyHubV73(){
+  const current=currentYM(),p=paymentSummary(),a=monthlyActualSummaryV66(current),budget=Math.max(0,Number(payments.auLivingBudget||0));
+  const remain=budget-a.living,review=cardReviewSummaryV71(current),ts=transferMonthSummaryV70(current),st=monthEndStateV68(current);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  set('dailyFree82V73',signedYenV72(p.free82));
+  set('dailyLivingRemainV73',remain>=0?yen(remain):'超過 '+yen(-remain));
+  set('dailyPendingTxV73',review.pending+'件');
+
+  const free=document.getElementById('dailyFree82V73'),living=document.getElementById('dailyLivingRemainV73'),pending=document.getElementById('dailyPendingTxV73');
+  if(free){free.classList.toggle('good',p.free82>=0);free.classList.toggle('warn',p.free82<0)}
+  if(living){living.classList.toggle('good',remain>=0);living.classList.toggle('warn',remain<0)}
+  if(pending){pending.classList.toggle('blue',review.pending===0);pending.classList.toggle('warn',review.pending>0)}
+
+  const tasks=[];
+  if(review.pending>0)tasks.push({level:'warn',title:'カード明細を確認',meta:'要確認 '+review.pending+'件。コンビニはタバコ混在も確認します。',state:'要確認'});
+  const scheduled=transferDateV70(current),diff=daysBetweenDateV70(new Date(),scheduled);
+  [ts.wife,ts.mother,ts.education].forEach(x=>{
+    if(x.principal<=0||x.status==='none')return;
+    if(x.status==='paid'&&x.actualFee===null)tasks.push({level:'warn',title:transferTypeLabelV70(x.type)+'の手数料確認',meta:'振込済みですが実手数料が未入力です。',state:'手数料'});
+    if(x.status!=='paid'&&diff<=0)tasks.push({level:diff<0?'bad':'warn',title:transferTypeLabelV70(x.type)+' '+yen(x.principal),meta:'15日振込 / '+transferTypeRouteV70(x.type),state:diff<0?'期限経過':'今日'});
+  });
+  const today=new Date();
+  if(today.getDate()>=17&&today.getDate()<=20){
+    tasks.push({level:'ok',title:'apollostation値引きを確認',meta:'いつでも値引きの単価更新目安は毎月18日頃です。現在設定 '+apolloDiscountUnitV73()+'円/L。',state:'18日頃'});
+  }
+  if(today.getDate()>=25&&!st.closed&&!st.ready){
+    const missing=monthEndMissingLabelsV71(st);
+    tasks.push({level:'warn',title:'月末チェック',meta:missing.length?'未完了：'+missing.join(' / '):'月締め確認',state:(st.total-st.done)+'項目'});
+  }
+  if(p.free82<0)tasks.push({level:'bad',title:'八十二銀行の確保額不足',meta:'必要確保額に対して '+yen(Math.abs(p.free82))+' 不足しています。',state:'不足'});
+  if(remain<0)tasks.push({level:'bad',title:'生活費予算を超過',meta:'今月の生活費が '+yen(Math.abs(remain))+' 超過しています。',state:'超過'});
+
+  const box=document.getElementById('todayTasksV73');
+  if(box)box.innerHTML=tasks.length?tasks.slice(0,5).map(x=>`<div class="todayTaskV73 ${x.level}"><div><div class="todayTaskTitleV73">${escapeHtml(x.title)}</div><div class="todayTaskMetaV73">${escapeHtml(x.meta)}</div></div><span class="todayTaskStateV73">${escapeHtml(x.state)}</span></div>`).join(''):'<div class="todayTaskV73 ok"><div><div class="todayTaskTitleV73">今日の必須作業はありません</div><div class="todayTaskMetaV73">未確認・期限超過・残高不足は見つかりませんでした。</div></div><span class="todayTaskStateV73">OK</span></div>';
+
+  const pill=document.getElementById('dailyHubPillV73'),bad=tasks.some(x=>x.level==='bad'),warn=tasks.some(x=>x.level==='warn');
+  if(pill){pill.textContent=bad?'要対応':warn?'要確認 '+tasks.filter(x=>x.level!=='ok').length+'件':'今日OK';pill.className='pill '+(bad?'healthBadV69':warn?'healthWarnV69':'healthGoodV69')}
+  applyDailyModeV73();
 }
 function paymentSummary(){
   const needToJibun=Math.max(0,Number(payments.auNextBill||0)-Number(payments.jibunBalance||0));
@@ -6036,7 +6275,7 @@ function render(){
   document.querySelectorAll('[data-setting]').forEach(el=>el.value=settings[el.dataset.setting]);
   document.querySelectorAll('[data-setting-text]').forEach(el=>el.value=settings[el.dataset.settingText]||'');
   loadUtilitiesToFormV58(); renderUtilitiesV58(); renderRulesV58();
-  renderHistory(); updateMonthTotals(); renderPayments(); renderTodayTransactions(); renderMonthlyAuto(); renderFamilyTransfersV69(); renderTransferManageV70(); renderDeadlineAlertsV70(); renderFifteenFundingV70(); renderPaydayCycleV72(); renderBackupHealthV69(); renderSelfDiagnosisV70();
+  renderHistory(); updateMonthTotals(); renderPayments(); renderTodayTransactions(); renderMonthlyAuto(); renderFamilyTransfersV69(); renderTransferManageV70(); renderDeadlineAlertsV70(); renderFifteenFundingV70(); renderPaydayCycleV72(); renderDailyHubV73(); renderBackupHealthV69(); renderSelfDiagnosisV70();
   const modeV591=currentMonthModeV591();
   const usageV591=document.getElementById('usagePanelV59');
   const billingV591=document.getElementById('billingPanelV59');
@@ -6125,6 +6364,12 @@ const quickPendingV72=document.getElementById('quickPendingV72');if(quickPending
 const quickTobaccoV72=document.getElementById('quickTobaccoV72');if(quickTobaccoV72)quickTobaccoV72.addEventListener('click',()=>applyQuickFilterV72('tobacco'));
 const quickConvenienceV72=document.getElementById('quickConvenienceV72');if(quickConvenienceV72)quickConvenienceV72.addEventListener('click',()=>applyQuickFilterV72('convenience'));
 const quickAllV72=document.getElementById('quickAllV72');if(quickAllV72)quickAllV72.addEventListener('click',()=>applyQuickFilterV72('all'));
+const dailyAddCardV73=document.getElementById('dailyAddCardV73');if(dailyAddCardV73)dailyAddCardV73.addEventListener('click',dailyOpenCardV73);
+const dailyPendingV73=document.getElementById('dailyPendingV73');if(dailyPendingV73)dailyPendingV73.addEventListener('click',dailyOpenPendingV73);
+const dailyAddCashV73=document.getElementById('dailyAddCashV73');if(dailyAddCashV73)dailyAddCashV73.addEventListener('click',dailyOpenCashV73);
+const dailyTransferV73=document.getElementById('dailyTransferV73');if(dailyTransferV73)dailyTransferV73.addEventListener('click',dailyOpenTransferV73);
+const toggleDailyModeV73Btn=document.getElementById('toggleDailyModeV73');if(toggleDailyModeV73Btn)toggleDailyModeV73Btn.addEventListener('click',toggleDailyModeV73);
+
 
 const splitOverlayV702=document.getElementById('splitOverlayV702');
 if(splitOverlayV702)splitOverlayV702.addEventListener('click',e=>{if(e.target===splitOverlayV702)closeSplitEditorV702()});
@@ -6354,7 +6599,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.2',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.3',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));ensureTransactionReviewStateV71();protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -6372,7 +6617,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.2',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.3',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
