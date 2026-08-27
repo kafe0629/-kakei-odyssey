@@ -24,8 +24,8 @@
     header .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
     header h1{font-size:23px;margin:4px 0 0}
     main{padding:16px}
-    section{display:none;animation:fade .18s ease}
-    section.active{display:block}
+    .app main > section{display:none;animation:fade .18s ease}
+    .app main > section.active{display:block}
     @keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .card{background:linear-gradient(180deg,rgba(24,34,53,.96),rgba(18,26,43,.96));border:1px solid rgba(148,163,184,.13);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow)}
@@ -138,7 +138,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.5</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.6</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -270,7 +270,7 @@
               </div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.3では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、v5.3では反映前に金額を編集・選択できます。請求額が1〜3桁など不自然な候補は自動で未選択にします。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.6では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、v5.6では反映前に金額を編集・選択できます。請求額が1〜3桁など不自然な候補は自動で未選択にします。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
@@ -453,18 +453,18 @@
           <div class="sub" style="margin-top:7px">アプリ更新後に不具合が出た場合でも、保存した時点の設定・支払管理・月次・カード明細へ戻せます。</div>
         </div>
       </div>
-      <div class="note" style="margin-top:12px">v5.5：登録済みカード明細に「使用カード」を表示し、au PAY・イオン・apollostationを登録後でも変更できるようにしました。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v5.6：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
 </div>
 
 <nav class="tabs"><div class="tabsInner">
-  <button class="tab active" data-tab="home"><span>🏠</span>ホーム</button>
-  <button class="tab" data-tab="monthly"><span>🧾</span>月次</button>
-  <button class="tab" data-tab="car"><span>🚙</span>車計画</button>
-  <button class="tab" data-tab="schedule"><span>📅</span>予定</button>
-  <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
+  <button class="tab active" data-tab="home" aria-selected="true"><span>🏠</span>ホーム</button>
+  <button class="tab" data-tab="monthly" aria-selected="false"><span>🧾</span>月次</button>
+  <button class="tab" data-tab="car" aria-selected="false"><span>🚙</span>車計画</button>
+  <button class="tab" data-tab="schedule" aria-selected="false"><span>📅</span>予定</button>
+  <button class="tab" data-tab="settings" aria-selected="false"><span>⚙️</span>設定</button>
 </div></nav>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -535,7 +535,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'5.5',at:new Date().toISOString(),reason,
+      version:'5.6',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -694,7 +694,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'5.5',
+    version:'5.6',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -1870,7 +1870,52 @@ function render(){
 }
 function renderHistory(){const h=document.getElementById('history');const keys=Object.keys(months).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k];const total=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">タバコ ${yen(m.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho)}</div></div>`}).join('')}
 function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther'];const total=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const tobacco=Number(document.getElementById('mTobacco')?.value||0);const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards)}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
+const pageIdsV56=['home','monthly','car','schedule','settings'];
+
+function repairPageStructureV56(){
+  const app=document.querySelector('.app');
+  const main=app?.querySelector('main')||document.querySelector('main');
+  if(!main)return false;
+
+  // ブラウザが不正な閉じタグを補正して section を main の外へ出した場合でも、
+  // 5画面を必ず main の直下へ戻す。
+  pageIdsV56.forEach(id=>{
+    const sec=document.getElementById(id);
+    if(sec && sec.parentElement!==main) main.appendChild(sec);
+  });
+  return true;
+}
+
+function showPageV56(id,scroll=true){
+  repairPageStructureV56();
+  const target=pageIdsV56.includes(id)?id:'home';
+
+  pageIdsV56.forEach(pid=>{
+    const sec=document.getElementById(pid);
+    if(sec)sec.classList.toggle('active',pid===target);
+  });
+
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.tab===target);
+    btn.setAttribute('aria-selected',btn.dataset.tab===target?'true':'false');
+  });
+
+  localStorage.setItem('odyssey_active_page',target);
+  if(scroll)window.scrollTo({top:0,behavior:'auto'});
+}
+
+repairPageStructureV56();
+
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    showPageV56(btn.dataset.tab,true);
+  });
+});
+
+// 更新後は最後に開いていたページを復元。
+// 初回または不明な値ならホーム。
+const savedPageV56=localStorage.getItem('odyssey_active_page');
+showPageV56(pageIdsV56.includes(savedPageV56)?savedPageV56:'home',false);
 ['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
 const now=new Date();document.getElementById('monthKey').value=now.toISOString().slice(0,7);
 
@@ -1928,13 +1973,13 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.5',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.6',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.5',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.6',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
