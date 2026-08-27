@@ -134,6 +134,29 @@
     .monthlyCardStat .label{font-size:11px;color:#94a3b8}
     .monthlyCardStat .v{font-weight:800;margin-top:4px;overflow-wrap:anywhere}
     .monthlyGrandTotal{margin-top:12px;padding:12px;border:1px solid #22543d;border-radius:14px;background:rgba(34,84,61,.12)}
+    .monthModeSwitch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+    .monthModeBtn{border:1px solid #334a70;background:#0a1528;color:#a8b6ca;border-radius:13px;padding:11px 8px;font-weight:800;font-size:14px}
+    .monthModeBtn.active{background:#183154;color:#fff;border-color:#6095df}
+    .dualMonthOverview{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0 14px}
+    .dualMonthBox{border:1px solid #29446b;border-radius:14px;padding:11px;background:#091528}
+    .dualMonthBox .label{font-size:11px;color:#94a3b8}
+    .dualMonthBox .amount{font-size:22px;font-weight:900;margin-top:5px}
+    .billingPanelV59{display:none}
+    .billingPanelV59.active{display:block}
+    .usagePanelV59{display:none}
+    .usagePanelV59.active{display:block}
+    .billingCardV59{border:1px solid #29446b;border-radius:16px;padding:12px;background:#091528;margin-top:10px}
+    .billingCardHeadV59{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .billingFormV59{display:grid;grid-template-columns:1.2fr 1fr;gap:9px}
+    .billingTotalsV59{border:1px solid #22543d;border-radius:14px;padding:12px;background:rgba(34,84,61,.10);margin-top:12px}
+    .billingHistoryRowV59{display:grid;grid-template-columns:82px 1fr auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(148,163,184,.13)}
+    .billingHistoryRowV59:last-child{border-bottom:0}
+    .tinyStatusV59{font-size:10px;color:#9fb0c7;margin-top:3px}
+    @media(max-width:430px){
+      .dualMonthOverview{grid-template-columns:1fr 1fr}
+      .billingFormV59{grid-template-columns:1fr 1fr}
+    }
+
     .utilityBlock{border:1px solid #29446b;border-radius:15px;padding:12px;background:#091528;margin-top:10px}
     .utilityHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
     .utilityGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
@@ -157,7 +180,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.8.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.9</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -213,7 +236,7 @@
           <div class="separator"></div>
           <div class="row"><div class="name"><strong>現在の締めサイクル明細合計</strong></div><div class="value good" id="statementCycleTotal">¥0</div></div>
           <div class="row" style="margin-top:8px"><div class="name"><strong>au PAY明細のみ未確定利用額へ自動反映</strong></div><label style="display:flex;align-items:center;gap:8px;color:#dbeafe"><input id="statementAutoSync" type="checkbox" style="width:20px;height:20px" checked> ON</label></div>
-          <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="syncStatementUnconfirmed" type="button">今すぐ明細合計を反映</button></div>
+          <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="syncStatementUnconfirmed" type="button">au PAY未確定へ反映</button></div>
           <div class="sub" style="margin-top:8px">ONのときは、明細を登録・削除するたびに現在の締めサイクル明細合計を「au PAYゴールド 未確定利用額」へ自動反映し、「今月au PAY残り」「今日あと使ってOK」「将来引落し見込み」まで再計算します。カードアプリ側の未確定合計を手入力したい場合はOFFにしてください。</div>
           <div class="row" style="margin-top:8px"><div class="name"><strong>登録済み明細</strong></div><div class="value" id="statementRegisteredCount">0件</div></div>
           <div class="btnRow" style="margin:8px 0 2px"><button class="btn secondary" id="reclassifyHome" type="button">未分類を再分類</button></div>
@@ -412,15 +435,26 @@
           <div class="field"><label>外食・娯楽</label><input type="number" id="mFun" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>タバコ</label><input type="number" id="mTobacco" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>その他</label><input type="number" id="mOther" inputmode="numeric" placeholder="0"></div>
-          <div class="field"><label>au PAYゴールド利用</label><input type="number" id="mAu" inputmode="numeric" placeholder="0"></div>
-          <div class="field"><label>イオンカード利用</label><input type="number" id="mAeon" inputmode="numeric" placeholder="0"></div>
-          <div class="field"><label>apollostation利用</label><input type="number" id="mApollo" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>au PAY 利用月額</label><input type="number" id="mAu" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>イオン 利用月額</label><input type="number" id="mAeon" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>apollostation 利用月額</label><input type="number" id="mApollo" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>みずほ月末残高</label><input type="number" id="mMizuho" inputmode="numeric" placeholder="0"></div>
         </div>
         <div class="receiptBox">
-          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 3カード明細から自動集計</h3><span class="pill">au PAY・イオン・apollostation</span></div>
-          <div class="sub">ホームで登録した3枚のカード明細を対象月ごとに分離して集計します。「月次欄へ反映」でカテゴリ合計と3カード利用額をまとめてコピーできます。</div>
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 カード月次デュアル管理</h3><span class="pill">利用月＋請求月</span></div>
+          <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
+          <div class="monthModeSwitch">
+            <button class="monthModeBtn active" id="monthModeUsageV59" type="button">🛍️ 利用月</button>
+            <button class="monthModeBtn" id="monthModeBillingV59" type="button">🏦 請求月</button>
+          </div>
+
+          <div class="dualMonthOverview">
+            <div class="dualMonthBox"><div class="label">この月に利用した3カード</div><div class="amount good" id="dualUsageTotalV59">¥0</div><div class="sub" id="dualUsageSubV59">利用日ベース</div></div>
+            <div class="dualMonthBox"><div class="label">この月に請求される3カード</div><div class="amount blue" id="dualBillingTotalV59">¥0</div><div class="sub" id="dualBillingSubV59">請求日ベース</div></div>
+          </div>
+
+          <div class="usagePanelV59 active" id="usagePanelV59">
           <div class="monthlyCardsWrap">
             <div class="monthlyCardBlock">
               <div class="monthlyCardHead"><strong>💳 au PAY</strong><span class="monthlyCardTotal good" id="autoAuTotal">¥0</span></div>
@@ -474,14 +508,63 @@
           <div class="row"><div class="name"><strong>今月よく使った店 TOP5</strong></div><div class="value" id="monthlyMerchantCount">0店舗</div></div>
           <div class="merchantRank" id="monthlyMerchantRank"><div class="empty">明細を登録すると表示されます。</div></div>
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="autoClassifyExisting" type="button">未分類明細を自動分類</button><button class="btn secondary" id="applyTransactionsToMonth" type="button">3カードを月次欄へ反映</button></div>
-          <div class="note" style="margin-top:10px">apollostationは「請求額」ではなく、利用日ベースの登録明細を月次へ集計します。9/7確定請求の値引き265円は利用日を特定できないため、9/7の請求調整として登録しています。8月の利用月には8/7の2,869円と8/23の2,769円を反映します。</div>
+          <div class="note" style="margin-top:10px">apollostationは利用日ベースで月次集計します。v5.8.2の欠損明細個別補完も維持しています。利用月は「何月に使ったか」を見るための家計分析用です。</div>
+          </div>
+
+          <div class="billingPanelV59" id="billingPanelV59">
+            <div class="sectionTitle" style="margin-top:4px"><h3 style="margin:0">🏦 請求月のカード計算</h3><span class="pill" id="billingMonthPillV59">対象月</span></div>
+            <div class="sub">請求月は「口座からいつ・いくら出ていくか」を見る資金管理用です。利用月の食費・ガソリン等には加算しません。</div>
+
+            <div class="billingCardV59">
+              <div class="billingCardHeadV59"><strong>💳 au PAY</strong><span class="pill">4日・auじぶん銀行</span></div>
+              <div class="billingFormV59">
+                <div class="field"><label>請求額</label><input id="billAuAmountV59" type="number" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>状態</label><select id="billAuStatusV59"><option value="none">未登録</option><option value="estimated">未確定・見込み</option><option value="confirmed">確定</option><option value="paid">支払済</option></select></div>
+              </div>
+            </div>
+
+            <div class="billingCardV59">
+              <div class="billingCardHeadV59"><strong>🛒 イオンカード</strong><span class="pill">2日・八十二銀行</span></div>
+              <div class="billingFormV59">
+                <div class="field"><label>請求額</label><input id="billAeonAmountV59" type="number" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>状態</label><select id="billAeonStatusV59"><option value="none">未登録</option><option value="estimated">未確定・見込み</option><option value="confirmed">確定</option><option value="paid">支払済</option></select></div>
+              </div>
+            </div>
+
+            <div class="billingCardV59">
+              <div class="billingCardHeadV59"><strong>⛽ apollostation</strong><span class="pill">7日・八十二銀行</span></div>
+              <div class="billingFormV59">
+                <div class="field"><label>請求額</label><input id="billApolloAmountV59" type="number" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>状態</label><select id="billApolloStatusV59"><option value="none">未登録</option><option value="estimated">未確定・見込み</option><option value="confirmed">確定</option><option value="paid">支払済</option></select></div>
+              </div>
+            </div>
+
+            <div class="billingTotalsV59">
+              <div class="row"><div class="name"><strong>3カード請求合計</strong></div><div class="value good" id="billingGrandTotalV59">¥0</div></div>
+              <div class="row"><div class="name">八十二銀行から引落予定</div><div class="value" id="billing82TotalV59">¥0</div></div>
+              <div class="row"><div class="name">auじぶん銀行から引落予定</div><div class="value" id="billingJibunTotalV59">¥0</div></div>
+              <div class="row"><div class="name">確定済み請求</div><div class="value blue" id="billingConfirmedTotalV59">¥0</div></div>
+              <div class="row"><div class="name">未確定・見込み</div><div class="value warn" id="billingEstimatedTotalV59">¥0</div></div>
+            </div>
+
+            <div class="btnRow" style="margin-top:10px">
+              <button class="btn secondary" id="syncBillingPaymentsV59" type="button">支払管理から同期</button>
+              <button class="btn" id="saveBillingMonthV59" type="button">請求月を保存</button>
+              <button class="btn secondary" id="clearBillingMonthV59" type="button">この請求月をクリア</button>
+            </div>
+            <div class="note" style="margin-top:10px">「支払管理から同期」は、次回確定請求と現在の未確定額を請求月へ割り当てます。apollostationは確定20,197円を9月、翌月未確定2,769円を10月として扱います。au PAYの未確定額は現在の締めサイクルから支払月を自動判定します。</div>
+
+            <div class="separator"></div>
+            <div class="row"><div class="name"><strong>請求月の履歴</strong></div><div class="value" id="billingHistoryCountV59">0か月</div></div>
+            <div id="billingHistoryV59"><div class="empty">まだ請求月データがありません。</div></div>
+          </div>
         </div>
         <div class="separator"></div>
         <div class="row"><div class="name">変動生活費 合計</div><div class="value" id="monthlyVariable">¥0</div></div>
         <div class="row"><div class="name">生活費（タバコ除く）</div><div class="value good" id="monthlyWithoutTobacco">¥0</div></div>
         <div class="row"><div class="name">タバコ</div><div class="value warn" id="monthlyTobacco">¥0</div></div>
         <div class="row"><div class="name">カード利用 合計</div><div class="value blue" id="monthlyCards">¥0</div></div>
-        <div class="btnRow" style="margin-top:12px"><button class="btn" id="saveMonth">この月を保存</button><button class="btn secondary" id="exportCsv">CSV書き出し</button></div>
+        <div class="btnRow" style="margin-top:12px"><button class="btn" id="saveMonth">この月を保存</button><button class="btn secondary" id="exportCsv">利用月CSV</button><button class="btn secondary" id="exportBillingCsvV59">請求月CSV</button></div>
       </div>
       <div class="sectionTitle" style="margin-top:18px"><h2>履歴</h2></div>
       <div class="card" id="history"></div>
@@ -616,6 +699,9 @@ const utilityDefaultsV58={
   water:{amount:0,payer:'unset',method:'unset',status:'unpaid'}
 };
 let utilityMonths=safeParseStorage('odyssey_utilities',{});
+let billingMonths=safeParseStorage('odyssey_billing_months',{});
+if(!billingMonths || typeof billingMonths!=='object' || Array.isArray(billingMonths))billingMonths={};
+
 function cloneUtilityDefaultV58(){
   return JSON.parse(JSON.stringify(utilityDefaultsV58));
 }
@@ -672,6 +758,7 @@ function persistStateV52(){
   localStorage.setItem('odyssey_months',JSON.stringify(months));
   localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));
   localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));
+  localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));
 }
 
 function snapshotV52(reason='自動'){
@@ -679,12 +766,13 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'5.8.1',at:new Date().toISOString(),reason,
+      version:'5.9',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
       auTransactions:JSON.parse(JSON.stringify(auTransactions)),
-      utilityMonths:JSON.parse(JSON.stringify(utilityMonths))
+      utilityMonths:JSON.parse(JSON.stringify(utilityMonths)),
+      billingMonths:JSON.parse(JSON.stringify(billingMonths))
     };
     const current=localStorage.getItem('odyssey_recovery_v52');
     if(current)localStorage.setItem('odyssey_recovery_v52_prev',current);
@@ -703,6 +791,7 @@ function restoreRecoveryV52(){
     months=s.months||{};
     auTransactions=Array.isArray(s.auTransactions)?s.auTransactions:[];
     utilityMonths=s.utilityMonths||{};
+    billingMonths=s.billingMonths||{};
     persistStateV52();
     render();
     updateProtectionStatusV52('正常バックアップから復元しました。');
@@ -840,13 +929,14 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'5.8.1',
+    version:'5.9',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
     months:JSON.parse(JSON.stringify(months)),
     auTransactions:JSON.parse(JSON.stringify(auTransactions)),
-    utilityMonths:JSON.parse(JSON.stringify(utilityMonths))
+    utilityMonths:JSON.parse(JSON.stringify(utilityMonths)),
+    billingMonths:JSON.parse(JSON.stringify(billingMonths))
   };
 }
 function updateStableBackupStatusV55(){
@@ -883,6 +973,7 @@ function restoreStableBackupV55(){
     months=s.months||{};
     auTransactions=Array.isArray(s.auTransactions)?s.auTransactions:[];
     utilityMonths=s.utilityMonths||{};
+    billingMonths=s.billingMonths||{};
     protectedSaveV52('安定版復元');
     render();
     updateStableBackupStatusV55();
@@ -1266,6 +1357,219 @@ function syncStatementCycleToUnconfirmed(){
   if(!confirm('現在の締めサイクル明細合計 '+yen(total)+' を、au PAYゴールド未確定利用額へ反映しますか？'))return;
   payments.auUnconfirmed=total; syncTodaySpentFromTransactions(); localStorage.setItem('odyssey_payments',JSON.stringify(payments)); renderPayments(); renderTodayTransactions();
 }
+
+function emptyBillingCardV59(){
+  return {amount:0,status:'none',source:'manual',updatedAt:''};
+}
+function emptyBillingRecordV59(){
+  return {au:emptyBillingCardV59(),aeon:emptyBillingCardV59(),apollo:emptyBillingCardV59(),updatedAt:''};
+}
+function normalizeBillingCardV59(card){
+  const c={...emptyBillingCardV59(),...(card||{})};
+  c.amount=Math.max(0,Number(c.amount||0));
+  if(!['none','estimated','confirmed','paid'].includes(c.status))c.status=c.amount>0?'estimated':'none';
+  return c;
+}
+function getBillingRecordV59(monthKey){
+  const raw=billingMonths[monthKey]||{};
+  return {
+    au:normalizeBillingCardV59(raw.au),
+    aeon:normalizeBillingCardV59(raw.aeon),
+    apollo:normalizeBillingCardV59(raw.apollo),
+    updatedAt:raw.updatedAt||''
+  };
+}
+function ymFromDateV59(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function addMonthKeyV59(monthKey,delta){
+  const [y,m]=String(monthKey).split('-').map(Number);
+  if(!y||!m)return monthKey;
+  return ymFromDateV59(new Date(y,m-1+delta,1));
+}
+function safeDateV59(y,m,day){
+  const last=new Date(y,m+1,0).getDate();
+  return new Date(y,m,Math.min(Math.max(1,Number(day||1)),last));
+}
+function nextPaymentMonthV59(day,baseDate=new Date()){
+  const b=new Date(baseDate);b.setHours(0,0,0,0);
+  let d=safeDateV59(b.getFullYear(),b.getMonth(),day);
+  if(b>d)d=safeDateV59(b.getFullYear(),b.getMonth()+1,day);
+  return ymFromDateV59(d);
+}
+function auUnconfirmedBillingMonthV59(baseDate=new Date()){
+  const b=new Date(baseDate);b.setHours(0,0,0,0);
+  const close=Math.min(31,Math.max(1,Number(payments.auCloseDay||15)));
+  const pay=Math.min(31,Math.max(1,Number(payments.auPaymentDay||4)));
+  let closeDate=safeDateV59(b.getFullYear(),b.getMonth(),close);
+  if(b>closeDate)closeDate=safeDateV59(b.getFullYear(),b.getMonth()+1,close);
+  let payDate=safeDateV59(closeDate.getFullYear(),closeDate.getMonth()+1,pay);
+  if(payDate<=closeDate)payDate=safeDateV59(closeDate.getFullYear(),closeDate.getMonth()+2,pay);
+  return ymFromDateV59(payDate);
+}
+function billingStatusLabelV59(status){
+  return {none:'未登録',estimated:'未確定',confirmed:'確定',paid:'支払済'}[status]||'未登録';
+}
+function saveBillingStoreV59(){
+  localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));
+}
+function upsertBillingFromPaymentV59(monthKey,card,amount,status,source,force=false){
+  amount=Math.max(0,Number(amount||0));
+  if(!monthKey||amount<=0)return false;
+  const rec=getBillingRecordV59(monthKey);
+  const current=rec[card];
+  // 確定・支払済を未確定値で上書きしない。
+  if(status==='estimated' && ['confirmed','paid'].includes(current.status))return false;
+  const autoOwned=String(current.source||'').startsWith('payments-');
+  if(!force && current.amount>0 && !autoOwned && current.status!=='estimated')return false;
+  rec[card]={amount,status,source,updatedAt:new Date().toISOString()};
+  rec.updatedAt=new Date().toISOString();
+  billingMonths[monthKey]=rec;
+  return true;
+}
+function syncBillingFromPaymentsV59(showAlert=true,force=false,baseDate=new Date()){
+  let changed=0;
+  const auNextYM=nextPaymentMonthV59(payments.auPaymentDay||4,baseDate);
+  const aeonNextYM=nextPaymentMonthV59(2,baseDate);
+  const apolloNextYM=nextPaymentMonthV59(7,baseDate);
+  const apolloFollowingYM=addMonthKeyV59(apolloNextYM,1);
+  const auUnconfirmedYM=auUnconfirmedBillingMonthV59(baseDate);
+
+  if(upsertBillingFromPaymentV59(auNextYM,'au',payments.auNextBill,'confirmed','payments-next',force))changed++;
+  if(upsertBillingFromPaymentV59(aeonNextYM,'aeon',payments.aeonNextBill,'confirmed','payments-next',force))changed++;
+  if(upsertBillingFromPaymentV59(apolloNextYM,'apollo',payments.apolloNextBill,'confirmed','payments-next',force))changed++;
+  if(upsertBillingFromPaymentV59(apolloFollowingYM,'apollo',payments.apolloFollowingBill,'estimated','payments-following',force))changed++;
+  if(upsertBillingFromPaymentV59(auUnconfirmedYM,'au',payments.auUnconfirmed,'estimated','payments-unconfirmed',force))changed++;
+
+  if(changed){
+    saveBillingStoreV59();
+    snapshotV52('請求月同期');
+  }
+  if(showAlert){
+    alert(changed
+      ?'支払管理から請求月へ同期しました。\\n更新：'+changed+'項目'
+      :'同期できる新しい請求額はありませんでした。');
+  }
+  return {changed,auNextYM,aeonNextYM,apolloNextYM,apolloFollowingYM,auUnconfirmedYM};
+}
+function seedBillingMonthsV59(){
+  if(localStorage.getItem('odyssey_v59_billing_seed_done'))return;
+  syncBillingFromPaymentsV59(false,false,new Date());
+  localStorage.setItem('odyssey_v59_billing_seed_done',new Date().toISOString());
+}
+function billingSummaryV59(monthKey){
+  const r=getBillingRecordV59(monthKey);
+  const cards=['au','aeon','apollo'];
+  const total=cards.reduce((s,k)=>s+Number(r[k].amount||0),0);
+  const confirmed=cards.reduce((s,k)=>s+(['confirmed','paid'].includes(r[k].status)?Number(r[k].amount||0):0),0);
+  const estimated=cards.reduce((s,k)=>s+(r[k].status==='estimated'?Number(r[k].amount||0):0),0);
+  return {
+    record:r,
+    total,
+    bank82:Number(r.aeon.amount||0)+Number(r.apollo.amount||0),
+    jibun:Number(r.au.amount||0),
+    confirmed,
+    estimated
+  };
+}
+function readBillingFormV59(){
+  const card=(idAmount,idStatus)=>({
+    amount:Math.max(0,Number(document.getElementById(idAmount)?.value||0)),
+    status:document.getElementById(idStatus)?.value||'none',
+    source:'manual',
+    updatedAt:new Date().toISOString()
+  });
+  return {
+    au:card('billAuAmountV59','billAuStatusV59'),
+    aeon:card('billAeonAmountV59','billAeonStatusV59'),
+    apollo:card('billApolloAmountV59','billApolloStatusV59'),
+    updatedAt:new Date().toISOString()
+  };
+}
+function billingPreviewFromFormV59(){
+  const r=readBillingFormV59();
+  const total=r.au.amount+r.aeon.amount+r.apollo.amount;
+  const confirmed=['au','aeon','apollo'].reduce((s,k)=>s+(['confirmed','paid'].includes(r[k].status)?r[k].amount:0),0);
+  const estimated=['au','aeon','apollo'].reduce((s,k)=>s+(r[k].status==='estimated'?r[k].amount:0),0);
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+  set('billingGrandTotalV59',yen(total));
+  set('billing82TotalV59',yen(r.aeon.amount+r.apollo.amount));
+  set('billingJibunTotalV59',yen(r.au.amount));
+  set('billingConfirmedTotalV59',yen(confirmed));
+  set('billingEstimatedTotalV59',yen(estimated));
+  const d=document.getElementById('dualBillingTotalV59');if(d)d.textContent=yen(total);
+}
+function renderBillingHistoryV59(){
+  const box=document.getElementById('billingHistoryV59');
+  const cnt=document.getElementById('billingHistoryCountV59');
+  if(!box)return;
+  const keys=Object.keys(billingMonths).filter(k=>{
+    const s=billingSummaryV59(k);
+    return s.total>0;
+  }).sort().reverse();
+  if(cnt)cnt.textContent=keys.length+'か月';
+  if(!keys.length){box.innerHTML='<div class="empty">まだ請求月データがありません。</div>';return}
+  box.innerHTML=keys.slice(0,12).map(k=>{
+    const s=billingSummaryV59(k),r=s.record;
+    return `<div class="billingHistoryRowV59">
+      <div><strong>${escapeHtml(k)}</strong></div>
+      <div>
+        <div>au ${yen(r.au.amount)} / イオン ${yen(r.aeon.amount)} / Apollo ${yen(r.apollo.amount)}</div>
+        <div class="tinyStatusV59">au ${billingStatusLabelV59(r.au.status)} ・ イオン ${billingStatusLabelV59(r.aeon.status)} ・ Apollo ${billingStatusLabelV59(r.apollo.status)}</div>
+      </div>
+      <div class="value">${yen(s.total)}</div>
+    </div>`;
+  }).join('');
+}
+function renderBillingMonthV59(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  const s=billingSummaryV59(k),r=s.record;
+  const setValue=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v};
+  setValue('billAuAmountV59',r.au.amount||0);setValue('billAuStatusV59',r.au.status);
+  setValue('billAeonAmountV59',r.aeon.amount||0);setValue('billAeonStatusV59',r.aeon.status);
+  setValue('billApolloAmountV59',r.apollo.amount||0);setValue('billApolloStatusV59',r.apollo.status);
+  const pill=document.getElementById('billingMonthPillV59');if(pill)pill.textContent=k+' 請求';
+  billingPreviewFromFormV59();
+  renderBillingHistoryV59();
+}
+function saveBillingMonthV59(){
+  const k=document.getElementById('monthKey')?.value;
+  if(!k)return;
+  const r=readBillingFormV59();
+  // 金額があるのに未登録なら「未確定」に自動補正。
+  ['au','aeon','apollo'].forEach(card=>{
+    if(r[card].amount>0 && r[card].status==='none')r[card].status='estimated';
+    if(r[card].amount===0)r[card].status='none';
+  });
+  billingMonths[k]=r;
+  saveBillingStoreV59();
+  snapshotV52('請求月保存');
+  renderBillingMonthV59();
+  renderMonthlyAuto();
+  alert(k+' のカード請求額を保存しました。');
+}
+function clearBillingMonthV59(){
+  const k=document.getElementById('monthKey')?.value;
+  if(!k||!billingMonths[k])return;
+  if(!confirm(k+' の請求月データをクリアしますか？\\n利用月の明細・月次記録は消えません。'))return;
+  snapshotV52('請求月クリア前');
+  delete billingMonths[k];
+  saveBillingStoreV59();
+  renderBillingMonthV59();
+  renderMonthlyAuto();
+}
+function setMonthModeV59(mode){
+  const m=mode==='billing'?'billing':'usage';
+  localStorage.setItem('odyssey_month_mode_v59',m);
+  const usage=document.getElementById('usagePanelV59');
+  const billing=document.getElementById('billingPanelV59');
+  const ub=document.getElementById('monthModeUsageV59');
+  const bb=document.getElementById('monthModeBillingV59');
+  if(usage)usage.classList.toggle('active',m==='usage');
+  if(billing)billing.classList.toggle('active',m==='billing');
+  if(ub)ub.classList.toggle('active',m==='usage');
+  if(bb)bb.classList.toggle('active',m==='billing');
+}
 function emptyCardSummaryV57(){
   return {food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,total:0,count:0};
 }
@@ -1343,7 +1647,14 @@ function renderMonthlyAuto(){
   set('autoTobacco',yen(s.tobacco));
   set('autoOther',yen(s.other));
 
+  const du=document.getElementById('dualUsageTotalV59');if(du)du.textContent=yen(s.total);
+  const dus=document.getElementById('dualUsageSubV59');if(dus)dus.textContent=k+' 利用日ベース';
+  const bs=billingSummaryV59(k);
+  const db=document.getElementById('dualBillingTotalV59');if(db)db.textContent=yen(bs.total);
+  const dbs=document.getElementById('dualBillingSubV59');if(dbs)dbs.textContent=k+' 請求日ベース';
+
   renderMonthlyMerchantRank();
+  renderBillingMonthV59();
 }
 
 function applyTransactionsToMonth(){
@@ -1425,17 +1736,9 @@ function autoClassifyExistingTransactions(silent=false){
   return changed;
 }
 
-function restoreKnownApolloTransactionsV581(){
-  if(localStorage.getItem('odyssey_v581_apollo_known_restore_done'))return {added:0,skipped:true};
+function restoreKnownApolloTransactionsV582(){
+  if(localStorage.getItem('odyssey_v582_apollo_merge_done'))return {added:0,skipped:true};
 
-  const existingApollo=auTransactions.filter(x=>(x.cardType||'au')==='apollo');
-  // 既にapollostation明細がある場合は自動追加せず、重複を避ける。
-  if(existingApollo.length){
-    localStorage.setItem('odyssey_v581_apollo_known_restore_done','existing');
-    return {added:0,skipped:true};
-  }
-
-  // 以前確認済みの請求値と一致する時だけ自動復元する。
   const matchesKnown=
     Number(payments.apolloNextBill||0)===20197 &&
     Number(payments.apolloFollowingBill||0)===2769 &&
@@ -1444,7 +1747,7 @@ function restoreKnownApolloTransactionsV581(){
     Number(payments.apolloOther||0)===12100;
 
   if(!matchesKnown){
-    localStorage.setItem('odyssey_v581_apollo_known_restore_done','not-matched');
+    localStorage.setItem('odyssey_v582_apollo_merge_done','not-matched');
     return {added:0,skipped:true};
   }
 
@@ -1453,34 +1756,40 @@ function restoreKnownApolloTransactionsV581(){
     {date:'2026-07-20',memo:'ABC-MART 下北沢4号店',amount:12100,category:'other',billGroup:'2026-09-07'},
     {date:'2026-07-26',memo:'apollostation ガソリン',amount:2593,category:'fuel',billGroup:'2026-09-07'},
     {date:'2026-08-07',memo:'apollostation ガソリン',amount:2869,category:'fuel',billGroup:'2026-09-07'},
-    // 値引きは利用日が明細情報だけでは確定できないので支払日へ「請求調整」として置く。
     {date:'2026-09-07',memo:'apollostation 請求値引き（9/7確定分）',amount:-265,category:'discount',billGroup:'2026-09-07',billingAdjustment:true},
     {date:'2026-08-23',memo:'セルフ草加弁天町 レギュラーガソリン',amount:2769,category:'fuel',billGroup:'2026-10-07'}
   ];
 
-  const existing=new Set(auTransactions.map(txKey));
+  // v5.8.1は「Apollo明細が1件でもあれば復元しない」ため、
+  // ABC-MARTだけ残っているケースでガソリン明細が復元されなかった。
+  // v5.8.2はカード種別 + 利用日 + 金額で1件ずつ存在確認する。
+  const existsByCore=(r)=>auTransactions.some(x=>
+    (x.cardType||'au')==='apollo' &&
+    String(x.date||'')===String(r.date||'') &&
+    Math.round(Number(x.amount||0))===Math.round(Number(r.amount||0))
+  );
+
   let added=0;
   rows.forEach((r,i)=>{
-    const clean={...r,cardType:'apollo'};
-    const k=txKey(clean);
-    if(existing.has(k))return;
-    existing.add(k);
+    if(existsByCore(r))return;
     auTransactions.push({
       id:Date.now()+i+Math.random(),
-      ...clean,
+      ...r,
+      cardType:'apollo',
       time:'',
-      source:'v5.8.1-known-apollo-restore'
+      source:'v5.8.2-known-apollo-merge'
     });
     added++;
   });
 
   if(added){
     saveAuTransactions();
-    protectedSaveV52('apollostation既知明細復元');
+    protectedSaveV52('apollostation欠損明細補完');
   }
-  localStorage.setItem('odyssey_v581_apollo_known_restore_done',new Date().toISOString());
+  localStorage.setItem('odyssey_v582_apollo_merge_done',new Date().toISOString());
   return {added,skipped:false};
 }
+
 
 function migrateV49Apollo(){
   let changed=false;
@@ -2344,6 +2653,7 @@ function render(){
   document.querySelectorAll('[data-setting-text]').forEach(el=>el.value=settings[el.dataset.settingText]||'');
   loadUtilitiesToFormV58(); renderUtilitiesV58(); renderRulesV58();
   renderHistory(); updateMonthTotals(); renderPayments(); renderTodayTransactions(); renderMonthlyAuto();
+  setMonthModeV59(localStorage.getItem('odyssey_month_mode_v59')||'usage');
 }
 function renderHistory(){const h=document.getElementById('history');const keys=Object.keys(months).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k];const total=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">タバコ ${yen(m.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho)}</div></div>`}).join('')}
 function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther'];const total=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const tobacco=Number(document.getElementById('mTobacco')?.value||0);const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards)}
@@ -2460,24 +2770,54 @@ document.getElementById('syncStatementUnconfirmed').addEventListener('click',syn
 const statementAutoSync=document.getElementById('statementAutoSync');if(statementAutoSync){statementAutoSync.checked=Number(payments.statementAutoSync??1)!==0;statementAutoSync.addEventListener('change',()=>{payments.statementAutoSync=statementAutoSync.checked?1:0;if(statementAutoSync.checked)syncStatementTotalAutomatic();localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();renderTodayTransactions();});}
 document.getElementById('autoClassifyExisting').addEventListener('click',autoClassifyExistingTransactions);
 const reclassifyHome=document.getElementById('reclassifyHome');if(reclassifyHome)reclassifyHome.addEventListener('click',autoClassifyExistingTransactions);
-const apolloRestoreV581=restoreKnownApolloTransactionsV581();
+const apolloRestoreV582=restoreKnownApolloTransactionsV582();
+seedBillingMonthsV59();
 migrateV49Apollo();
 migrateV48Categories();
 if(stateIsHealthyV52())snapshotV52('v5.4起動時');
 document.getElementById('applyTransactionsToMonth').addEventListener('click',applyTransactionsToMonth);
-document.getElementById('monthKey').addEventListener('change',renderMonthlyAuto);
+const monthModeUsageV59=document.getElementById('monthModeUsageV59');
+const monthModeBillingV59=document.getElementById('monthModeBillingV59');
+if(monthModeUsageV59)monthModeUsageV59.addEventListener('click',()=>setMonthModeV59('usage'));
+if(monthModeBillingV59)monthModeBillingV59.addEventListener('click',()=>setMonthModeV59('billing'));
+['billAuAmountV59','billAeonAmountV59','billApolloAmountV59'].forEach(id=>{
+  const e=document.getElementById(id);if(e)e.addEventListener('input',billingPreviewFromFormV59);
+});
+['billAuStatusV59','billAeonStatusV59','billApolloStatusV59'].forEach(id=>{
+  const e=document.getElementById(id);if(e)e.addEventListener('change',billingPreviewFromFormV59);
+});
+const syncBillingPaymentsV59=document.getElementById('syncBillingPaymentsV59');
+if(syncBillingPaymentsV59)syncBillingPaymentsV59.addEventListener('click',()=>{syncBillingFromPaymentsV59(true,true,new Date());renderBillingMonthV59();renderMonthlyAuto()});
+const saveBillingMonthBtnV59=document.getElementById('saveBillingMonthV59');
+if(saveBillingMonthBtnV59)saveBillingMonthBtnV59.addEventListener('click',saveBillingMonthV59);
+const clearBillingMonthBtnV59=document.getElementById('clearBillingMonthV59');
+if(clearBillingMonthBtnV59)clearBillingMonthBtnV59.addEventListener('click',clearBillingMonthV59);
+
+document.getElementById('monthKey').addEventListener('change',()=>{renderMonthlyAuto();renderBillingMonthV59()});
 document.querySelectorAll('[data-payment]').forEach(el=>el.addEventListener('input',()=>{payments[el.dataset.payment]=Number(el.value||0);renderPayments()}));
-document.getElementById('savePayments').addEventListener('click',()=>{document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));snapshotV52('支払管理変更前');protectedSaveV52('支払管理保存');renderPayments();alert('支払管理を保存し、正常バックアップも更新しました')});
+document.getElementById('savePayments').addEventListener('click',()=>{document.querySelectorAll('[data-payment]').forEach(el=>payments[el.dataset.payment]=Number(el.value||0));snapshotV52('支払管理変更前');protectedSaveV52('支払管理保存');syncBillingFromPaymentsV59(false,false,new Date());renderPayments();renderMonthlyAuto();alert('支払管理を保存し、請求月も同期しました。正常バックアップも更新しました')});
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.8.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
-document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.9',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費（本人負担）','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
+
+const exportBillingCsvV59=document.getElementById('exportBillingCsvV59');
+if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
+  const rows=[['請求月','au PAY請求','au状態','イオン請求','イオン状態','apollostation請求','apollostation状態','3カード請求合計','八十二銀行引落','auじぶん銀行引落']];
+  Object.keys(billingMonths).sort().forEach(k=>{
+    const s=billingSummaryV59(k),r=s.record;
+    rows.push([k,r.au.amount,billingStatusLabelV59(r.au.status),r.aeon.amount,billingStatusLabelV59(r.aeon.status),r.apollo.amount,billingStatusLabelV59(r.apollo.status),s.total,s.bank82,s.jibun]);
+  });
+  const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_カード請求月.csv';a.click();URL.revokeObjectURL(a.href);
+});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.8.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.9',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
