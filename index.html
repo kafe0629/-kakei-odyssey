@@ -138,7 +138,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.4</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.5</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -443,8 +443,17 @@
         </div>
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
+        <div class="stableBackupBox">
+          <strong>🧷 安定版バックアップ</strong>
+          <div class="sub" id="stableBackupStatus" style="margin-top:6px">まだ保存されていません。</div>
+          <div class="btnRow">
+            <button class="btn secondary" id="saveStableBackup" type="button">現在を安定版として保存</button>
+            <button class="btn secondary" id="restoreStableBackup" type="button">安定版へ戻す</button>
+          </div>
+          <div class="sub" style="margin-top:7px">アプリ更新後に不具合が出た場合でも、保存した時点の設定・支払管理・月次・カード明細へ戻せます。</div>
+        </div>
       </div>
-      <div class="note" style="margin-top:12px">v5.4：0円表示の根本原因だった計算エンジン内の未定義データ参照を修正しました。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v5.5：登録済みカード明細に「使用カード」を表示し、au PAY・イオン・apollostationを登録後でも変更できるようにしました。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -526,7 +535,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'5.4',at:new Date().toISOString(),reason,
+      version:'5.5',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -683,6 +692,59 @@ function protectedSaveV52(reason='保存'){
   updateProtectionStatusV52();
 }
 
+function stableBackupDataV55(){
+  return {
+    version:'5.5',
+    at:new Date().toISOString(),
+    settings:JSON.parse(JSON.stringify(settings)),
+    payments:JSON.parse(JSON.stringify(payments)),
+    months:JSON.parse(JSON.stringify(months)),
+    auTransactions:JSON.parse(JSON.stringify(auTransactions))
+  };
+}
+function updateStableBackupStatusV55(){
+  const el=document.getElementById('stableBackupStatus');
+  if(!el)return;
+  const raw=localStorage.getItem('odyssey_stable_backup_v55');
+  if(!raw){el.textContent='まだ保存されていません。';return}
+  try{
+    const s=JSON.parse(raw);
+    const d=s.at?new Date(s.at):null;
+    const when=d&&!isNaN(d)?d.toLocaleString('ja-JP'):'日時不明';
+    el.textContent='保存済み：'+when+' ／ カード明細 '+(Array.isArray(s.auTransactions)?s.auTransactions.length:0)+'件';
+  }catch(e){el.textContent='バックアップ情報を読み取れません。'}
+}
+function saveStableBackupV55(showAlert=true){
+  if(!stateIsHealthyV52()){
+    if(showAlert)alert('現在の支払設定が正常判定ではないため、安定版として保存できません。');
+    return false;
+  }
+  localStorage.setItem('odyssey_stable_backup_v55',JSON.stringify(stableBackupDataV55()));
+  updateStableBackupStatusV55();
+  if(showAlert)alert('現在の状態を安定版バックアップとして保存しました。');
+  return true;
+}
+function restoreStableBackupV55(){
+  const raw=localStorage.getItem('odyssey_stable_backup_v55');
+  if(!raw){alert('安定版バックアップがありません。');return}
+  try{
+    const s=JSON.parse(raw);
+    if(!confirm('安定版バックアップへ戻しますか？\n保存日時：'+(s.at?new Date(s.at).toLocaleString('ja-JP'):'不明')))return;
+    snapshotV52('安定版復元前');
+    settings={...defaults,...(s.settings||{})};
+    payments={...paymentDefaults,...(s.payments||{})};
+    months=s.months||{};
+    auTransactions=Array.isArray(s.auTransactions)?s.auTransactions:[];
+    protectedSaveV52('安定版復元');
+    render();
+    updateStableBackupStatusV55();
+    alert('安定版バックアップへ戻しました。');
+  }catch(e){
+    console.error(e);
+    alert('安定版バックアップの復元に失敗しました。');
+  }
+}
+
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
 function loanMonthly(){const principal=Math.max(0,settings.carTotal-settings.downPayment);const n=settings.loanYears*12;const r=(settings.ratePct/100)/12;if(!n)return 0;if(r===0)return principal/n;return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
@@ -800,8 +862,15 @@ function syncStatementTotalAutomatic(){
 }
 function deleteAuSpend(id){
   const i=auTransactions.findIndex(x=>String(x.id)===String(id)); if(i<0)return;
-  auTransactions.splice(i,1); saveAuTransactions(); syncTodaySpentFromTransactions(); syncStatementTotalAutomatic();
-  localStorage.setItem('odyssey_payments',JSON.stringify(payments)); renderPayments(); renderTodayTransactions(); renderMonthlyAuto();
+  const tx=auTransactions[i];
+  if(!confirm('この明細を削除しますか？\n'+(tx.memo||'カード利用')+' '+yen(tx.amount||0)))return;
+  snapshotV52('明細削除前');
+  auTransactions.splice(i,1);
+  saveAuTransactions();
+  syncTodaySpentFromTransactions();
+  syncStatementTotalAutomatic();
+  protectedSaveV52('明細削除');
+  renderPayments(); renderTodayTransactions(); renderMonthlyAuto();
 }
 function currentStatementCycle(){
   const today=new Date(); today.setHours(0,0,0,0);
@@ -821,13 +890,81 @@ function renderTodayTransactions(){
   const list=document.getElementById('todayTxList'); if(!list)return;
   const items=auTransactions.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)).slice(0,30);
   const count=document.getElementById('statementRegisteredCount'); if(count)count.textContent=auTransactions.length+'件';
-  const cyc=currentCycleTransactions(); const cycTotal=cyc.reduce((s,x)=>s+Number(x.amount||0),0);
+
+  const cyc=currentCycleTransactions();
+  const cycTotal=cyc.reduce((s,x)=>s+Number(x.amount||0),0);
   const total=document.getElementById('statementCycleTotal'); if(total)total.textContent=yen(cycTotal);
   renderSpendInsights();
-  if(!items.length){list.innerHTML='<div class="empty" style="padding:6px 0">カード明細はまだ登録されていません。</div>';return}
+
+  if(!items.length){
+    list.innerHTML='<div class="empty" style="padding:6px 0">カード明細はまだ登録されていません。</div>';
+    return;
+  }
+
   const categoryOptions=Object.entries(txCategoryLabels).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-  list.innerHTML=items.map(x=>`<div class="statementItem"><div class="statementDate">${escapeHtml(x.date||'')}</div><div><div class="statementMemo">${escapeHtml(x.memo||'カード利用')}</div><select class="txCatSelect" data-tx-cat="${x.id}">${categoryOptions}</select></div><div class="statementAmount">${yen(x.amount)}</div><button class="tinyBtn" type="button" data-delete-tx="${x.id}">削除</button></div>`).join('');
-  list.querySelectorAll('[data-tx-cat]').forEach(el=>{const tx=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));if(tx){const c=effectiveTxCategory(tx);if(tx.category!==c){tx.category=c;saveAuTransactions()}el.value=c}el.addEventListener('change',()=>{const t=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));if(!t)return;t.category=el.value;rememberMerchantCategory(t.memo,t.category);saveAuTransactions();renderMonthlyAuto();renderSpendInsights();});});
+  const cardOptions='<option value="au">au PAY</option><option value="aeon">イオン</option><option value="apollo">apollostation</option>';
+
+  list.innerHTML=items.map(x=>{
+    const cardType=x.cardType||'au';
+    const cat=(cardType==='apollo')
+      ? classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)
+      : effectiveTxCategory(x);
+    return `<div class="statementItem">
+      <div class="statementDate">${escapeHtml(x.date||'')}</div>
+      <div>
+        <div class="statementMemo">${escapeHtml(x.memo||'カード利用')}</div>
+        <span class="txCardBadge">${escapeHtml(importCardLabel(cardType))}</span>
+        <div class="txEditRow">
+          <select class="txCardSelect" data-tx-card="${x.id}">${cardOptions}</select>
+          <select class="txCatSelect" data-tx-cat="${x.id}">${categoryOptions}</select>
+        </div>
+      </div>
+      <div class="statementAmount">${yen(x.amount)}</div>
+      <button class="tinyBtn" type="button" data-delete-tx="${x.id}">削除</button>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('[data-tx-card]').forEach(el=>{
+    const tx=auTransactions.find(x=>String(x.id)===String(el.dataset.txCard));
+    if(tx)el.value=tx.cardType||'au';
+    el.addEventListener('change',()=>{
+      const t=auTransactions.find(x=>String(x.id)===String(el.dataset.txCard));
+      if(!t)return;
+      snapshotV52('明細カード変更前');
+      t.cardType=el.value;
+      t.category=classifyMerchantForCard(t.memo,t.cardType,t.amount,t.category);
+      saveAuTransactions();
+      syncTodaySpentFromTransactions();
+      syncStatementTotalAutomatic();
+      protectedSaveV52('明細カード変更');
+      renderPayments();
+      renderTodayTransactions();
+      renderMonthlyAuto();
+      alert(importCardLabel(t.cardType)+'へ変更しました。カード別集計を再計算しました。');
+    });
+  });
+
+  list.querySelectorAll('[data-tx-cat]').forEach(el=>{
+    const tx=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));
+    if(tx){
+      const c=(tx.cardType||'au')==='apollo'
+        ? classifyMerchantForCard(tx.memo,'apollo',tx.amount,tx.category)
+        : effectiveTxCategory(tx);
+      if(tx.category!==c){tx.category=c;saveAuTransactions()}
+      el.value=c;
+    }
+    el.addEventListener('change',()=>{
+      const t=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));
+      if(!t)return;
+      snapshotV52('明細カテゴリ変更前');
+      t.category=el.value;
+      rememberMerchantCategory(t.memo,t.category);
+      protectedSaveV52('明細カテゴリ変更');
+      renderMonthlyAuto();
+      renderSpendInsights();
+    });
+  });
+
   list.querySelectorAll('[data-delete-tx]').forEach(b=>b.addEventListener('click',()=>deleteAuSpend(b.dataset.deleteTx)));
 }
 let statementCandidates=[];
@@ -1757,7 +1894,17 @@ if(Number(payments.statementAutoSync??1)!==0)syncStatementTotalAutomatic();
 if(stateIsHealthyV52())snapshotV52('v5.4起動時正常状態');
 updateProtectionStatusV52(runtimeRecoveredV54
   ?'v5.4で計算エンジンを修正し、重要項目を復旧しました。'
-  :(criticalRecoveredV53||repairedAtBootV53?'保存値を補正しました。':'保存データは正常です。'));
+  :(criticalRecoveredV53||repairedAtBootV53?'保存値を補正しました。':'保存データは正常です.'));
+
+const saveStableBtn=document.getElementById('saveStableBackup');
+if(saveStableBtn)saveStableBtn.addEventListener('click',()=>saveStableBackupV55(true));
+const restoreStableBtn=document.getElementById('restoreStableBackup');
+if(restoreStableBtn)restoreStableBtn.addEventListener('click',restoreStableBackupV55);
+updateStableBackupStatusV55();
+// v5.5初回は、現在が正常なら自動で安定版を1つ作る。
+if(!localStorage.getItem('odyssey_stable_backup_v55') && stateIsHealthyV52()){
+  saveStableBackupV55(false);
+}
 
 document.getElementById('pickOcrImages').addEventListener('click',()=>document.getElementById('ocrImages').click());
 document.getElementById('ocrImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runOcr(fs)});
@@ -1781,13 +1928,13 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.4',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.5',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.4',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.5',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
