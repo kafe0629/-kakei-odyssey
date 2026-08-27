@@ -1,4 +1,4 @@
-const CACHE='kakei-odyssey-v5.3-20260827';
+const CACHE='kakei-odyssey-v5.4-20260827';
 const ASSETS=['./','./index.html','./manifest.json'];
 self.addEventListener('install',e=>{
   self.skipWaiting();
