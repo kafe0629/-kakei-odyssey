@@ -138,7 +138,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v4.9</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.0</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -188,7 +188,7 @@
           <div class="btnRow" id="statementImportBtns" style="margin-top:10px;display:none"><button class="btn" id="importStatement" type="button">選択した明細を登録</button></div>
           <div class="separator"></div>
           <div class="row"><div class="name"><strong>現在の締めサイクル明細合計</strong></div><div class="value good" id="statementCycleTotal">¥0</div></div>
-          <div class="row" style="margin-top:8px"><div class="name"><strong>明細登録で未確定利用額へ自動反映</strong></div><label style="display:flex;align-items:center;gap:8px;color:#dbeafe"><input id="statementAutoSync" type="checkbox" style="width:20px;height:20px" checked> ON</label></div>
+          <div class="row" style="margin-top:8px"><div class="name"><strong>au PAY明細のみ未確定利用額へ自動反映</strong></div><label style="display:flex;align-items:center;gap:8px;color:#dbeafe"><input id="statementAutoSync" type="checkbox" style="width:20px;height:20px" checked> ON</label></div>
           <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="syncStatementUnconfirmed" type="button">今すぐ明細合計を反映</button></div>
           <div class="sub" style="margin-top:8px">ONのときは、明細を登録・削除するたびに現在の締めサイクル明細合計を「au PAYゴールド 未確定利用額」へ自動反映し、「今月au PAY残り」「今日あと使ってOK」「将来引落し見込み」まで再計算します。カードアプリ側の未確定合計を手入力したい場合はOFFにしてください。</div>
           <div class="row" style="margin-top:8px"><div class="name"><strong>登録済み明細</strong></div><div class="value" id="statementRegisteredCount">0件</div></div>
@@ -262,7 +262,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v4.9では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.0では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
@@ -450,7 +450,19 @@
   <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
 </div></nav>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+document.querySelectorAll('[data-import-card]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    importCardType=btn.dataset.importCard;
+    localStorage.setItem('odyssey_import_card',importCardType);
+    ocrCandidates=[];
+    updateImportCardUI();
+    renderOcrCandidates();
+  });
+});
+updateImportCardUI();
+
+</script>
 <script>
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
@@ -477,7 +489,7 @@ function normalizeMerchantName(memo=''){
     .replace(/[\s　・･._\-—–ー/\\()（）［］【】「」『』]/g,'')
     .replace(/(株式会社|有限会社|合同会社|㈱|（株）|\(株\))/g,'').trim();
 }
-// v4.9: 店名判定を1本化。OCR候補・登録・既存明細・月次集計はすべてこの正規化キーを使う。
+// v5.0: 店名判定を1本化。OCR候補・登録・既存明細・月次集計はすべてこの正規化キーを使う。
 function canonicalMerchantKey(memo=''){
   const t=normalizeMerchantName(memo);
   if(!t)return '';
@@ -725,9 +737,13 @@ function migrateV48Categories(){
 }
 function paymentSummary(){
   const needToJibun=Math.max(0,Number(payments.auNextBill||0)-Number(payments.jibunBalance||0));
-  const apolloFuelGross=Math.max(0,Number(payments.apolloFuelGross||0));
-  const apolloDiscount=Math.max(0,Number(payments.apolloDiscount||0));
-  const apolloOther=Math.max(0,Number(payments.apolloOther||0));
+  const apolloImported=cardTx.filter(t=>(t.cardType||'au')==='apollo');
+  const apolloImportedFuel=apolloImported.filter(t=>t.category==='ガソリン').reduce((s,t)=>s+Math.max(0,Number(t.amount||0)),0);
+  const apolloImportedDiscount=Math.abs(apolloImported.filter(t=>t.category==='値引き'||Number(t.amount||0)<0).reduce((s,t)=>s+Math.min(0,Number(t.amount||0)),0));
+  const apolloImportedOther=apolloImported.filter(t=>t.category!=='ガソリン'&&t.category!=='値引き'&&Number(t.amount||0)>0).reduce((s,t)=>s+Number(t.amount||0),0);
+  const apolloFuelGross=Math.max(0,Number(payments.apolloFuelGross||0),apolloImportedFuel);
+  const apolloDiscount=Math.max(0,Number(payments.apolloDiscount||0),apolloImportedDiscount);
+  const apolloOther=Math.max(0,Number(payments.apolloOther||0),apolloImportedOther);
   const apolloFuelNet=Math.max(0,apolloFuelGross-apolloDiscount);
   const apolloCalculatedBill=Math.max(0,apolloFuelNet+apolloOther);
   // 確定請求額が入っている場合は、値引き込みの最終請求額を最優先。
