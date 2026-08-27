@@ -273,6 +273,30 @@
     .backupHealthCellV69 .label{font-size:10px;color:#94a3b8}
     .backupHealthCellV69 .v{font-size:14px;font-weight:850;margin-top:4px;line-height:1.5}
     .healthGoodV69{color:#86efac}.healthWarnV69{color:#fde68a}.healthBadV69{color:#fca5a5}
+    .txFilterV71{border:1px solid #29446b;border-radius:15px;background:#091528;padding:11px;margin:9px 0 10px}
+    .txFilterGridV71{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:7px}
+    .txFilterGridV71 input,.txFilterGridV71 select{padding:9px 10px;font-size:11px;min-width:0}
+    .txFilterSummaryV71{font-size:10px;color:#94a3b8;line-height:1.5;margin-top:8px}
+    .txReviewBadgeV71{display:inline-block;margin-top:5px;font-size:9px;font-weight:850;border:1px solid #35527c;border-radius:999px;padding:3px 7px}
+    .txReviewBadgeV71.ok{border-color:#22a06b;color:#86efac}
+    .txReviewBadgeV71.warn{border-color:#d49b37;color:#fde68a}
+    .reviewBtnV71.ok{border-color:#22a06b;color:#86efac}
+    .reviewBtnV71.warn{border-color:#d49b37;color:#fde68a}
+    .txEditRow{display:grid;grid-template-columns:minmax(145px,1.3fr) minmax(90px,.7fr);gap:6px;margin-top:6px;min-width:0}
+    .txEditRow select{min-width:0;padding:8px 8px;font-size:11px}
+    .txCardSelect{font-size:11px!important}
+    .statementMemo{overflow-wrap:anywhere}
+    .monthCloseGateV71{margin-top:10px;border:1px solid #735b27;border-radius:13px;padding:10px;background:#0b1627;font-size:11px;line-height:1.65;color:#fde68a}
+    .monthCloseGateV71.ready{border-color:#22543d;color:#86efac}
+    .tobaccoTrendV71{font-size:10px;color:#94a3b8;margin-top:3px}
+    @media(max-width:560px){
+      .txFilterGridV71{grid-template-columns:1fr 1fr}
+      .txFilterGridV71 .wideV71{grid-column:1/-1}
+      .txEditRow{grid-template-columns:minmax(135px,1.25fr) minmax(85px,.75fr)}
+      .txEditRow select{font-size:10px;padding:8px 6px}
+      .statementItem{grid-template-columns:58px minmax(0,1fr) auto}
+    }
+
     .txActionV702{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
     .splitBtnV702{border-color:#3b82f6;color:#bfdbfe}
     .splitActiveV702{display:inline-block;margin-top:5px;font-size:9px;color:#86efac;border:1px solid #22543d;border-radius:999px;padding:3px 7px;line-height:1.3}
@@ -454,7 +478,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.0.3</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -614,6 +638,19 @@
           <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="syncStatementUnconfirmed" type="button">au PAY未確定へ反映</button></div>
           <div class="sub" style="margin-top:8px">ONのときは、明細を登録・削除するたびに現在の締めサイクル明細合計を「au PAYゴールド 未確定利用額」へ自動反映し、「今月au PAY残り」「今日あと使ってOK」「将来引落し見込み」まで再計算します。カードアプリ側の未確定合計を手入力したい場合はOFFにしてください。</div>
           <div class="row" style="margin-top:8px"><div class="name"><strong>登録済み明細</strong></div><div class="value" id="statementRegisteredCount">0件</div></div>
+          <div class="txFilterV71">
+            <div class="sectionTitle" style="margin:0 0 8px"><h3 style="margin:0;font-size:14px">🔍 明細検索・要確認</h3><span class="pill" id="txPendingPillV71">要確認 0件</span></div>
+            <div class="txFilterGridV71">
+              <input class="wideV71" id="txSearchV71" type="search" placeholder="店名・メモを検索">
+              <input id="txMonthFilterV71" type="month">
+              <select id="txCardFilterV71"><option value="all">全カード</option><option value="au">au PAY</option><option value="aeon">イオン</option><option value="apollo">apollostation</option></select>
+              <select id="txCategoryFilterV71"><option value="all">全カテゴリ</option><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="discount">値引き</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select>
+              <select id="txReviewFilterV71"><option value="all">確認状態：すべて</option><option value="pending">要確認のみ</option><option value="reviewed">確認済みのみ</option><option value="split">分割済みのみ</option></select>
+              <button class="btn secondary" id="clearTxFilterV71" type="button" style="padding:9px 10px;font-size:11px">条件を解除</button>
+            </div>
+            <div class="btnRow" style="margin-top:8px"><button class="btn secondary" id="showPendingTxV71" type="button" style="padding:9px 11px;font-size:11px">⚠️ 要確認だけ見る</button></div>
+            <div class="txFilterSummaryV71" id="txFilterSummaryV71">明細を読み込んだら、要確認だけを確認して月締めできます。</div>
+          </div>
           <div class="btnRow" style="margin:8px 0 2px"><button class="btn secondary" id="reclassifyHome" type="button">未分類を再分類</button></div>
           <div class="sub" style="margin-bottom:8px">分類ルールを更新した後でも、過去の「その他」明細をワンタップで再判定できます。</div>
           <div class="statementRegistered" id="todayTxList"></div>
@@ -826,7 +863,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.0.3</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.1</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1022,6 +1059,11 @@
                 <div><strong>カード請求を確認した</strong><div class="checkMetaV68" id="checkCardsMetaV68">請求突合を確認</div></div>
                 <span class="pill">カード</span>
               </label>
+              <div class="checkRowV68">
+                <input id="checkCardReviewV71" type="checkbox" disabled>
+                <div><strong>カード明細の要確認が0件</strong><div class="checkMetaV68" id="checkCardReviewMetaV71">登録明細を自動確認</div></div>
+                <span class="pill">明細</span>
+              </div>
               <label class="checkRowV68">
                 <input id="checkCashV68" type="checkbox">
                 <div><strong>現金支出を確認した</strong><div class="checkMetaV68" id="checkCashMetaV68">現金の入力漏れを確認</div></div>
@@ -1047,8 +1089,14 @@
                 <div><strong>母への振込が完了</strong><div class="checkMetaV68" id="checkFamilyTransferMetaV69">対象月のみ自動判定</div></div>
                 <span class="pill">家族</span>
               </div>
+              <div class="checkRowV68">
+                <input id="checkTransferFeesV71" type="checkbox" disabled>
+                <div><strong>振込手数料を確認</strong><div class="checkMetaV68" id="checkTransferFeesMetaV71">振込済み分の実手数料を自動確認</div></div>
+                <span class="pill">手数料</span>
+              </div>
             </div>
             <div class="progress green monthEndProgressV68"><span id="monthEndProgressBarV68" style="width:0%"></span></div>
+            <div class="monthCloseGateV71" id="monthCloseGateV71">月締め前の不足項目を確認しています。</div>
 
             <div class="monthCloseStatusV68" id="monthCloseStatusV68">📂 未締め</div>
             <div class="sub" id="monthCloseSubV68">5項目が揃うと月締めできます。</div>
@@ -1071,6 +1119,8 @@
             <div class="monthlyReportCellV69"><div class="label">前月比</div><div class="v" id="reportPrevDiffV69">—</div></div>
             <div class="monthlyReportCellV69"><div class="label">みずほ増減</div><div class="v" id="reportMizuhoDeltaV69">—</div></div>
             <div class="monthlyReportCellV69"><div class="label">生活費予算 残り</div><div class="v" id="reportBudgetRemainV69">—</div></div>
+            <div class="monthlyReportCellV69"><div class="label">🚬 タバコ 今月</div><div class="v warn" id="reportTobaccoV71">¥0</div><div class="tobaccoTrendV71" id="reportTobaccoSubV71">カード分割も合算</div></div>
+            <div class="monthlyReportCellV69"><div class="label">🚬 タバコ 前月比</div><div class="v" id="reportTobaccoDiffV71">比較待ち</div><div class="tobaccoTrendV71">少ないほど節約</div></div>
             <div class="monthlyReportCellV69"><div class="label">最多カテゴリ</div><div class="v" id="reportTopCategoryV69">—</div></div>
             <div class="monthlyReportCellV69"><div class="label">最多店舗</div><div class="v" id="reportTopMerchantV69">—</div></div>
           </div>
@@ -1394,6 +1444,7 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v7.1：</strong>明細検索・月/カード/カテゴリ/確認状態の絞り込み、読み込み明細の「要確認→確認済み」管理、タバコの今月実績・前月比、カード選択欄の表示改善、月締め前の「明細要確認0件」「振込実手数料確認」自動ゲートを追加しました。新しく読み込んだカード明細は要確認になり、カテゴリ変更・分割保存・確認済み操作で確認完了になります。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.3：</strong>「分割」ボタンの表示対象をコンビニ明細に限定しました。ローソン・ファミリーマート・セブン-イレブン・ミニストップなど、カテゴリが「コンビニ」と判定された明細だけに表示します。apollostationのガソリン・値引き等には表示しません。すでに分割済みの明細は、あとから編集できるよう「分割編集」を維持します。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.2：</strong>au PAYなどのカード明細に「分割」機能を追加しました。コンビニでタバコと通常商品を一緒に買った場合、元のカード利用額を変えずに「タバコ／コンビニ／その他」へ内訳だけ分けられます。月次カテゴリには分割内訳を反映し、カード請求・締めサイクル・カード利用月額は元明細金額のまま維持します。分割合計が元明細と一致しない場合は保存できません。</div>
       <div class="note" style="margin-top:12px"><strong>v7.0.1：</strong>振込管理画面で状態・予定手数料・実手数料を変更すると即座に初期値へ戻ってしまう不具合を修正しました。振込額も編集して保存できます。2026年8月の妻への家賃は45,000円・振込済み、教育資金は2026年10月開始として8月・9月は対象なしに補正しています。</div>
@@ -3137,6 +3188,101 @@ function transactionSplitLabelV702(tx){
   if(!parts.length)return '';
   return parts.map(p=>(txCategoryLabels[p.category]||p.category)+' '+yen(p.amount)).join(' / ');
 }
+let txFilterStateV71={search:'',month:'',card:'all',category:'all',review:'all'};
+function transactionBaseCategoryV71(tx){
+  const cardType=tx?.cardType||'au';
+  return cardType==='apollo'
+    ?classifyMerchantForCard(tx?.memo||'','apollo',tx?.amount||0,tx?.category||'')
+    :effectiveTxCategory(tx);
+}
+function transactionReviewInfoV71(tx){
+  const reasons=[];
+  const memo=String(tx?.memo||'').trim();
+  const hasRawSplits=Array.isArray(tx?.splits)&&tx.splits.length>0;
+  if(!memo||memo==='undefined'||memo==='カード利用')reasons.push('店名確認');
+  if(hasRawSplits&&!validTransactionSplitsV702(tx).length)reasons.push('分割合計');
+  if(tx?.reviewed!==true){
+    const cat=transactionBaseCategoryV71(tx);
+    reasons.push(cat==='convenience'?'コンビニ内訳':cat==='other'?'カテゴリ':'明細');
+  }
+  return {ready:reasons.length===0,reasons:[...new Set(reasons)]};
+}
+function transactionNeedsReviewV71(tx){return !transactionReviewInfoV71(tx).ready}
+function ensureTransactionReviewStateV71(){
+  let changed=false;
+  auTransactions.forEach(tx=>{
+    if(tx.reviewed!==undefined)return;
+    const cat=transactionBaseCategoryV71(tx);
+    const hasSplit=validTransactionSplitsV702(tx).length>0;
+    // v7.1以前の既存データは、既知カテゴリなら確認済み扱い。
+    // コンビニと「その他」はタバコ混在/分類確認のため要確認にする。
+    tx.reviewed=hasSplit?true:!(cat==='convenience'||cat==='other');
+    if(tx.reviewed)tx.reviewedAt=tx.reviewedAt||new Date().toISOString();
+    changed=true;
+  });
+  if(changed)saveAuTransactions();
+  return changed;
+}
+function markTransactionReviewedV71(id,reviewed){
+  const tx=auTransactions.find(x=>String(x.id)===String(id));if(!tx)return;
+  const monthKey=String(tx.date||'').slice(0,7);
+  if(monthKey&&isMonthClosedV68(monthKey)){alert(monthKey+' は月締め済みです。確認状態を変える場合は先に締めを解除してください。');return}
+  if(reviewed){
+    const memo=String(tx.memo||'').trim();
+    if(!memo||memo==='undefined'||memo==='カード利用'){alert('店名・メモを確認してから「確認済み」にしてください。');return}
+    if(Array.isArray(tx.splits)&&tx.splits.length&&!validTransactionSplitsV702(tx).length){alert('分割合計が元明細と一致していません。分割を修正してください。');return}
+  }
+  snapshotV52('明細確認状態変更前');
+  tx.reviewed=!!reviewed;
+  tx.reviewedAt=reviewed?new Date().toISOString():'';
+  saveAuTransactions();
+  protectedSaveV52('明細確認状態変更');
+  renderTodayTransactions();renderMonthlyAuto();renderSelfDiagnosisV70();
+}
+function cardReviewSummaryV71(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed){
+    if(closed.reviewSummary)return deepCloneV68(closed.reviewSummary);
+    // v7.1より前に締めた月は、既存の締めを壊さない。
+    return {monthKey,total:0,pending:0,ready:true,legacy:true,examples:[]};
+  }
+  const rows=auTransactions.filter(x=>String(x.date||'').slice(0,7)===monthKey);
+  const pendingRows=rows.filter(transactionNeedsReviewV71);
+  return {
+    monthKey,total:rows.length,pending:pendingRows.length,ready:pendingRows.length===0,legacy:false,
+    examples:pendingRows.slice(0,3).map(x=>String(x.memo||'カード利用'))
+  };
+}
+function transactionMatchesFiltersV71(tx){
+  const f=txFilterStateV71;
+  const memo=String(tx?.memo||'').toLowerCase();
+  if(f.search&& !memo.includes(f.search.toLowerCase()))return false;
+  if(f.month&&String(tx?.date||'').slice(0,7)!==f.month)return false;
+  const card=tx?.cardType||'au';if(f.card!=='all'&&card!==f.card)return false;
+  if(f.category!=='all'){
+    const cats=transactionCategoryPartsV702(tx).map(p=>p.category);
+    if(!cats.includes(f.category))return false;
+  }
+  if(f.review==='pending'&&!transactionNeedsReviewV71(tx))return false;
+  if(f.review==='reviewed'&&transactionNeedsReviewV71(tx))return false;
+  if(f.review==='split'&&!validTransactionSplitsV702(tx).length)return false;
+  return true;
+}
+function readTransactionFiltersV71(){
+  txFilterStateV71={
+    search:document.getElementById('txSearchV71')?.value.trim()||'',
+    month:document.getElementById('txMonthFilterV71')?.value||'',
+    card:document.getElementById('txCardFilterV71')?.value||'all',
+    category:document.getElementById('txCategoryFilterV71')?.value||'all',
+    review:document.getElementById('txReviewFilterV71')?.value||'all'
+  };
+}
+function clearTransactionFiltersV71(){
+  ['txSearchV71','txMonthFilterV71'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  ['txCardFilterV71','txCategoryFilterV71','txReviewFilterV71'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='all'});
+  readTransactionFiltersV71();renderTodayTransactions();
+}
+
 let activeSplitTxIdV702=null;
 function activeSplitTxV702(){return auTransactions.find(x=>String(x.id)===String(activeSplitTxIdV702))}
 function openSplitEditorV702(id){
@@ -3211,6 +3357,7 @@ function saveSplitV702(){
   snapshotV52('カード明細分割前');
   tx.splits=vals.filter(p=>p.amount>0);
   tx.splitUpdatedAt=new Date().toISOString();
+  tx.reviewed=true;tx.reviewedAt=new Date().toISOString();
   saveAuTransactions();
   protectedSaveV52('カード明細分割');
   syncTodaySpentFromTransactions();
@@ -3225,6 +3372,7 @@ function clearSplitV702(){
   if(!confirm('この明細のカテゴリ分割を解除しますか？\nカード利用額そのものは変更されません。'))return;
   snapshotV52('カード明細分割解除前');
   delete tx.splits;delete tx.splitUpdatedAt;
+  tx.reviewed=false;tx.reviewedAt='';
   saveAuTransactions();protectedSaveV52('カード明細分割解除');
   closeSplitEditorV702();
   renderPayments();renderTodayTransactions();renderMonthlyAuto();renderMonthlyMerchantRank();
@@ -3272,8 +3420,21 @@ function currentCycleTransactions(){
 }
 function renderTodayTransactions(){
   const list=document.getElementById('todayTxList'); if(!list)return;
-  const items=auTransactions.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)).slice(0,30);
+  ensureTransactionReviewStateV71();
+  readTransactionFiltersV71();
+
+  const allSorted=auTransactions.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0));
+  const filtered=allSorted.filter(transactionMatchesFiltersV71);
+  const items=filtered.slice(0,100);
+  const pendingAll=auTransactions.filter(transactionNeedsReviewV71).length;
+
   const count=document.getElementById('statementRegisteredCount'); if(count)count.textContent=auTransactions.length+'件';
+  const pendingPill=document.getElementById('txPendingPillV71');
+  if(pendingPill){pendingPill.textContent='要確認 '+pendingAll+'件';pendingPill.className='pill '+(pendingAll?'healthWarnV69':'healthGoodV69')}
+  const filterSummary=document.getElementById('txFilterSummaryV71');
+  if(filterSummary){
+    filterSummary.textContent='表示 '+filtered.length+' / 全 '+auTransactions.length+'件'+(filtered.length>100?'（先頭100件）':'')+'。要確認は全体で '+pendingAll+'件です。';
+  }
 
   const cyc=currentCycleTransactions();
   const cycTotal=cyc.reduce((s,x)=>s+Number(x.amount||0),0);
@@ -3281,28 +3442,27 @@ function renderTodayTransactions(){
   renderSpendInsights();
 
   if(!items.length){
-    list.innerHTML='<div class="empty" style="padding:6px 0">カード明細はまだ登録されていません。</div>';
+    list.innerHTML='<div class="empty" style="padding:6px 0">'+(auTransactions.length?'条件に一致する明細はありません。':'カード明細はまだ登録されていません。')+'</div>';
     return;
   }
 
   const categoryOptions=Object.entries(txCategoryLabels).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-  const cardOptions='<option value="au">au PAY</option><option value="aeon">イオン</option><option value="apollo">apollostation</option>';
+  const cardOptions='<option value="au">au PAY</option><option value="aeon">イオンカード</option><option value="apollo">apollostation</option>';
 
   list.innerHTML=items.map(x=>{
     const cardType=x.cardType||'au';
-    const cat=(cardType==='apollo')
-      ? classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)
-      : effectiveTxCategory(x);
+    const cat=(cardType==='apollo')?classifyMerchantForCard(x.memo,'apollo',x.amount,x.category):effectiveTxCategory(x);
     const splitLabel=transactionSplitLabelV702(x);
-    const currentSplitCategory=cardType==='apollo'
-      ?classifyMerchantForCard(x.memo,'apollo',x.amount,x.category)
-      :effectiveTxCategory(x);
+    const currentSplitCategory=transactionBaseCategoryV71(x);
     const canSplit=Number(x.amount||0)>0&&!x.billingAdjustment&&(!!splitLabel||currentSplitCategory==='convenience');
+    const review=transactionReviewInfoV71(x);
+    const reviewText=review.ready?'確認済み':'要確認：'+review.reasons.join('・');
     return `<div class="statementItem">
       <div class="statementDate">${escapeHtml(x.date||'')}</div>
       <div>
         <div class="statementMemo">${escapeHtml(x.memo||'カード利用')}</div>
         <span class="txCardBadge">${escapeHtml(importCardLabel(cardType))}</span>
+        <span class="txReviewBadgeV71 ${review.ready?'ok':'warn'}">${escapeHtml(reviewText)}</span>
         ${splitLabel?`<span class="splitActiveV702">分割中：${escapeHtml(splitLabel)}</span>`:''}
         <div class="txEditRow">
           <select class="txCardSelect" data-tx-card="${x.id}">${cardOptions}</select>
@@ -3312,6 +3472,7 @@ function renderTodayTransactions(){
       <div class="statementAmount">${yen(x.amount)}</div>
       <div class="txActionV702">
         ${canSplit?`<button class="tinyBtn splitBtnV702" type="button" data-split-tx="${x.id}">${splitLabel?'分割編集':'分割'}</button>`:''}
+        <button class="tinyBtn reviewBtnV71 ${review.ready?'ok':'warn'}" type="button" data-review-tx="${x.id}" data-reviewed="${review.ready?'1':'0'}">${review.ready?'再確認':'確認済みにする'}</button>
         <button class="tinyBtn" type="button" data-delete-tx="${x.id}">削除</button>
       </div>
     </div>`;
@@ -3326,23 +3487,20 @@ function renderTodayTransactions(){
       snapshotV52('明細カード変更前');
       t.cardType=el.value;
       t.category=classifyMerchantForCard(t.memo,t.cardType,t.amount,t.category);
+      t.reviewed=false;t.reviewedAt='';
       saveAuTransactions();
       syncTodaySpentFromTransactions();
       syncStatementTotalAutomatic();
       protectedSaveV52('明細カード変更');
-      renderPayments();
-      renderTodayTransactions();
-      renderMonthlyAuto();
-      alert(importCardLabel(t.cardType)+'へ変更しました。カード別集計を再計算しました。');
+      renderPayments();renderTodayTransactions();renderMonthlyAuto();
+      alert(importCardLabel(t.cardType)+'へ変更しました。カード別集計を再計算しました。内容を確認して「確認済み」にしてください。');
     });
   });
 
   list.querySelectorAll('[data-tx-cat]').forEach(el=>{
     const tx=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));
     if(tx){
-      const c=(tx.cardType||'au')==='apollo'
-        ? classifyMerchantForCard(tx.memo,'apollo',tx.amount,tx.category)
-        : effectiveTxCategory(tx);
+      const c=(tx.cardType||'au')==='apollo'?classifyMerchantForCard(tx.memo,'apollo',tx.amount,tx.category):effectiveTxCategory(tx);
       if(tx.category!==c){tx.category=c;saveAuTransactions()}
       el.value=c;
     }
@@ -3351,14 +3509,16 @@ function renderTodayTransactions(){
       if(!t)return;
       snapshotV52('明細カテゴリ変更前');
       t.category=el.value;
+      t.reviewed=true;t.reviewedAt=new Date().toISOString();
       rememberMerchantCategory(t.memo,t.category);
+      saveAuTransactions();
       protectedSaveV52('明細カテゴリ変更');
-      renderMonthlyAuto();
-      renderSpendInsights();
+      renderTodayTransactions();renderMonthlyAuto();renderSpendInsights();renderSelfDiagnosisV70();
     });
   });
 
   list.querySelectorAll('[data-split-tx]').forEach(b=>b.addEventListener('click',()=>openSplitEditorV702(b.dataset.splitTx)));
+  list.querySelectorAll('[data-review-tx]').forEach(b=>b.addEventListener('click',()=>markTransactionReviewedV71(b.dataset.reviewTx,b.dataset.reviewed!=='1')));
   list.querySelectorAll('[data-delete-tx]').forEach(b=>b.addEventListener('click',()=>deleteAuSpend(b.dataset.deleteTx)));
 }
 let statementCandidates=[];
@@ -3442,7 +3602,7 @@ function importStatementCandidates(){
     const k=txKey(clean);
     if(existing.has(k)){dup++;continue}
     existing.add(k);
-    auTransactions.push({id:Date.now()+Math.random(),...clean,time:'',source:'statement'});
+    auTransactions.push({id:Date.now()+Math.random(),...clean,time:'',source:'statement',reviewed:false,reviewedAt:''});
     added++;
   }
   saveAuTransactions();syncTodaySpentFromTransactions();const autoSynced=syncStatementTotalAutomatic();protectedSaveV52('明細自動反映設定');renderPayments();renderTodayTransactions();renderMonthlyAuto();
@@ -4062,6 +4222,11 @@ function renderMonthlyReportV69(){
   set('reportPrevDiffV69',prev?(out.total-prev.total===0?yen(0):(out.total-prev.total>0?'+':'−')+yen(Math.abs(out.total-prev.total))):'比較待ち');
   set('reportMizuhoDeltaV69',mzDiff===null?'実績待ち':(mzDiff===0?yen(0):(mzDiff>0?'+':'−')+yen(Math.abs(mzDiff))));
   set('reportBudgetRemainV69',budget>0?(budgetRemain>=0?yen(budgetRemain):'超過 '+yen(-budgetRemain)):'未設定');
+  const prevActualV71=prevExists?monthlyActualSummaryV66(prevKey):null;
+  const tobaccoDiffV71=prevActualV71?Number(a.tobacco||0)-Number(prevActualV71.tobacco||0):null;
+  set('reportTobaccoV71',yen(a.tobacco||0));
+  set('reportTobaccoDiffV71',tobaccoDiffV71===null?'比較待ち':tobaccoDiffV71===0?yen(0):(tobaccoDiffV71>0?'+':'−')+yen(Math.abs(tobaccoDiffV71)));
+  set('reportTobaccoSubV71','カード分割＋現金を合算');
   set('reportTopCategoryV69',topCat?topCat.label+' '+yen(topCat.amount):'実績なし');
   const validTopMerchant=topMerchant&&topMerchant.name&&String(topMerchant.name)!=='undefined'&&Number(topMerchant.total||0)>0;
   set('reportTopMerchantV69',validTopMerchant?topMerchant.name+' '+yen(topMerchant.total):'実績なし');
@@ -4072,7 +4237,7 @@ function renderHomeMonthEndV69(){
   const k=currentYM(),st=monthEndStateV68(k),family=familyTransferRecordV69(k),next=nextFamilyTransferV69(k),total=st.total,done=st.done;
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
   set('homeMonthEndCountV69',done+'/'+total);
-  const missing=[];if(!st.checks.cardsReviewed)missing.push('カード');if(!st.checks.cashReviewed)missing.push('現金');if(!st.checks.utilitiesReviewed)missing.push('光熱費');if(!st.spouseOk)missing.push('妻精算');if(!st.mizuhoOk)missing.push('月末残高');if(st.familyRequired&&!st.familyOk)missing.push('母振込');
+  const missing=[];if(!st.checks.cardsReviewed)missing.push('カード');if(!st.cardReviewOk)missing.push('明細確認'+st.reviewSummary.pending+'件');if(!st.checks.cashReviewed)missing.push('現金');if(!st.checks.utilitiesReviewed)missing.push('光熱費');if(!st.spouseOk)missing.push('妻精算');if(!st.mizuhoOk)missing.push('月末残高');if(st.familyRequired&&!st.familyOk)missing.push('母振込');if(!st.transferFeesOk)missing.push('手数料確認');
   set('homeMonthEndMissingV69',st.closed?'今月は締め済み':missing.length?'残り：'+missing.join('・'):'月締め準備OK');
   set('homeFamilyTransferV69',family.amount>0?(family.status==='paid'?'✅ '+yen(family.amount)+' 済':'⏳ '+yen(family.amount)+' 未振込'):'対象なし');
   set('homeFamilyTransferNextV69',next?'次回 '+next.monthKey.slice(5)+'月15日 '+yen(next.amount):'予定分はすべて完了');
@@ -4093,10 +4258,12 @@ function renderBackupHealthV69(){
 function runSelfDiagnosisV70(){
   const issues=[],current=currentYM();
   const add=(severity,text)=>issues.push({severity,text});
-  const badMerchants=auTransactions.filter(t=>Number(t.amount||0)>0&&(!t.merchant||String(t.merchant).trim()===''||String(t.merchant)==='undefined'));
+  const badMerchants=auTransactions.filter(t=>Number(t.amount||0)>0&&(!t.memo||String(t.memo).trim()===''||String(t.memo)==='undefined'));
   if(badMerchants.length)add('warn','店舗名が空/undefinedのカード明細が '+badMerchants.length+'件あります。');
   const badSplits=auTransactions.filter(t=>Array.isArray(t.splits)&&t.splits.length&&!validTransactionSplitsV702(t));
   if(badSplits.length)add('bad','カテゴリ分割の合計が元明細と一致しないカード明細が '+badSplits.length+'件あります。分割を開いて修正してください。');
+  const pendingReviewV71=cardReviewSummaryV71(current);
+  if(pendingReviewV71.pending)add('warn',current+' のカード明細に要確認が '+pendingReviewV71.pending+'件あります。ホームの「要確認だけ見る」で確認してください。');
   Object.keys(billingMonths||{}).forEach(k=>{
     try{const r=billingReconciliationV66(k);if(r.relevant>0&&Math.abs(Number(r.grandDiff||0))>0)add('warn',k+' のカード請求突合に差額 '+(r.grandDiff>0?'+':'−')+yen(Math.abs(r.grandDiff))+' があります。')}
     catch(e){add('bad',k+' のカード請求突合を診断できませんでした。')}
@@ -4205,8 +4372,12 @@ function monthEndStateV68(monthKey){
   const spouseOk=spouse.status==='settled';
   const reconciliation=billingReconciliationV66(monthKey);
   const family=familyTransferRecordV69(monthKey),familyRequired=family.amount>0,familyOk=!familyRequired||family.status==='paid';
-  const items=[checks.cardsReviewed,checks.cashReviewed,checks.utilitiesReviewed,spouseOk,mizuhoOk,...(familyRequired?[familyOk]:[])];
-  return {checks,spouse,reconciliation,mizuhoValue,mizuhoOk,spouseOk,family,familyRequired,familyOk,done:items.filter(Boolean).length,total:items.length,ready:items.every(Boolean),closed:isMonthClosedV68(monthKey)};
+  const closed=isMonthClosedV68(monthKey);
+  const reviewSummary=cardReviewSummaryV71(monthKey),cardReviewOk=closed&&reviewSummary.legacy?true:reviewSummary.ready;
+  const transferSummary=transferMonthSummaryV70(monthKey);
+  const transferFeesOk=closed?true:transferSummary.actualFeeMissing.length===0;
+  const items=[checks.cardsReviewed,cardReviewOk,checks.cashReviewed,checks.utilitiesReviewed,spouseOk,mizuhoOk,...(familyRequired?[familyOk]:[]),transferFeesOk];
+  return {checks,spouse,reconciliation,mizuhoValue,mizuhoOk,spouseOk,family,familyRequired,familyOk,reviewSummary,cardReviewOk,transferSummary,transferFeesOk,done:items.filter(Boolean).length,total:items.length,ready:items.every(Boolean),closed};
 }
 function setMonthEditingStateV68(closed){
   ['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo','mMizuho','billAuAmountV59','billAuStatusV59','billAeonAmountV59','billAeonStatusV59','billApolloAmountV59','billApolloStatusV59','cashDateV66','cashCategoryV66','cashMemoV66','cashAmountV66'].forEach(id=>{
@@ -4216,6 +4387,18 @@ function setMonthEditingStateV68(closed){
     const e=document.getElementById(id);if(e)e.disabled=closed;
   });
   document.querySelectorAll('[data-delete-cash-v66]').forEach(e=>e.disabled=closed);
+}
+function monthEndMissingLabelsV71(st){
+  const missing=[];
+  if(!st.checks.cardsReviewed)missing.push('カード請求の確認');
+  if(!st.cardReviewOk)missing.push('カード明細 要確認 '+st.reviewSummary.pending+'件');
+  if(!st.checks.cashReviewed)missing.push('現金支出の確認');
+  if(!st.checks.utilitiesReviewed)missing.push('光熱費の確認');
+  if(!st.spouseOk)missing.push('妻との精算');
+  if(!st.mizuhoOk)missing.push('みずほ月末残高');
+  if(st.familyRequired&&!st.familyOk)missing.push('母への振込');
+  if(!st.transferFeesOk)missing.push('実振込手数料 '+st.transferSummary.actualFeeMissing.length+'件');
+  return missing;
 }
 function renderMonthEndV68(){
   const k=document.getElementById('monthKey')?.value||currentYM();
@@ -4248,6 +4431,10 @@ function renderMonthEndV68(){
   const familyRow=document.getElementById('checkFamilyTransferRowV69'),familyCheck=document.getElementById('checkFamilyTransferV69');
   if(familyRow)familyRow.style.display=st.familyRequired?'':'none';if(familyCheck)familyCheck.checked=st.familyOk;
   set('checkFamilyTransferMetaV69',st.familyRequired?(st.familyOk?'15日 振込済み '+yen(st.family.amount):'15日 未振込 '+yen(st.family.amount)):'対象なし');
+  const cardReviewCheck=document.getElementById('checkCardReviewV71');if(cardReviewCheck)cardReviewCheck.checked=st.cardReviewOk;
+  set('checkCardReviewMetaV71',st.reviewSummary.legacy?'v7.1以前の締め済み月':st.cardReviewOk?'要確認 0件 / 全 '+st.reviewSummary.total+'件':'要確認 '+st.reviewSummary.pending+'件'+(st.reviewSummary.examples.length?'：'+st.reviewSummary.examples.join('、'):''));
+  const feeCheck=document.getElementById('checkTransferFeesV71');if(feeCheck)feeCheck.checked=st.transferFeesOk;
+  set('checkTransferFeesMetaV71',st.transferFeesOk?'振込済み分の実手数料 確認OK':'実手数料 未確認 '+st.transferSummary.actualFeeMissing.map(transferTypeLabelV70).join('・'));
 
   const r=st.reconciliation;
   set('checkCardsMetaV68',r.relevant>0?'請求突合 '+r.matches+'/'+r.relevant+'一致 / 差額 '+(r.grandDiff===0?yen(0):(r.grandDiff>0?'+':'−')+yen(Math.abs(r.grandDiff))):'請求・明細の登録状況を確認');
@@ -4266,6 +4453,11 @@ function renderMonthEndV68(){
   set('monthCloseSubV68',st.closed
       ?'確定日時：'+(monthClosuresV68[k]?.closedAt?new Date(monthClosuresV68[k].closedAt).toLocaleString('ja-JP'):'日時不明')
       :st.ready?'必要項目がすべて揃っています。締めるとこの月の数字を固定します。':'あと '+(st.total-st.done)+'項目を確認してください。');
+  const gate=document.getElementById('monthCloseGateV71'),missingV71=monthEndMissingLabelsV71(st);
+  if(gate){
+    gate.classList.toggle('ready',st.closed||st.ready);
+    gate.textContent=st.closed?'✅ この月は締め済みです。':st.ready?'✅ 月締め前チェックはすべて完了しています。':'⚠️ まだ締めない方がよい項目：'+missingV71.join(' / ');
+  }
 
   const closeBtn=document.getElementById('closeMonthV68');if(closeBtn){closeBtn.disabled=st.closed||!st.ready;closeBtn.style.display=st.closed?'none':''}
   const reopenBtn=document.getElementById('reopenMonthV68');if(reopenBtn)reopenBtn.style.display=st.closed?'':'none';
@@ -4277,7 +4469,7 @@ function closeMonthV68(){
   const k=document.getElementById('monthKey')?.value||currentYM();
   if(isMonthClosedV68(k))return;
   const st=monthEndStateV68(k);
-  if(!st.ready){alert('まだ月締めできません。月末チェックリストの必要項目を完了してください。');return}
+  if(!st.ready){alert('まだ月締めできません。\n\n未完了：\n・'+monthEndMissingLabelsV71(st).join('\n・'));return}
   if(!confirm(k+' を締めますか？\n\n締めた後は、この月の月次・カード・請求・現金・光熱費・夫婦精算を固定します。\n修正する場合は「締めを解除して再集計」が必要です。'))return;
 
   snapshotV52('月締め前');
@@ -4289,7 +4481,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.0.3',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.1',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -4299,6 +4491,7 @@ function closeMonthV68(){
       spouseSummary:deepCloneV68(spouseSettlementSummaryV68(k)),
       familyTransfer:deepCloneV68(familyTransferRecordV69(k)),
       transferSummary:deepCloneV68(transferMonthSummaryV70(k)),
+      reviewSummary:deepCloneV68(cardReviewSummaryV71(k)),
       checklist:deepCloneV68(getMonthEndChecksV68(k))
     };
   }finally{buildingClosureSnapshotV68=false}
@@ -5720,6 +5913,11 @@ const splitRemainderV702=document.getElementById('splitRemainderConvenienceV702'
 const splitAllTobaccoBtnV702=document.getElementById('splitAllTobaccoV702');if(splitAllTobaccoBtnV702)splitAllTobaccoBtnV702.addEventListener('click',allTobaccoV702);
 const saveSplitBtnV702=document.getElementById('saveSplitV702');if(saveSplitBtnV702)saveSplitBtnV702.addEventListener('click',saveSplitV702);
 const clearSplitBtnV702=document.getElementById('clearSplitV702');if(clearSplitBtnV702)clearSplitBtnV702.addEventListener('click',clearSplitV702);
+['txSearchV71','txMonthFilterV71','txCardFilterV71','txCategoryFilterV71','txReviewFilterV71'].forEach(id=>{
+  const e=document.getElementById(id);if(e){e.addEventListener('input',()=>{readTransactionFiltersV71();renderTodayTransactions()});e.addEventListener('change',()=>{readTransactionFiltersV71();renderTodayTransactions()})}
+});
+const clearTxFilterV71=document.getElementById('clearTxFilterV71');if(clearTxFilterV71)clearTxFilterV71.addEventListener('click',clearTransactionFiltersV71);
+const showPendingTxV71=document.getElementById('showPendingTxV71');if(showPendingTxV71)showPendingTxV71.addEventListener('click',()=>{const e=document.getElementById('txReviewFilterV71');if(e)e.value='pending';readTransactionFiltersV71();renderTodayTransactions()});
 const splitOverlayV702=document.getElementById('splitOverlayV702');
 if(splitOverlayV702)splitOverlayV702.addEventListener('click',e=>{if(e.target===splitOverlayV702)closeSplitEditorV702()});
 
@@ -5948,8 +6146,8 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.0.3',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
-document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.1',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));ensureTransactionReviewStateV71();protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
 const exportBillingCsvV59=document.getElementById('exportBillingCsvV59');
@@ -5966,7 +6164,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.0.3',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
@@ -5981,6 +6179,7 @@ const startupSavedMonthV591=localStorage.getItem(
   startupModeV591==='billing'?'odyssey_billing_month_v591':'odyssey_usage_month_v591'
 );
 if(startupSavedMonthV591)document.getElementById('monthKey').value=startupSavedMonthV591;
+ensureTransactionReviewStateV71();
 initializeMotivationBadgeBaselineV671();
 render();
 </script>
