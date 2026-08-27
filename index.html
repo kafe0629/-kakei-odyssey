@@ -109,6 +109,17 @@
     .receiptGrid .full{grid-column:1/-1}
     .receiptPreview{font-size:12px;line-height:1.6;background:#07101e;border:1px solid #243652;border-radius:11px;padding:9px;margin-top:8px;display:none}
     .receiptPreview.show{display:block}
+
+    .statementBox{margin-top:12px;padding:12px;background:#091426;border:1px dashed #365075;border-radius:14px}
+    .statementCandidates{display:grid;gap:8px;margin-top:10px}
+    .statementCandidate{background:#07101e;border:1px solid #243652;border-radius:12px;padding:10px}
+    .statementCandidateTop{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}
+    .statementFields{display:grid;grid-template-columns:110px 1fr 110px;gap:7px;margin-top:8px}
+    .statementFields input,.statementFields select{padding:9px;font-size:12px}
+    .statementRegistered{margin-top:10px;display:grid;gap:7px}
+    .statementItem{display:grid;grid-template-columns:72px 1fr auto auto;gap:8px;align-items:center;background:#07101e;border:1px solid #243652;border-radius:11px;padding:9px}
+    .statementDate{font-size:11px;color:#93c5fd}.statementMemo{font-size:12px;font-weight:700}.statementAmount{font-weight:800}
+    @media(max-width:430px){.statementFields{grid-template-columns:1fr 1fr}.statementFields .memoField{grid-column:1/-1}.statementItem{grid-template-columns:64px 1fr auto}.statementItem .tinyBtn{grid-column:3}.statementAmount{grid-column:3}}
     .monthAutoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}
     .monthAutoItem{background:#07101e;border:1px solid #243652;border-radius:11px;padding:9px}
     .monthAutoItem .v{font-weight:800;margin-top:4px}
@@ -119,7 +130,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v4.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v4.2</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -144,39 +155,21 @@
         </div>
         <div class="note" id="quickTodayStatus" style="margin-top:10px">今日のau PAY利用額を入力すると、残り利用可能額と使いすぎ状況を表示します。</div>
         <div class="quickSpend">
-          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🛒 今日の買い物を登録</h3><span class="pill">au PAYカード</span></div>
-          <div class="quickSpendBtns">
-            <button class="btn secondary quickAddSpend" type="button" data-amount="500">＋500円</button>
-            <button class="btn secondary quickAddSpend" type="button" data-amount="1000">＋1,000円</button>
-            <button class="btn secondary quickAddSpend" type="button" data-amount="3000">＋3,000円</button>
-          </div>
-          <div class="spendEntry">
-            <input id="spendAmount" type="number" inputmode="numeric" placeholder="金額">
-            <input id="spendMemo" type="text" placeholder="メモ（スーパー等）">
-            <select id="spendCategory" aria-label="分類"><option value="food">食費</option><option value="daily">日用品</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other" selected>その他</option></select>
-            <button class="btn" id="addSpend" type="button">登録</button>
-          </div>
-          <div class="sub" style="margin-top:9px">登録すると「今日の利用額」と「au PAY未確定利用額」に同時反映します。</div>
-          <div class="receiptBox">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🧾 レシートから登録</h3><span class="pill">端末内OCR</span></div>
-            <div class="sub">レシートの写真・スクリーンショットから合計金額と店名を読み取ります。反映前に必ず確認してください。</div>
-            <input id="receiptImage" type="file" accept="image/*" style="display:none">
-            <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="pickReceipt" type="button">レシートを選ぶ</button><button class="btn secondary" id="clearReceipt" type="button">結果を消す</button></div>
-            <div class="ocrProgress"><span id="receiptProgress"></span></div>
-            <div class="ocrStatus" id="receiptStatus">レシートを選ぶと金額候補を読み取ります。</div>
-            <div class="receiptPreview" id="receiptPreview">
-              <div class="receiptGrid">
-                <div class="field"><label>認識した金額</label><input id="receiptAmount" type="number" inputmode="numeric" placeholder="0"></div>
-                <div class="field"><label>店名・メモ</label><input id="receiptMemo" type="text" placeholder="店名"></div>
-                <div class="field full"><label>分類</label><select id="receiptCategory"><option value="food" selected>食費</option><option value="daily">日用品</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select></div>
-              </div>
-              <div class="btnRow" style="margin-top:9px"><button class="btn" id="registerReceipt" type="button">このレシートを登録</button></div>
-              <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="receiptRaw"></pre></details>
-            </div>
-          </div>
-          <div class="row" style="margin-top:6px"><div class="name"><strong>今日の登録合計</strong></div><div class="value good" id="todayTxTotal">¥0</div></div>
-          <div class="todayTx" id="todayTxList"></div>
-        </div>
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 au PAYカード明細を取り込む</h3><span class="pill">カード明細中心</span></div>
+          <div class="sub">au PAYカードの利用明細スクリーンショットをまとめて選択します。OCR後に利用日・店名・金額を確認してから登録できます。</div>
+          <input id="statementImages" type="file" accept="image/*" multiple style="display:none">
+          <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="pickStatementImages" type="button">明細画像を選ぶ</button><button class="btn secondary" id="clearStatement" type="button">候補を消す</button></div>
+          <div class="ocrProgress"><span id="statementProgress"></span></div>
+          <div class="ocrStatus" id="statementStatus">複数の明細スクリーンショットをまとめて選べます。同じ明細は重複登録しません。</div>
+          <div class="statementCandidates" id="statementCandidates"></div>
+          <div class="btnRow" id="statementImportBtns" style="margin-top:10px;display:none"><button class="btn" id="importStatement" type="button">選択した明細を登録</button></div>
+          <div class="separator"></div>
+          <div class="row"><div class="name"><strong>現在の締めサイクル明細合計</strong></div><div class="value good" id="statementCycleTotal">¥0</div></div>
+          <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="syncStatementUnconfirmed" type="button">明細合計を未確定利用額へ反映</button></div>
+          <div class="sub" style="margin-top:8px">すべての利用明細が揃っていることを確認してから反映してください。カードアプリ側の未確定合計が分かる場合は、その金額を優先して入力できます。</div>
+          <div class="row" style="margin-top:8px"><div class="name"><strong>登録済み明細</strong></div><div class="value" id="statementRegisteredCount">0件</div></div>
+          <div class="statementRegistered" id="todayTxList"></div>
+        </div>        </div>
       </div>
       <div class="grid">
         <div class="card"><div class="label">生活防衛資金 達成率</div><div class="kpi" id="emergencyPct">0%</div><div class="progress"><span id="emergencyProgress"></span></div></div>
@@ -210,7 +203,7 @@
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>八十二銀行に残す生活予備費（任意）</label><input data-payment="safetyBuffer82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>1日あたり生活費予算（au PAY中心）</label><input data-payment="dailyLivingCost" type="number" inputmode="numeric" placeholder="3000"></div>
-            <div class="field"><label>今日のau PAY利用額</label><input data-payment="auTodaySpent" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>今日のau PAY利用額（明細から自動）</label><input data-payment="auTodaySpent" type="number" inputmode="numeric" placeholder="0" readonly></div>
             <div class="field"><label>給料日前の現金・口座払い生活費（任意）</label><input data-payment="cashLivingUntilPayday" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>次サイクル1日あたり生活費（任意）</label><input data-payment="nextCycleDailyLivingCost" type="number" inputmode="numeric" placeholder="未入力なら上と同額"></div>
             <div class="field"><label>次サイクルのカード請求見込み（任意）</label><input data-payment="nextCycleCards" type="number" inputmode="numeric" placeholder="0"></div>
@@ -277,7 +270,7 @@
           <div id="shortageBreakdown" class="note" style="margin-top:10px">現在の残高と確保額の内訳をここに表示します。</div>
           <div id="autoCalcMessage" class="note" style="margin-top:10px">OCR結果を反映すると、残高・請求額を保存して、必要振替額・確保額・自由資金・追加貯金可能額まで自動計算します。</div>
           <div class="btnRow" style="margin-top:12px"><button class="btn" id="savePayments">支払管理を保存</button></div>
-          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費予算」はau PAYカード中心の利用目安として使い、八十二銀行から現金として二重確保しません。「今日のau PAY利用額」を入力すると今日あと使える額と明日以降の1日目安を再計算し、日付が変わると今日利用額は自動で0円へ戻ります。現金・口座払いが必要な分だけ「給料日前の現金・口座払い生活費」に入力してください。「次サイクル1日あたり生活費」は別に設定でき、未入力または0円なら現在の1日生活費を引き継ぎます。v4.1では、レシートOCRと買い物分類・月次自動集計に対応し、au PAYカードの締め日・支払日を設定でき、未確定利用額と締め日までの利用予定を将来請求として扱います。次回15日の振り分け後から翌月15日までの生活費と、15日の振り分けに含まれない自動車保険・NHK月平均・ガソリン・au固定的支出を自動で見込みます。次サイクルのカード請求やその他支出が分かっている場合は任意欄へ入力すると、「本当の余裕資金」に反映します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
+          <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費予算」はau PAYカード中心の利用目安として使い、八十二銀行から現金として二重確保しません。「今日のau PAY利用額」を入力すると今日あと使える額と明日以降の1日目安を再計算し、日付が変わると今日利用額は自動で0円へ戻ります。現金・口座払いが必要な分だけ「給料日前の現金・口座払い生活費」に入力してください。「次サイクル1日あたり生活費」は別に設定でき、未入力または0円なら現在の1日生活費を引き継ぎます。v4.2では、au PAYカード利用明細のスクリーンショットをまとめてOCRし、利用日・店名・金額を候補化して重複を除きながら登録できるようにしました。登録明細は月次へ自動集計でき、現在の締めサイクル明細合計を未確定利用額へ反映できます。カードの締め日・支払日を設定でき、au PAYカードの締め日・支払日を設定でき、未確定利用額と締め日までの利用予定を将来請求として扱います。次回15日の振り分け後から翌月15日までの生活費と、15日の振り分けに含まれない自動車保険・NHK月平均・ガソリン・au固定的支出を自動で見込みます。次サイクルのカード請求やその他支出が分かっている場合は任意欄へ入力すると、「本当の余裕資金」に反映します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
         </div>
       </div>
     </section>
@@ -299,15 +292,15 @@
           <div class="field"><label>みずほ月末残高</label><input type="number" id="mMizuho" inputmode="numeric" placeholder="0"></div>
         </div>
         <div class="receiptBox">
-          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🛒 買い物履歴から自動集計</h3><span class="pill">au PAY登録分</span></div>
-          <div class="sub">ホームで登録した買い物・レシートを対象月ごとに集計します。「月次欄へ反映」で食費などとau PAY利用額へコピーできます。</div>
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 カード明細から自動集計</h3><span class="pill">au PAY登録分</span></div>
+          <div class="sub">ホームで登録したau PAYカード明細を対象月ごとに集計します。「月次欄へ反映」で食費などとau PAY利用額へコピーできます。</div>
           <div class="monthAutoGrid">
             <div class="monthAutoItem"><div class="label">食費</div><div class="v" id="autoFood">¥0</div></div>
             <div class="monthAutoItem"><div class="label">日用品</div><div class="v" id="autoDaily">¥0</div></div>
             <div class="monthAutoItem"><div class="label">外食・娯楽</div><div class="v" id="autoFun">¥0</div></div>
             <div class="monthAutoItem"><div class="label">タバコ</div><div class="v" id="autoTobacco">¥0</div></div>
             <div class="monthAutoItem"><div class="label">その他</div><div class="v" id="autoOther">¥0</div></div>
-            <div class="monthAutoItem"><div class="label">au PAY登録合計</div><div class="v good" id="autoAuTotal">¥0</div></div>
+            <div class="monthAutoItem"><div class="label">au PAY明細合計</div><div class="v good" id="autoAuTotal">¥0</div></div>
           </div>
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="applyTransactionsToMonth" type="button">月次欄へ反映</button></div>
         </div>
@@ -395,7 +388,7 @@
         <div class="separator"></div>
         <div class="btnRow"><button class="btn" id="saveSettings">設定を保存</button><button class="btn secondary" id="exportJson">バックアップ</button><label class="btn secondary" style="display:inline-block;cursor:pointer">復元<input id="importJson" type="file" accept="application/json" style="display:none"></label><button class="btn danger" id="resetApp">初期値に戻す</button></div>
       </div>
-      <div class="note" style="margin-top:12px">v4.1：ホームの「今日のお金ナビ」からau PAYの買い物を素早く登録できるようにしました。＋500円・＋1,000円・＋3,000円のクイック登録、金額とメモの個別登録、今日の利用履歴と削除に対応します。登録した金額は「今日の利用額」と「au PAYゴールド未確定利用額」の両方へ加算し、今日あと使える額・今月残り・将来請求・貯金可能額を自動再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v4.2：レシート・手入力中心の運用をやめ、au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
   </main>
@@ -430,70 +423,108 @@ function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+se
 function localDateKey(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function saveAuTransactions(){localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions))}
 const txCategoryLabels={food:'食費',daily:'日用品',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
-function addAuSpend(amount,memo='',category='other'){
-  amount=Math.round(Number(amount||0)); if(amount<=0)return;
-  const now=new Date(); const date=localDateKey(now);
-  category=txCategoryLabels[category]?category:'other';
-  auTransactions.push({id:Date.now()+Math.random(),date,time:String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),amount,memo:(memo||'買い物').trim()||'買い物',category});
-  payments.auTodaySpentDate=date;
-  payments.auTodaySpent=Math.max(0,Number(payments.auTodaySpent||0))+amount;
-  payments.auUnconfirmed=Math.max(0,Number(payments.auUnconfirmed||0))+amount;
-  saveAuTransactions(); localStorage.setItem('odyssey_payments',JSON.stringify(payments)); renderPayments(); renderTodayTransactions(); renderMonthlyAuto();
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function txKey(x){return [String(x.date||''),String(x.memo||'').toLowerCase().replace(/\s+/g,''),Math.round(Number(x.amount||0))].join('|')}
+function syncTodaySpentFromTransactions(){
+  const today=localDateKey();
+  payments.auTodaySpentDate=today;
+  payments.auTodaySpent=auTransactions.filter(x=>x.date===today).reduce((s,x)=>s+Math.max(0,Number(x.amount||0)),0);
 }
 function deleteAuSpend(id){
   const i=auTransactions.findIndex(x=>String(x.id)===String(id)); if(i<0)return;
-  const tx=auTransactions[i]; auTransactions.splice(i,1); saveAuTransactions();
-  if(tx.date===localDateKey()) payments.auTodaySpent=Math.max(0,Number(payments.auTodaySpent||0)-Number(tx.amount||0));
-  payments.auUnconfirmed=Math.max(0,Number(payments.auUnconfirmed||0)-Number(tx.amount||0));
+  auTransactions.splice(i,1); saveAuTransactions(); syncTodaySpentFromTransactions();
   localStorage.setItem('odyssey_payments',JSON.stringify(payments)); renderPayments(); renderTodayTransactions(); renderMonthlyAuto();
 }
+function currentStatementCycle(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const close=Math.min(31,Math.max(1,Number(payments.auCloseDay||15)));
+  const safe=(y,m,d)=>new Date(y,m,Math.min(d,new Date(y,m+1,0).getDate()));
+  let end=safe(today.getFullYear(),today.getMonth(),close);
+  if(today>end) end=safe(today.getFullYear(),today.getMonth()+1,close);
+  const prev=safe(end.getFullYear(),end.getMonth()-1,close);
+  const start=new Date(prev); start.setDate(start.getDate()+1);
+  return {start,end};
+}
+function currentCycleTransactions(){
+  const {start,end}=currentStatementCycle();
+  return auTransactions.filter(x=>{const d=new Date(String(x.date||'')+'T00:00:00');return !isNaN(d)&&d>=start&&d<=end});
+}
 function renderTodayTransactions(){
-  const list=document.getElementById('todayTxList'), totalEl=document.getElementById('todayTxTotal'); if(!list||!totalEl)return;
-  const today=localDateKey(); const items=auTransactions.filter(x=>x.date===today).slice().reverse(); const total=items.reduce((a,x)=>a+Number(x.amount||0),0); totalEl.textContent=yen(total);
-  if(!items.length){list.innerHTML='<div class="empty" style="padding:6px 0">今日の登録はまだありません。</div>';return}
-  list.innerHTML=items.map(x=>`<div class="todayTxItem"><div><div class="todayTxMemo">${escapeHtml(x.memo||'買い物')}<span class="txCat">${escapeHtml(txCategoryLabels[x.category]||'その他')}</span></div><div class="todayTxTime">${escapeHtml(x.time||'')}</div></div><div class="todayTxAmt">${yen(x.amount)}</div><button class="tinyBtn" type="button" data-delete-tx="${x.id}">削除</button></div>`).join('');
+  const list=document.getElementById('todayTxList'); if(!list)return;
+  const items=auTransactions.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)).slice(0,30);
+  const count=document.getElementById('statementRegisteredCount'); if(count)count.textContent=auTransactions.length+'件';
+  const cyc=currentCycleTransactions(); const cycTotal=cyc.reduce((s,x)=>s+Number(x.amount||0),0);
+  const total=document.getElementById('statementCycleTotal'); if(total)total.textContent=yen(cycTotal);
+  if(!items.length){list.innerHTML='<div class="empty" style="padding:6px 0">カード明細はまだ登録されていません。</div>';return}
+  list.innerHTML=items.map(x=>`<div class="statementItem"><div class="statementDate">${escapeHtml(x.date||'')}</div><div><div class="statementMemo">${escapeHtml(x.memo||'カード利用')}<span class="txCat">${escapeHtml(txCategoryLabels[x.category]||'その他')}</span></div></div><div class="statementAmount">${yen(x.amount)}</div><button class="tinyBtn" type="button" data-delete-tx="${x.id}">削除</button></div>`).join('');
   list.querySelectorAll('[data-delete-tx]').forEach(b=>b.addEventListener('click',()=>deleteAuSpend(b.dataset.deleteTx)));
 }
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function receiptMoney(s){return Number(String(s||'').replace(/[¥￥,，\s]/g,'').replace(/[^0-9]/g,''))||0}
-function parseReceiptText(raw){
-  const txt=String(raw||'').replace(/，/g,',').replace(/￥/g,'¥');
-  const lines=txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-  const scored=[];
-  const patterns=[
-    {re:/(?:合計|総合計|お支払(?:い)?|請求額|TOTAL|Total|total|税込)[^0-9¥￥]{0,16}[¥￥]?\s*([0-9][0-9,]*)/g,score:100},
-    {re:/[¥￥]\s*([0-9][0-9,]*)/g,score:55},
-    {re:/(?:^|\s)([0-9]{2,7})\s*円/g,score:45}
-  ];
-  for(const p of patterns){let m;while((m=p.re.exec(txt))){const v=receiptMoney(m[1]);if(v>0&&v<1000000)scored.push({v,score:p.score,index:m.index})}}
-  scored.sort((a,b)=>b.score-a.score||b.v-a.v||b.index-a.index);
-  const amount=scored.length?scored[0].v:0;
-  const ignore=/(レシート|領収|TEL|電話|日時|担当|レジ|No\.?|合計|小計|税込|税率|現金|クレジット|カード|ポイント|お預り|お釣り|TOTAL)/i;
-  let memo='';
-  for(const line of lines.slice(0,10)){
-    const clean=line.replace(/[|｜]/g,' ').trim();
-    if(clean.length<2||clean.length>30||ignore.test(clean))continue;
-    if((clean.match(/[0-9]/g)||[]).length>clean.length/2)continue;
-    if(/[ぁ-んァ-ヶ一-龠A-Za-z]/.test(clean)){memo=clean;break}
-  }
-  return {amount,memo:memo||'レシート',raw:txt};
+let statementCandidates=[];
+function moneyNum(s){return Number(String(s||'').replace(/[¥￥,，\s]/g,'').replace(/[^0-9]/g,''))||0}
+function normalizeStatementDate(s){
+  const now=new Date(); let m=String(s||'').match(/(?:(\d{4})[年\/.-])?\s*(\d{1,2})[月\/.-]\s*(\d{1,2})日?/);
+  if(!m)return localDateKey(); const y=m[1]?Number(m[1]):now.getFullYear(); const mo=Number(m[2]),d=Number(m[3]);
+  if(mo<1||mo>12||d<1||d>31)return localDateKey(); return y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 }
-async function runReceiptOcr(file){
-  if(!file)return;
-  if(!window.Tesseract){alert('OCR機能を読み込めませんでした。インターネット接続を確認してください。');return}
-  const status=document.getElementById('receiptStatus'),bar=document.getElementById('receiptProgress'),preview=document.getElementById('receiptPreview');
-  preview.classList.remove('show'); bar.style.width='3%'; status.textContent='OCRを準備しています…';
+function cleanMerchant(s){
+  return String(s||'').replace(/(?:(?:20\d{2})[年\/.-])?\s*\d{1,2}[月\/.-]\s*\d{1,2}日?/g,' ').replace(/[¥￥]\s*[0-9][0-9,]*/g,' ').replace(/[+-]?\s*[0-9][0-9,]{2,}\s*円?/g,' ').replace(/(利用日|利用額|ご利用|支払|明細|一括|カード|未確定|確定)/g,' ').replace(/\s+/g,' ').trim().slice(0,40);
+}
+function parseStatementText(raw,filename=''){
+  const lines=String(raw||'').replace(/，/g,',').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const ignore=/(利用可能額|ご利用可能額|限度額|お支払金額|請求額|合計|ポイント|Ponta|支払日|締め日|残高|キャンペーン|カード番号)/i;
+  const out=[];
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i]; if(ignore.test(line))continue;
+    const amounts=[]; let m;
+    const re=/[¥￥]\s*([0-9][0-9,]{0,8})|(?:^|\s)([0-9]{2,7}(?:,[0-9]{3})*)\s*円(?:\s|$)/g;
+    while((m=re.exec(line))){const v=moneyNum(m[1]||m[2]);if(v>0&&v<500000)amounts.push(v)}
+    if(!amounts.length)continue;
+    const amount=amounts[amounts.length-1];
+    const nearby=[line,lines[i-1]||'',lines[i-2]||'',lines[i+1]||''];
+    const dateLine=nearby.find(x=>/(?:(?:20\d{2})[年\/.-])?\s*\d{1,2}[月\/.-]\s*\d{1,2}日?/.test(x))||'';
+    let memo=cleanMerchant(line);
+    if(!memo||memo.length<2){memo=cleanMerchant(lines[i-1]||'')||cleanMerchant(lines[i-2]||'')||'カード利用'}
+    if(/^[0-9\s/:.-]+$/.test(memo))memo='カード利用';
+    out.push({date:normalizeStatementDate(dateLine),memo,amount,category:'other',checked:true,source:filename});
+  }
+  const seen=new Set(); return out.filter(x=>{const k=txKey(x);if(seen.has(k))return false;seen.add(k);return true});
+}
+function renderStatementCandidates(){
+  const box=document.getElementById('statementCandidates'), btns=document.getElementById('statementImportBtns'); if(!box)return;
+  if(!statementCandidates.length){box.innerHTML='';if(btns)btns.style.display='none';return}
+  if(btns)btns.style.display='flex';
+  box.innerHTML=statementCandidates.map((x,i)=>`<div class="statementCandidate"><div class="statementCandidateTop"><input type="checkbox" data-sc-check="${i}" ${x.checked?'checked':''}><div class="sub">${escapeHtml(x.source||'画像')} から認識</div></div><div class="statementFields"><input data-sc-date="${i}" type="date" value="${escapeHtml(x.date)}"><input class="memoField" data-sc-memo="${i}" type="text" value="${escapeHtml(x.memo)}" placeholder="店名"><input data-sc-amount="${i}" type="number" inputmode="numeric" value="${x.amount}"><select data-sc-cat="${i}"><option value="food">食費</option><option value="daily">日用品</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other" ${x.category==='other'?'selected':''}>その他</option></select></div></div>`).join('');
+  box.querySelectorAll('[data-sc-check]').forEach(el=>el.addEventListener('change',()=>statementCandidates[+el.dataset.scCheck].checked=el.checked));
+  box.querySelectorAll('[data-sc-date]').forEach(el=>el.addEventListener('change',()=>statementCandidates[+el.dataset.scDate].date=el.value));
+  box.querySelectorAll('[data-sc-memo]').forEach(el=>el.addEventListener('input',()=>statementCandidates[+el.dataset.scMemo].memo=el.value));
+  box.querySelectorAll('[data-sc-amount]').forEach(el=>el.addEventListener('input',()=>statementCandidates[+el.dataset.scAmount].amount=Number(el.value||0)));
+  box.querySelectorAll('[data-sc-cat]').forEach(el=>{const x=statementCandidates[+el.dataset.scCat];el.value=x.category||'other';el.addEventListener('change',()=>statementCandidates[+el.dataset.scCat].category=el.value)});
+}
+async function runStatementOcr(files){
+  const status=document.getElementById('statementStatus'),bar=document.getElementById('statementProgress'); statementCandidates=[]; renderStatementCandidates();
   let worker;
   try{
-    worker=await Tesseract.createWorker(['jpn','eng'],1,{logger:m=>{if(m.progress!=null){bar.style.width=Math.min(95,5+m.progress*90)+'%';status.textContent=(m.status==='recognizing text'?'レシートを読み取っています…':'OCR準備中…')+' '+Math.round(m.progress*100)+'%';}}});
-    const r=await worker.recognize(file); const parsed=parseReceiptText(r?.data?.text||'');
-    document.getElementById('receiptRaw').textContent=parsed.raw;
-    document.getElementById('receiptAmount').value=parsed.amount||'';
-    document.getElementById('receiptMemo').value=parsed.memo||'';
-    bar.style.width='100%'; preview.classList.add('show');
-    status.textContent=parsed.amount?'読み取り完了。金額・店名・分類を確認して登録してください。':'合計金額を特定できませんでした。金額を手入力して登録できます。';
-  }catch(e){status.textContent='読み取りに失敗しました。別の写真を試すか、手入力してください。';bar.style.width='0%'}
-  finally{try{if(worker)await worker.terminate()}catch(e){}}
+    status.textContent='OCRを準備しています…';bar.style.width='2%';
+    worker=await Tesseract.createWorker(['jpn','eng'],1,{logger:m=>{if(m.progress!=null)bar.style.width=Math.min(90,5+m.progress*80)+'%'}});
+    for(let i=0;i<files.length;i++){
+      status.textContent=`${i+1}/${files.length}枚目を読み取り中…`;
+      const r=await worker.recognize(files[i]); statementCandidates.push(...parseStatementText(r.data.text,files[i].name));
+    }
+    const existing=new Set(auTransactions.map(txKey)); statementCandidates.forEach(x=>{if(existing.has(txKey(x)))x.checked=false});
+    status.textContent=statementCandidates.length?`${statementCandidates.length}件の候補を見つけました。内容を確認して登録してください。チェックが外れている候補は登録済みの可能性があります。`:'明細候補を見つけられませんでした。金額と店名が見える明細画面を試してください。';
+    bar.style.width='100%';renderStatementCandidates();
+  }catch(e){console.error(e);status.textContent='読み取りに失敗しました。別のスクリーンショットで試してください。';bar.style.width='0%'}finally{if(worker)await worker.terminate().catch(()=>{})}
+}
+function importStatementCandidates(){
+  const existing=new Set(auTransactions.map(txKey)); let added=0,dup=0;
+  for(const x of statementCandidates){if(!x.checked||Number(x.amount)<=0)continue;const clean={date:x.date||localDateKey(),memo:(x.memo||'カード利用').trim()||'カード利用',amount:Math.round(Number(x.amount)),category:txCategoryLabels[x.category]?x.category:'other'};const k=txKey(clean);if(existing.has(k)){dup++;continue}existing.add(k);auTransactions.push({id:Date.now()+Math.random(),...clean,time:'',source:'statement'});added++}
+  saveAuTransactions();syncTodaySpentFromTransactions();localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();renderTodayTransactions();renderMonthlyAuto();
+  statementCandidates=[];renderStatementCandidates();document.getElementById('statementStatus').textContent=`${added}件を登録しました${dup?`（重複 ${dup}件は除外）`:''}。`;
+}
+function syncStatementCycleToUnconfirmed(){
+  const total=currentCycleTransactions().reduce((s,x)=>s+Number(x.amount||0),0);
+  if(!confirm('現在の締めサイクルに登録したカード明細 '+yen(total)+' を、au PAYゴールド未確定利用額として反映しますか？'))return;
+  payments.auUnconfirmed=total; syncTodaySpentFromTransactions(); localStorage.setItem('odyssey_payments',JSON.stringify(payments)); renderPayments(); renderTodayTransactions();
 }
 function monthlyTransactionSummary(monthKey){
   const sums={food:0,daily:0,fun:0,tobacco:0,other:0,total:0,count:0};
@@ -1162,13 +1193,11 @@ document.getElementById('pickOcrImages').addEventListener('click',()=>document.g
 document.getElementById('ocrImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runOcr(fs)});
 document.getElementById('applyOcr').addEventListener('click',applyOcrCandidates);
 document.getElementById('clearOcr').addEventListener('click',()=>{ocrCandidates={};ocrRawChunks=[];ocrClassifications=[];document.getElementById('ocrResult').classList.remove('show');document.getElementById('ocrProgressBar').style.width='0%';document.getElementById('ocrStatus').textContent='「自動判定」のまま複数画像をまとめて選べます。画像ごとに銀行・カードの種類を判定して、必要な金額だけを抽出します。失敗した画像だけ種類を指定して再読み取りできます。';document.getElementById('ocrImages').value=''});
-document.querySelectorAll('.quickAddSpend').forEach(b=>b.addEventListener('click',()=>addAuSpend(Number(b.dataset.amount||0),'クイック登録','other')));
-document.getElementById('addSpend').addEventListener('click',()=>{const a=document.getElementById('spendAmount'),m=document.getElementById('spendMemo'),c=document.getElementById('spendCategory');const n=Number(a.value||0);if(n<=0){alert('金額を入力してください');return}addAuSpend(n,m.value,c.value);a.value='';m.value='';});
-document.getElementById('spendAmount').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('addSpend').click()});
-document.getElementById('pickReceipt').addEventListener('click',()=>document.getElementById('receiptImage').click());
-document.getElementById('receiptImage').addEventListener('change',e=>{const f=e.target.files?.[0];if(f)runReceiptOcr(f)});
-document.getElementById('clearReceipt').addEventListener('click',()=>{document.getElementById('receiptImage').value='';document.getElementById('receiptAmount').value='';document.getElementById('receiptMemo').value='';document.getElementById('receiptRaw').textContent='';document.getElementById('receiptPreview').classList.remove('show');document.getElementById('receiptProgress').style.width='0%';document.getElementById('receiptStatus').textContent='レシートを選ぶと金額候補を読み取ります。'});
-document.getElementById('registerReceipt').addEventListener('click',()=>{const a=Number(document.getElementById('receiptAmount').value||0),m=document.getElementById('receiptMemo').value,c=document.getElementById('receiptCategory').value;if(a<=0){alert('レシートの金額を確認してください');return}addAuSpend(a,m,c);document.getElementById('clearReceipt').click();});
+document.getElementById('pickStatementImages').addEventListener('click',()=>document.getElementById('statementImages').click());
+document.getElementById('statementImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runStatementOcr(fs)});
+document.getElementById('clearStatement').addEventListener('click',()=>{statementCandidates=[];renderStatementCandidates();document.getElementById('statementImages').value='';document.getElementById('statementProgress').style.width='0%';document.getElementById('statementStatus').textContent='複数の明細スクリーンショットをまとめて選べます。同じ明細は重複登録しません。'});
+document.getElementById('importStatement').addEventListener('click',importStatementCandidates);
+document.getElementById('syncStatementUnconfirmed').addEventListener('click',syncStatementCycleToUnconfirmed);
 document.getElementById('applyTransactionsToMonth').addEventListener('click',applyTransactionsToMonth);
 document.getElementById('monthKey').addEventListener('change',renderMonthlyAuto);
 document.querySelectorAll('[data-payment]').forEach(el=>el.addEventListener('input',()=>{payments[el.dataset.payment]=Number(el.value||0);renderPayments()}));
@@ -1182,7 +1211,7 @@ document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[[
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=4.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=4.2',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
