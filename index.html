@@ -186,7 +186,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.9.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.9.2</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -779,7 +779,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'5.9.1',at:new Date().toISOString(),reason,
+      version:'5.9.2',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -942,7 +942,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'5.9.1',
+    version:'5.9.2',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -1587,8 +1587,8 @@ function nextBillingMonthWithDataV591(referenceMonth,includeCurrent=true){
   const keys=billingMonthsWithDataV591();
   if(!keys.length)return '';
   const ref=String(referenceMonth||currentYM());
-  const hit=keys.find(k=>includeCurrent?k>=ref:k>ref);
-  return hit||keys[0];
+  // 未来方向だけを検索。未来に請求がなければ過去へループしない。
+  return keys.find(k=>includeCurrent?k>=ref:k>ref)||'';
 }
 function rememberActiveMonthV591(){
   const k=document.getElementById('monthKey')?.value;
@@ -1604,9 +1604,10 @@ function updateMonthNavigationV591(){
   const nextBill=document.getElementById('nextBillingWithDataV591');
   if(nextBill){
     const next=nextBillingMonthWithDataV591(k,false);
-    nextBill.classList.toggle('show',mode==='billing'&&!!next);
-    nextBill.textContent=next?'💳 次の請求あり：'+monthLabelV591(next):'💳 次の請求がある月へ';
-    nextBill.dataset.targetMonth=next||'';
+    const hasFuture=mode==='billing'&&!!next;
+    nextBill.classList.toggle('show',hasFuture);
+    nextBill.textContent=hasFuture?'💳 次の請求あり：'+monthLabelV591(next):'';
+    nextBill.dataset.targetMonth=hasFuture?next:'';
   }
 }
 function setMonthKeyAndRenderV591(k,remember=true){
@@ -1658,8 +1659,13 @@ function setMonthModeV59(mode,autoJump=true){
     }else if(savedBilling && billingSummaryV59(savedBilling).total>0){
       target=savedBilling;
     }else if(autoJump){
-      // 0円の8月などから請求月へ切り替えた時は、次の請求あり月へ自動移動
-      target=nextBillingMonthWithDataV591(currentKey,true)||currentKey;
+      // 0円の月からは未来方向の次の請求月へ。
+      target=nextBillingMonthWithDataV591(currentKey,true);
+      if(!target && savedBilling && billingSummaryV59(savedBilling).total>0)target=savedBilling;
+      if(!target){
+        const allBillingV592=billingMonthsWithDataV591();
+        target=allBillingV592.length?allBillingV592[allBillingV592.length-1]:currentKey;
+      }
     }else{
       target=savedBilling||currentKey;
     }
@@ -2892,7 +2898,12 @@ const reclassifyHome=document.getElementById('reclassifyHome');if(reclassifyHome
 const apolloRestoreV582=restoreKnownApolloTransactionsV582();
 seedBillingMonthsV59();
 if(!localStorage.getItem('odyssey_billing_month_v591')){
-  const firstBillingV591=nextBillingMonthWithDataV591(document.getElementById('monthKey')?.value||currentYM(),true);
+  const baseBillingMonthV592=document.getElementById('monthKey')?.value||currentYM();
+  let firstBillingV591=nextBillingMonthWithDataV591(baseBillingMonthV592,true);
+  if(!firstBillingV591){
+    const allBillingV592=billingMonthsWithDataV591();
+    firstBillingV591=allBillingV592.length?allBillingV592[allBillingV592.length-1]:'';
+  }
   if(firstBillingV591)localStorage.setItem('odyssey_billing_month_v591',firstBillingV591);
 }
 migrateV49Apollo();
@@ -2944,7 +2955,7 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.9.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.9.2',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費（本人負担）','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -2962,7 +2973,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.9.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.9.2',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
