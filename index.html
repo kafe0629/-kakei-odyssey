@@ -232,6 +232,22 @@
     .badgeV67.earned{border-color:#22a06b;color:#86efac;background:rgba(34,160,107,.10)}
     .badgeV67.next{border-color:#d49b37;color:#fde68a;background:rgba(212,155,55,.10)}
     .miniProgressV67{margin-top:8px}
+    .monthEndBoxV68{margin-top:14px;border:1px solid #35527c;border-radius:16px;padding:12px;background:#091528}
+    .settlementHeroV68{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+    .settlementCellV68{border:1px solid #29446b;border-radius:12px;padding:10px;background:#071322}
+    .settlementCellV68 .label{font-size:10px;color:#94a3b8}
+    .settlementCellV68 .v{font-size:17px;font-weight:900;margin-top:4px}
+    .settlementRouteV68{margin-top:9px;border:1px dashed #35527c;border-radius:12px;padding:10px;font-size:11px;color:#b9c7da;line-height:1.6}
+    .checkListV68{display:grid;gap:7px;margin-top:10px}
+    .checkRowV68{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;border:1px solid #29446b;border-radius:11px;padding:9px;background:#071322}
+    .checkRowV68 input{width:20px;height:20px}
+    .checkMetaV68{font-size:10px;color:#94a3b8;margin-top:2px}
+    .monthCloseStatusV68{font-size:25px;font-weight:950;margin:9px 0 4px}
+    .closedBannerV68{display:none;margin:9px 0;border:1px solid #22a06b;border-radius:12px;padding:10px;background:rgba(34,160,107,.10);color:#86efac;font-weight:850}
+    .closedBannerV68.show{display:block}
+    .monthEndProgressV68{margin-top:8px}
+    .closedPillV68{border-color:#22a06b!important;color:#86efac!important}
+
     .achievementOverlayV671{
       position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
       padding:22px;background:rgba(2,8,18,.78);backdrop-filter:blur(7px)
@@ -361,7 +377,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.7.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.8</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -699,7 +715,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.7.1</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.8</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -863,6 +879,68 @@
             <div class="separator"></div>
             <div class="row"><div class="name"><strong>請求月の履歴</strong></div><div class="value" id="billingHistoryCountV59">0か月</div></div>
             <div id="billingHistoryV59"><div class="empty">まだ請求月データがありません。</div></div>
+          </div>
+
+          <div class="monthEndBoxV68">
+            <div class="sectionTitle" style="margin:0">
+              <h3 style="margin:0">🤝 夫婦精算・月末締め</h3>
+              <span class="pill" id="monthEndPillV68">未締め</span>
+            </div>
+            <div class="closedBannerV68" id="closedBannerV68">🔒 この月は締め済みです。カード分類や自動同期を変更しても、この月の確定値は変わりません。</div>
+
+            <div class="separator"></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🤝 妻との精算</h3><span class="pill" id="spouseSettlementPillV68">未精算</span></div>
+            <div class="settlementHeroV68">
+              <div class="settlementCellV68"><div class="label">家賃</div><div class="v" id="spouseRentV68">¥0</div></div>
+              <div class="settlementCellV68"><div class="label">光熱費 差額</div><div class="v" id="spouseUtilityV68">¥0</div></div>
+              <div class="settlementCellV68"><div class="label">妻へ振込</div><div class="v blue" id="spouseToWifeV68">¥0</div></div>
+              <div class="settlementCellV68"><div class="label">妻から受取</div><div class="v good" id="spouseFromWifeV68">¥0</div></div>
+            </div>
+            <div class="settlementRouteV68" id="spouseRouteV68">自分のみずほ → 妻のみずほ</div>
+            <div class="sub" id="spouseSettlementStatusV68" style="margin-top:8px">まだ精算済みにしていません。</div>
+            <div class="btnRow" style="margin-top:9px">
+              <button class="btn secondary" id="settleSpouseV68" type="button">この金額で精算済みにする</button>
+              <button class="btn secondary" id="unsettleSpouseV68" type="button">未精算に戻す</button>
+            </div>
+
+            <div class="separator"></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">📋 月末チェックリスト</h3><span class="pill" id="monthEndProgressTextV68">0/5</span></div>
+            <div class="checkListV68">
+              <label class="checkRowV68">
+                <input id="checkCardsV68" type="checkbox">
+                <div><strong>カード請求を確認した</strong><div class="checkMetaV68" id="checkCardsMetaV68">請求突合を確認</div></div>
+                <span class="pill">カード</span>
+              </label>
+              <label class="checkRowV68">
+                <input id="checkCashV68" type="checkbox">
+                <div><strong>現金支出を確認した</strong><div class="checkMetaV68" id="checkCashMetaV68">現金の入力漏れを確認</div></div>
+                <span class="pill">現金</span>
+              </label>
+              <label class="checkRowV68">
+                <input id="checkUtilitiesV68" type="checkbox">
+                <div><strong>光熱費を確認した</strong><div class="checkMetaV68" id="checkUtilitiesMetaV68">ガス・電気・水道を確認</div></div>
+                <span class="pill">光熱費</span>
+              </label>
+              <div class="checkRowV68">
+                <input id="checkSpouseV68" type="checkbox" disabled>
+                <div><strong>妻との精算が完了</strong><div class="checkMetaV68" id="checkSpouseMetaV68">精算状態から自動判定</div></div>
+                <span class="pill">精算</span>
+              </div>
+              <div class="checkRowV68">
+                <input id="checkMizuhoV68" type="checkbox" disabled>
+                <div><strong>みずほ月末残高を入力</strong><div class="checkMetaV68" id="checkMizuhoMetaV68">月末残高から自動判定</div></div>
+                <span class="pill">残高</span>
+              </div>
+            </div>
+            <div class="progress green monthEndProgressV68"><span id="monthEndProgressBarV68" style="width:0%"></span></div>
+
+            <div class="monthCloseStatusV68" id="monthCloseStatusV68">📂 未締め</div>
+            <div class="sub" id="monthCloseSubV68">5項目が揃うと月締めできます。</div>
+            <div class="btnRow" style="margin-top:9px">
+              <button class="btn" id="closeMonthV68" type="button">🔒 この月を締める</button>
+              <button class="btn secondary" id="reopenMonthV68" type="button" style="display:none">締めを解除して再集計</button>
+            </div>
+            <div class="note" style="margin-top:9px">月締めすると、月次・カード利用集計・請求月・現金・光熱費・夫婦精算をスナップショット保存します。締めた月は自動同期や分類変更で勝手に変わりません。修正したい場合だけ締めを解除してください。</div>
           </div>
         </div>
         <div class="separator"></div>
@@ -1047,7 +1125,8 @@
         <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認 / 妻の給料日</div></div><span class="pill">確認</span></div>
         <div class="scheduleItem"><div class="day">26日</div><div><div class="schedTitle">東京海上日動 自動車保険</div><div class="schedSub">八十二銀行 / 15,270円</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">26日</div><div><div class="schedTitle">NHK 2,200円</div><div class="schedSub">2か月に1回（8月・10月・12月…を基準）</div></div><span class="pill">隔月</span></div>
-        <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">Money Forward ME 月次確認</div><div class="schedSub">支出・未分類・タバコ・貯金進捗を確認</div></div><span class="pill">点検</span></div>
+        <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">月末チェック・家計締め</div><div class="schedSub">カード突合 / 現金 / 光熱費 / 妻との精算 / みずほ月末残高 → 月締め</div></div><span class="pill">締め</span></div>
+        <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">Money Forward ME 月次確認</div><div class="schedSub">支出・未分類・タバコ・貯金進捗を確認してアプリと照合</div></div><span class="pill">点検</span></div>
       </div>
       <div class="card" style="margin-top:14px">
         <h3>口座の役割</h3>
@@ -1113,8 +1192,9 @@
           <div class="sub" style="margin-top:7px">アプリ更新後に不具合が出た場合でも、保存した時点の設定・支払管理・月次・カード明細へ戻せます。</div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v6.8：</strong>月次に「夫婦精算・月末締め」を追加しました。家賃＋光熱費差額から妻へ振り込む額／妻から受け取る額を月ごとに算出し、精算済み状態を保存できます。月末チェックはカード請求・現金・光熱費・夫婦精算・みずほ月末残高の5項目で、全て揃うと月締めできます。締めた月は月次・カード利用集計・請求・現金・光熱費・夫婦精算をスナップショット保存し、自動同期や分類変更で過去月が勝手に変わらないようにしました。必要な時だけ締め解除して再集計できます。</div>
       <div class="note" style="margin-top:12px"><strong>v6.6：</strong>月次に①カード請求額と登録明細の差額を確認する「請求突合チェック」、②カードと混ぜずに登録できる現金支出、③カード＋現金の「予算 vs 実績」を追加しました。請求突合はカードの締め日と明細のbillGroupを使って請求月へ割り当て、apollostationの請求値引きも含めて比較します。現金支出はカード自動同期ONのまま利用でき、月次合計・履歴・CSVへ加算します。全体生活費予算はau PAY生活費月間予算を参照し、カテゴリ別予算は設定画面で任意入力できます。現金支出も正常バックアップ・安定版・JSONへ保存します。</div>
-      <div class="note" style="margin-top:12px"><strong>v6.7.1：生活防衛資金・購入資金のバッジ条件を新しく達成した時だけ「🎉 バッジ獲得！」の達成演出を1回表示するようにしました。更新前から達成済みのバッジは初回起動時に既達成として登録するため、過去分の演出が突然連続表示されません。複数ラインを一度に超えた場合も最上位のバッジを1回だけ表示します。v6.7：ホームに「貯金モチベーション」を追加しました。次の小目標（50万円→100万円→150万円→200万円→250万円→300万円→購入必要資金）、月末残高からの連続貯金、前月末と比べた今月の前進、生活防衛資金・購入資金の達成バッジを自動表示します。実績記録が足りない項目は無理に推測せず「判定待ち」と表示します。v6.6.1：家賃の送金ルートを「八十二銀行→自分のみずほ銀行→妻のみずほ銀行」に変更しました。15日は八十二から自分のみずほへ貯金・県民共済・家賃中継分をまとめて移し、その後、自分のみずほから妻のみずほへ家賃を送金します。家賃中継分はみずほの貯金純増には含めず、固定振り分け合計でも二重計上しません。予定表と口座の役割も新ルートへ変更しました。v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
+      <div class="note" style="margin-top:12px"><strong>v6.8：生活防衛資金・購入資金のバッジ条件を新しく達成した時だけ「🎉 バッジ獲得！」の達成演出を1回表示するようにしました。更新前から達成済みのバッジは初回起動時に既達成として登録するため、過去分の演出が突然連続表示されません。複数ラインを一度に超えた場合も最上位のバッジを1回だけ表示します。v6.7：ホームに「貯金モチベーション」を追加しました。次の小目標（50万円→100万円→150万円→200万円→250万円→300万円→購入必要資金）、月末残高からの連続貯金、前月末と比べた今月の前進、生活防衛資金・購入資金の達成バッジを自動表示します。実績記録が足りない項目は無理に推測せず「判定待ち」と表示します。v6.6.1：家賃の送金ルートを「八十二銀行→自分のみずほ銀行→妻のみずほ銀行」に変更しました。15日は八十二から自分のみずほへ貯金・県民共済・家賃中継分をまとめて移し、その後、自分のみずほから妻のみずほへ家賃を送金します。家賃中継分はみずほの貯金純増には含めず、固定振り分け合計でも二重計上しません。予定表と口座の役割も新ルートへ変更しました。v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
       <div class="note" style="margin-top:12px">v5.6.1：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
@@ -1182,13 +1262,32 @@ if(!Array.isArray(cashTransactionsV66))cashTransactionsV66=[];
 let seenMotivationBadgesV671=safeParseStorage('odyssey_seen_motivation_badges_v671',[]);
 if(!Array.isArray(seenMotivationBadgesV671))seenMotivationBadgesV671=[];
 let achievementTimerV671=null;
+let monthClosuresV68=safeParseStorage('odyssey_month_closures_v68',{});
+if(!monthClosuresV68 || typeof monthClosuresV68!=='object' || Array.isArray(monthClosuresV68))monthClosuresV68={};
+let spouseSettlementsV68=safeParseStorage('odyssey_spouse_settlements_v68',{});
+if(!spouseSettlementsV68 || typeof spouseSettlementsV68!=='object' || Array.isArray(spouseSettlementsV68))spouseSettlementsV68={};
+let monthEndChecksV68=safeParseStorage('odyssey_month_end_checks_v68',{});
+if(!monthEndChecksV68 || typeof monthEndChecksV68!=='object' || Array.isArray(monthEndChecksV68))monthEndChecksV68={};
+let buildingClosureSnapshotV68=false;
 
 
 
+
+
+function deepCloneV68(x){return x==null?x:JSON.parse(JSON.stringify(x));}
+function isMonthClosedV68(monthKey){return !!(monthKey&&monthClosuresV68?.[monthKey]);}
+function closedSnapshotV68(monthKey){return isMonthClosedV68(monthKey)?monthClosuresV68[monthKey]:null;}
+function blockClosedEditV68(monthKey,action='変更'){
+  if(!isMonthClosedV68(monthKey))return false;
+  alert(monthKey+' は月締め済みのため「'+action+'」できません。\n修正する場合は月次ページで「締めを解除して再集計」を押してください。');
+  return true;
+}
 function cloneUtilityDefaultV58(){
   return JSON.parse(JSON.stringify(utilityDefaultsV58));
 }
 function getUtilityRecordV58(monthKey=currentYM()){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.utilityRecord)return deepCloneV68(closed.utilityRecord);
   const raw=utilityMonths[monthKey]||{};
   const d=cloneUtilityDefaultV58();
   return {
@@ -1243,6 +1342,9 @@ function persistStateV52(){
   localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));
   localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));
   localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));
+  localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));
+  localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));
+  localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));
   if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));
   else localStorage.removeItem('odyssey_adopted_loan_v631');
 }
@@ -1260,6 +1362,9 @@ function snapshotV52(reason='自動'){
       utilityMonths:JSON.parse(JSON.stringify(utilityMonths)),
       billingMonths:JSON.parse(JSON.stringify(billingMonths)),
       cashTransactionsV66:JSON.parse(JSON.stringify(cashTransactionsV66)),
+      monthClosuresV68:JSON.parse(JSON.stringify(monthClosuresV68)),
+      spouseSettlementsV68:JSON.parse(JSON.stringify(spouseSettlementsV68)),
+      monthEndChecksV68:JSON.parse(JSON.stringify(monthEndChecksV68)),
       adoptedLoanPlanV631:adoptedLoanPlanV631?JSON.parse(JSON.stringify(adoptedLoanPlanV631)):null
     };
     const current=localStorage.getItem('odyssey_recovery_v52');
@@ -1281,6 +1386,9 @@ function restoreRecoveryV52(){
     utilityMonths=s.utilityMonths||{};
     billingMonths=s.billingMonths||{};
     cashTransactionsV66=Array.isArray(s.cashTransactionsV66)?s.cashTransactionsV66:[];
+    monthClosuresV68=s.monthClosuresV68||{};
+    spouseSettlementsV68=s.spouseSettlementsV68||{};
+    monthEndChecksV68=s.monthEndChecksV68||{};
     adoptedLoanPlanV631=s.adoptedLoanPlanV631||null;
     persistStateV52();
     render();
@@ -1312,6 +1420,9 @@ function recoverHealthySnapshotV651(){
       utilityMonths=s.utilityMonths||utilityMonths||{};
       billingMonths=s.billingMonths||billingMonths||{};
       cashTransactionsV66=Array.isArray(s.cashTransactionsV66)?s.cashTransactionsV66:cashTransactionsV66;
+      monthClosuresV68=s.monthClosuresV68||monthClosuresV68||{};
+      spouseSettlementsV68=s.spouseSettlementsV68||spouseSettlementsV68||{};
+      monthEndChecksV68=s.monthEndChecksV68||monthEndChecksV68||{};
       adoptedLoanPlanV631=s.adoptedLoanPlanV631||adoptedLoanPlanV631||null;
       persistStateV52();
       localStorage.setItem('odyssey_v651_auto_recovered',new Date().toISOString());
@@ -1458,6 +1569,9 @@ function stableBackupDataV55(){
     utilityMonths:JSON.parse(JSON.stringify(utilityMonths)),
     billingMonths:JSON.parse(JSON.stringify(billingMonths)),
     cashTransactionsV66:JSON.parse(JSON.stringify(cashTransactionsV66)),
+    monthClosuresV68:JSON.parse(JSON.stringify(monthClosuresV68)),
+    spouseSettlementsV68:JSON.parse(JSON.stringify(spouseSettlementsV68)),
+    monthEndChecksV68:JSON.parse(JSON.stringify(monthEndChecksV68)),
     adoptedLoanPlanV631:adoptedLoanPlanV631?JSON.parse(JSON.stringify(adoptedLoanPlanV631)):null
   };
 }
@@ -1497,6 +1611,9 @@ function restoreStableBackupV55(){
     utilityMonths=s.utilityMonths||{};
     billingMonths=s.billingMonths||{};
     cashTransactionsV66=Array.isArray(s.cashTransactionsV66)?s.cashTransactionsV66:[];
+    monthClosuresV68=s.monthClosuresV68||{};
+    spouseSettlementsV68=s.spouseSettlementsV68||{};
+    monthEndChecksV68=s.monthEndChecksV68||{};
     adoptedLoanPlanV631=s.adoptedLoanPlanV631||null;
     protectedSaveV52('安定版復元');
     render();
@@ -2946,6 +3063,8 @@ function normalizeBillingCardV59(card){
   return c;
 }
 function getBillingRecordV59(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.billingRecord)return deepCloneV68(closed.billingRecord);
   const raw=billingMonths[monthKey]||{};
   return {
     au:normalizeBillingCardV59(raw.au),
@@ -2989,6 +3108,7 @@ function saveBillingStoreV59(){
   localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));
 }
 function upsertBillingFromPaymentV59(monthKey,card,amount,status,source,force=false){
+  if(isMonthClosedV68(monthKey))return false;
   amount=Math.max(0,Number(amount||0));
   if(!monthKey||amount<=0)return false;
   const rec=getBillingRecordV59(monthKey);
@@ -3111,6 +3231,7 @@ function renderBillingMonthV59(){
 function saveBillingMonthV59(){
   const k=document.getElementById('monthKey')?.value;
   if(!k)return;
+  if(blockClosedEditV68(k,'請求月を保存'))return;
   const r=readBillingFormV59();
   // 金額があるのに未登録なら「未確定」に自動補正。
   ['au','aeon','apollo'].forEach(card=>{
@@ -3127,6 +3248,7 @@ function saveBillingMonthV59(){
 function clearBillingMonthV59(){
   const k=document.getElementById('monthKey')?.value;
   if(!k||!billingMonths[k])return;
+  if(blockClosedEditV68(k,'請求月をクリア'))return;
   if(!confirm(k+' の請求月データをクリアしますか？\\n利用月の明細・月次記録は消えません。'))return;
   snapshotV52('請求月クリア前');
   delete billingMonths[k];
@@ -3250,6 +3372,8 @@ function emptyCardSummaryV57(){
   return {food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,total:0,count:0};
 }
 function monthlyTransactionSummary(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.transactionSummary)return deepCloneV68(closed.transactionSummary);
   const sums={
     food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,
     total:0,count:0,au:0,aeon:0,apollo:0,
@@ -3279,6 +3403,190 @@ function monthlyTransactionSummary(monthKey){
     sums[ct]+=a;
   });
   return sums;
+}
+
+function monthDateForV68(monthKey){
+  const [y,m]=String(monthKey||currentYM()).split('-').map(Number);
+  return y&&m?new Date(y,m-1,15):new Date();
+}
+function monthRecordFromFormV68(monthKey){
+  const existing=months[monthKey]||{};
+  const selected=(document.getElementById('monthKey')?.value||'')===monthKey;
+  if(!selected)return deepCloneV68(existing);
+  const n=id=>Number(document.getElementById(id)?.value||0);
+  return {...existing,food:n('mFood'),daily:n('mDaily'),convenience:n('mConvenience'),fuel:n('mFuel'),utilities:n('mUtilities'),fun:n('mFun'),tobacco:n('mTobacco'),other:n('mOther'),au:n('mAu'),aeon:n('mAeon'),apollo:n('mApollo'),mizuho:n('mMizuho'),autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};
+}
+function getMonthEndChecksV68(monthKey){
+  const r=monthEndChecksV68[monthKey]||{};
+  return {cardsReviewed:!!r.cardsReviewed,cashReviewed:!!r.cashReviewed,utilitiesReviewed:!!r.utilitiesReviewed,updatedAt:r.updatedAt||''};
+}
+function saveMonthEndCheckV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  if(isMonthClosedV68(k))return;
+  monthEndChecksV68[k]={
+    cardsReviewed:!!document.getElementById('checkCardsV68')?.checked,
+    cashReviewed:!!document.getElementById('checkCashV68')?.checked,
+    utilitiesReviewed:!!document.getElementById('checkUtilitiesV68')?.checked,
+    updatedAt:new Date().toISOString()
+  };
+  localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));
+  renderMonthEndV68();
+}
+function spouseSettlementSummaryV68(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.spouseSummary)return deepCloneV68(closed.spouseSummary);
+  const rent=Math.max(0,effectiveRentV58(monthDateForV68(monthKey)));
+  const util=utilitySummaryV58(monthKey);
+  const utilityNet=Number(util.netSettlement||0);
+  const net=rent+utilityNet;
+  const rec=spouseSettlementsV68[monthKey]||{};
+  const exact=rec.status==='settled'&&Math.round(Number(rec.settledNet||0))===Math.round(net);
+  const changed=rec.status==='settled'&&!exact;
+  return {
+    monthKey,rent,utilityNet,net,toWife:Math.max(0,net),fromWife:Math.max(0,-net),
+    status:exact?'settled':changed?'changed':'pending',
+    settledAt:rec.settledAt||'',settledNet:Number(rec.settledNet||0)
+  };
+}
+function markSpouseSettlementV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  if(blockClosedEditV68(k,'夫婦精算の状態を変更'))return;
+  const s=spouseSettlementSummaryV68(k);
+  const dir=s.net>=0?'妻へ '+yen(s.toWife):'妻から '+yen(s.fromWife);
+  if(!confirm(k+' の夫婦精算を完了にしますか？\n\n'+dir+'\n\n家賃と現在入力済みの光熱費差額を合わせた金額です。'))return;
+  spouseSettlementsV68[k]={status:'settled',settledNet:s.net,settledAt:new Date().toISOString()};
+  localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));
+  snapshotV52('夫婦精算完了');
+  renderMonthEndV68();
+}
+function unsettleSpouseV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  if(blockClosedEditV68(k,'夫婦精算の状態を変更'))return;
+  if(!spouseSettlementsV68[k])return;
+  if(!confirm(k+' の夫婦精算を未精算へ戻しますか？'))return;
+  delete spouseSettlementsV68[k];
+  localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));
+  snapshotV52('夫婦精算未完了へ戻す');
+  renderMonthEndV68();
+}
+function monthEndStateV68(monthKey){
+  const checks=getMonthEndChecksV68(monthKey);
+  const spouse=spouseSettlementSummaryV68(monthKey);
+  const rec=months[monthKey]||{};
+  const selected=(document.getElementById('monthKey')?.value||'')===monthKey;
+  const mizuhoValue=selected?Number(document.getElementById('mMizuho')?.value||rec.mizuho||0):Number(rec.mizuho||0);
+  const mizuhoOk=mizuhoValue>0;
+  const spouseOk=spouse.status==='settled';
+  const reconciliation=billingReconciliationV66(monthKey);
+  const items=[checks.cardsReviewed,checks.cashReviewed,checks.utilitiesReviewed,spouseOk,mizuhoOk];
+  return {checks,spouse,reconciliation,mizuhoValue,mizuhoOk,spouseOk,done:items.filter(Boolean).length,total:5,ready:items.every(Boolean),closed:isMonthClosedV68(monthKey)};
+}
+function setMonthEditingStateV68(closed){
+  ['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo','mMizuho','billAuAmountV59','billAuStatusV59','billAeonAmountV59','billAeonStatusV59','billApolloAmountV59','billApolloStatusV59','cashDateV66','cashCategoryV66','cashMemoV66','cashAmountV66'].forEach(id=>{
+    const e=document.getElementById(id);if(e)e.disabled=closed;
+  });
+  ['applyTransactionsToMonth','saveMonth','saveBillingMonthV59','clearBillingMonthV59','addCashV66'].forEach(id=>{
+    const e=document.getElementById(id);if(e)e.disabled=closed;
+  });
+  document.querySelectorAll('[data-delete-cash-v66]').forEach(e=>e.disabled=closed);
+}
+function renderMonthEndV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  const st=monthEndStateV68(k),sp=st.spouse;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+
+  set('spouseRentV68',yen(sp.rent));
+  set('spouseUtilityV68',sp.utilityNet>0?'妻へ '+yen(sp.utilityNet):sp.utilityNet<0?'妻から '+yen(-sp.utilityNet):'精算なし');
+  set('spouseToWifeV68',yen(sp.toWife));
+  set('spouseFromWifeV68',yen(sp.fromWife));
+  set('spouseRouteV68',sp.net>=0?'自分のみずほ → 妻のみずほ：'+yen(sp.toWife)+'（家賃＋光熱費差額）':'妻のみずほ → 自分のみずほ：'+yen(sp.fromWife)+'（差引結果）');
+
+  const spPill=document.getElementById('spouseSettlementPillV68');
+  if(spPill){
+    spPill.textContent=sp.status==='settled'?'精算済み':sp.status==='changed'?'金額変更あり':'未精算';
+    spPill.classList.toggle('closedPillV68',sp.status==='settled');
+  }
+  set('spouseSettlementStatusV68',sp.status==='settled'
+      ?'精算済み：'+(sp.settledAt?new Date(sp.settledAt).toLocaleString('ja-JP'):'日時不明')
+      :sp.status==='changed'
+      ?'精算後に金額が変わりました。現在額でもう一度精算してください。'
+      :'家賃と光熱費差額を確認してから精算済みにしてください。');
+
+  const c=st.checks;
+  const cards=document.getElementById('checkCardsV68');if(cards){cards.checked=c.cardsReviewed;cards.disabled=st.closed}
+  const cash=document.getElementById('checkCashV68');if(cash){cash.checked=c.cashReviewed;cash.disabled=st.closed}
+  const utilCheck=document.getElementById('checkUtilitiesV68');if(utilCheck){utilCheck.checked=c.utilitiesReviewed;utilCheck.disabled=st.closed}
+  const spouseCheck=document.getElementById('checkSpouseV68');if(spouseCheck)spouseCheck.checked=st.spouseOk;
+  const mzCheck=document.getElementById('checkMizuhoV68');if(mzCheck)mzCheck.checked=st.mizuhoOk;
+
+  const r=st.reconciliation;
+  set('checkCardsMetaV68',r.relevant>0?'請求突合 '+r.matches+'/'+r.relevant+'一致 / 差額 '+(r.grandDiff===0?yen(0):(r.grandDiff>0?'+':'−')+yen(Math.abs(r.grandDiff))):'請求・明細の登録状況を確認');
+  const ca=cashSummaryV66(k);set('checkCashMetaV68','現金 '+ca.count+'件 / '+yen(ca.total));
+  const us=utilitySummaryV58(k);set('checkUtilitiesMetaV68','本人負担 '+yen(us.selfShare)+' / 差額 '+(us.netSettlement>0?'妻へ '+yen(us.netSettlement):us.netSettlement<0?'妻から '+yen(-us.netSettlement):'なし'));
+  set('checkSpouseMetaV68',st.spouseOk?'精算済み':'未精算');
+  set('checkMizuhoMetaV68',st.mizuhoOk?'月末残高 '+yen(st.mizuhoValue):'「みずほ月末残高」を入力してください');
+
+  set('monthEndProgressTextV68',st.done+'/'+st.total);
+  const bar=document.getElementById('monthEndProgressBarV68');if(bar)bar.style.width=(st.done/st.total*100)+'%';
+
+  const pill=document.getElementById('monthEndPillV68');
+  if(pill){pill.textContent=st.closed?'締め済み':st.ready?'締め準備OK':'未締め';pill.classList.toggle('closedPillV68',st.closed)}
+  const banner=document.getElementById('closedBannerV68');if(banner)banner.classList.toggle('show',st.closed);
+  set('monthCloseStatusV68',st.closed?'✅ '+k+' 締め済み':st.ready?'🟢 月締めできます':'📂 未締め');
+  set('monthCloseSubV68',st.closed
+      ?'確定日時：'+(monthClosuresV68[k]?.closedAt?new Date(monthClosuresV68[k].closedAt).toLocaleString('ja-JP'):'日時不明')
+      :st.ready?'必要な5項目が揃っています。締めるとこの月の数字を固定します。':'あと '+(st.total-st.done)+'項目を確認してください。');
+
+  const closeBtn=document.getElementById('closeMonthV68');if(closeBtn){closeBtn.disabled=st.closed||!st.ready;closeBtn.style.display=st.closed?'none':''}
+  const reopenBtn=document.getElementById('reopenMonthV68');if(reopenBtn)reopenBtn.style.display=st.closed?'':'none';
+  const settleBtn=document.getElementById('settleSpouseV68');if(settleBtn)settleBtn.disabled=st.closed||sp.status==='settled';
+  const unsettleBtn=document.getElementById('unsettleSpouseV68');if(unsettleBtn)unsettleBtn.disabled=st.closed||sp.status==='pending';
+  setMonthEditingStateV68(st.closed);
+}
+function closeMonthV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  if(isMonthClosedV68(k))return;
+  const st=monthEndStateV68(k);
+  if(!st.ready){alert('まだ月締めできません。月末チェックリストの5項目を完了してください。');return}
+  if(!confirm(k+' を締めますか？\n\n締めた後は、この月の月次・カード・請求・現金・光熱費・夫婦精算を固定します。\n修正する場合は「締めを解除して再集計」が必要です。'))return;
+
+  snapshotV52('月締め前');
+  const record=monthRecordFromFormV68(k);
+  months[k]=record;
+  localStorage.setItem('odyssey_months',JSON.stringify(months));
+  if(record.mizuho>0){settings.mizuho=record.mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}
+
+  buildingClosureSnapshotV68=true;
+  try{
+    monthClosuresV68[k]={
+      version:'6.8',monthKey:k,closedAt:new Date().toISOString(),
+      monthRecord:deepCloneV68(record),
+      transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
+      cashSummary:deepCloneV68(cashSummaryV66(k)),
+      merchantSummary:deepCloneV68(merchantSummary(k)),
+      billingRecord:deepCloneV68(getBillingRecordV59(k)),
+      utilityRecord:deepCloneV68(getUtilityRecordV58(k)),
+      spouseSummary:deepCloneV68(spouseSettlementSummaryV68(k)),
+      checklist:deepCloneV68(getMonthEndChecksV68(k))
+    };
+  }finally{buildingClosureSnapshotV68=false}
+
+  localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));
+  protectedSaveV52('月締め '+k);
+  render();
+  alert(k+' を締めました。今後の自動同期や分類変更では、この月の確定値は変わりません。');
+}
+function reopenMonthV68(){
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  if(!monthClosuresV68[k])return;
+  if(!confirm(k+' の締めを解除しますか？\n\n解除後は現在のカード明細・分類・請求データから再集計できるようになります。'))return;
+  snapshotV52('月締め解除前 '+k);
+  delete monthClosuresV68[k];
+  localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));
+  if(Number(payments.monthlyUsageAutoSyncV65??1)!==0)syncUsageMonthRecordV65(k);
+  protectedSaveV52('月締め解除 '+k);
+  renderMonthlyAuto();renderHistory();
+  alert(k+' の締めを解除しました。修正後、もう一度チェックして締めてください。');
 }
 function renderMonthlyAuto(){
   const k=document.getElementById('monthKey')?.value||currentYM();
@@ -3338,11 +3646,13 @@ function renderMonthlyAuto(){
   renderCashV66();
   renderBudgetVsActualV66();
   renderBillingMonthV59();
+  renderMonthEndV68();
 }
 
 function applyTransactionsToMonth(){
   const k=document.getElementById('monthKey')?.value;
   if(!k)return;
+  if(blockClosedEditV68(k,'カード明細を月次へ再反映'))return;
   const s=monthlyTransactionSummary(k);
 
   document.getElementById('mFood').value=s.food;
@@ -3377,6 +3687,8 @@ function saveCashTransactionsV66(){
   localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));
 }
 function cashSummaryV66(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&closed?.cashSummary)return deepCloneV68(closed.cashSummary);
   const out={food:0,daily:0,convenience:0,fuel:0,fun:0,tobacco:0,other:0,total:0,count:0};
   cashTransactionsV66.filter(x=>String(x.date||'').slice(0,7)===monthKey).forEach(x=>{
     const c=Object.prototype.hasOwnProperty.call(out,x.category)?x.category:'other';
@@ -3410,6 +3722,8 @@ function renderCashV66(){
 }
 function addCashV66(){
   const date=document.getElementById('cashDateV66')?.value||'';
+  const targetMonth=String(date||'').slice(0,7);
+  if(blockClosedEditV68(targetMonth,'現金支出を追加'))return;
   const category=document.getElementById('cashCategoryV66')?.value||'other';
   const memo=(document.getElementById('cashMemoV66')?.value||'').trim();
   const amount=Math.round(Number(document.getElementById('cashAmountV66')?.value||0));
@@ -3423,6 +3737,8 @@ function addCashV66(){
 }
 function deleteCashV66(id){
   const i=cashTransactionsV66.findIndex(x=>String(x.id)===String(id));if(i<0)return;
+  const targetMonth=String(cashTransactionsV66[i].date||'').slice(0,7);
+  if(blockClosedEditV68(targetMonth,'現金支出を削除'))return;
   if(!confirm('この現金支出を削除しますか？\n'+(cashTransactionsV66[i].memo||'現金支出')+' '+yen(cashTransactionsV66[i].amount)))return;
   snapshotV52('現金支出削除前');cashTransactionsV66.splice(i,1);saveCashTransactionsV66();protectedSaveV52('現金支出削除');renderMonthlyAuto();renderHistory();
 }
@@ -3479,6 +3795,7 @@ function renderBillingReconciliationV66(){
 }
 function syncUsageMonthRecordV65(monthKey){
   if(!monthKey)return false;
+  if(isMonthClosedV68(monthKey))return false;
   const s=monthlyTransactionSummary(monthKey);
   const existing=months[monthKey]||{};
   const hasTx=s.count>0;
@@ -3525,12 +3842,13 @@ function syncUsageRecordsV65(renderAfter=true){
 }
 function fillMonthlyFormV65(monthKey){
   if(!monthKey)return;
-  const rec=months[monthKey]||{};
+  const closed=closedSnapshotV68(monthKey);
+  const rec=closed?.monthRecord||months[monthKey]||{};
   const autoOn=Number(payments.monthlyUsageAutoSyncV65??1)!==0;
   const s=monthlyTransactionSummary(monthKey);
   const val=(id,v)=>{const e=document.getElementById(id);if(e)e.value=Number(v||0)};
 
-  if(autoOn){
+  if(autoOn&&!closed){
     val('mFood',s.food);
     val('mDaily',s.daily);
     val('mConvenience',s.convenience);
@@ -3584,6 +3902,8 @@ function runFullAutoSyncV65(showAlert=true){
   return {usage:u,billing:b};
 }
 function merchantSummary(monthKey){
+  const closed=closedSnapshotV68(monthKey);
+  if(!buildingClosureSnapshotV68&&Array.isArray(closed?.merchantSummary))return deepCloneV68(closed.merchantSummary);
   const map=new Map();
   auTransactions.filter(x=>String(x.date||'').slice(0,7)===monthKey).forEach(x=>{
     if(x.billingAdjustment)return;
@@ -3733,12 +4053,15 @@ function collectUtilitiesFromFormV58(){
   return key;
 }
 function saveUtilitiesV58(showAlert=true){
+  const pendingKey=utilityMonthKeyFromUIV58();
+  if(blockClosedEditV68(pendingKey,'光熱費を変更'))return false;
   const key=collectUtilitiesFromFormV58();
   localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));
   snapshotV52('光熱費変更');
   renderUtilitiesV58();
   renderPayments();
   renderRulesV58();
+  if(typeof renderMonthEndV68==='function')renderMonthEndV68();
   if(showAlert)alert(key+' の光熱費・夫婦精算を保存しました。');
 }
 function renderUtilitiesV58(){
@@ -3773,8 +4096,9 @@ function renderUtilitiesV58(){
   set('utilityWaterAction',s.items.water.action+' / 本人負担 '+yen(s.items.water.selfShare));
 }
 function applyUtilitiesToMonthV58(){
-  saveUtilitiesV58(false);
   const key=utilityMonthKeyFromUIV58();
+  if(blockClosedEditV68(key,'光熱費を月次へ反映'))return;
+  if(saveUtilitiesV58(false)===false)return;
   const s=utilitySummaryV58(key);
   const mk=document.getElementById('monthKey');
   if(mk)mk.value=key;
@@ -4583,7 +4907,7 @@ function render(){
   if(bbV591)bbV591.classList.toggle('active',modeV591==='billing');
   updateMonthNavigationV591();
 }
-function renderHistory(){const h=document.getElementById('history');const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k]||{},cash=cashSummaryV66(k);const base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);const total=base+cash.total;return `<div class="historyItem"><div>${k}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">現金 ${yen(cash.total)} / タバコ ${yen(Number(m.tobacco||0)+cash.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho||0)}</div></div>`}).join('')}
+function renderHistory(){const h=document.getElementById('history');const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k]||{},cash=cashSummaryV66(k);const base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);const total=base+cash.total;return `<div class="historyItem"><div>${k}${isMonthClosedV68(k)?' <span class="pill closedPillV68">締め済</span>':''}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">現金 ${yen(cash.total)} / タバコ ${yen(Number(m.tobacco||0)+cash.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho||0)}</div></div>`}).join('')}
 function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther'];const base=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const k=document.getElementById('monthKey')?.value||currentYM(),cash=cashSummaryV66(k);const tobacco=Number(document.getElementById('mTobacco')?.value||0)+cash.tobacco;const total=base+cash.total;const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards);if(typeof renderBudgetVsActualV66==='function')renderBudgetVsActualV66()}
 const pageIdsV56=['home','monthly','car','schedule','settings'];
 
@@ -4673,6 +4997,20 @@ if(billingAutoSyncV65){
 }
 const runFullAutoSyncV65Btn=document.getElementById('runFullAutoSyncV65');
 if(runFullAutoSyncV65Btn)runFullAutoSyncV65Btn.addEventListener('click',()=>runFullAutoSyncV65(true));
+['checkCardsV68','checkCashV68','checkUtilitiesV68'].forEach(id=>{
+  const e=document.getElementById(id);if(e)e.addEventListener('change',saveMonthEndCheckV68);
+});
+const settleSpouseV68Btn=document.getElementById('settleSpouseV68');
+if(settleSpouseV68Btn)settleSpouseV68Btn.addEventListener('click',markSpouseSettlementV68);
+const unsettleSpouseV68Btn=document.getElementById('unsettleSpouseV68');
+if(unsettleSpouseV68Btn)unsettleSpouseV68Btn.addEventListener('click',unsettleSpouseV68);
+const closeMonthV68Btn=document.getElementById('closeMonthV68');
+if(closeMonthV68Btn)closeMonthV68Btn.addEventListener('click',closeMonthV68);
+const reopenMonthV68Btn=document.getElementById('reopenMonthV68');
+if(reopenMonthV68Btn)reopenMonthV68Btn.addEventListener('click',reopenMonthV68);
+const mizuhoMonthInputV68=document.getElementById('mMizuho');
+if(mizuhoMonthInputV68)mizuhoMonthInputV68.addEventListener('input',()=>{if(typeof renderMonthEndV68==='function')renderMonthEndV68()});
+
 
 document.querySelectorAll('[data-import-card]').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -4826,7 +5164,7 @@ document.getElementById('savePayments').addEventListener('click',()=>{
   renderPayments();renderMonthlyAuto();
   alert('支払管理を保存しました。'+(Number(payments.billingAutoSyncV65??1)!==0?'請求月も自動同期しました。':'請求月自動同期はOFFです。')+' 正常バックアップも更新しました');
 });
-document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={...(months[k]||{}),food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0,autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
+document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;if(blockClosedEditV68(k,'月次を保存'))return;months[k]={...(months[k]||{}),food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0,autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{
   snapshotV52('設定変更前');
   document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));
@@ -4837,8 +5175,8 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標は「頭金＋生活防衛資金」で自動更新しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.7.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
-document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.8',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
 const exportBillingCsvV59=document.getElementById('exportBillingCsvV59');
