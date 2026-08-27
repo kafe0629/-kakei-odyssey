@@ -1,4 +1,4 @@
-const CACHE='kakei-odyssey-v6.9.1-20260828';
+const CACHE='kakei-odyssey-v7.0-20260828';
 const ASSETS=['./','./index.html','./manifest.json'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{for(const k of await caches.keys())if(k!==CACHE)await caches.delete(k);await self.clients.claim()})())});
