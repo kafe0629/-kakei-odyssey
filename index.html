@@ -157,7 +157,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.8</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.8.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -450,7 +450,7 @@
               <div class="monthlyCardHead"><strong>⛽ apollostation</strong><span class="monthlyCardTotal" id="autoApolloTotal">¥0</span></div>
               <div class="monthlyCardGrid">
                 <div class="monthlyCardStat"><div class="label">ガソリン値引前</div><div class="v" id="autoApolloFuelGross">¥0</div></div>
-                <div class="monthlyCardStat"><div class="label">値引き</div><div class="v good" id="autoApolloDiscount">−¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">値引き・請求調整</div><div class="v good" id="autoApolloDiscount">−¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">ガソリン以外</div><div class="v" id="autoApolloOther">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">登録件数</div><div class="v" id="autoApolloCount">0件</div></div>
@@ -474,6 +474,7 @@
           <div class="row"><div class="name"><strong>今月よく使った店 TOP5</strong></div><div class="value" id="monthlyMerchantCount">0店舗</div></div>
           <div class="merchantRank" id="monthlyMerchantRank"><div class="empty">明細を登録すると表示されます。</div></div>
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="autoClassifyExisting" type="button">未分類明細を自動分類</button><button class="btn secondary" id="applyTransactionsToMonth" type="button">3カードを月次欄へ反映</button></div>
+          <div class="note" style="margin-top:10px">apollostationは「請求額」ではなく、利用日ベースの登録明細を月次へ集計します。9/7確定請求の値引き265円は利用日を特定できないため、9/7の請求調整として登録しています。8月の利用月には8/7の2,869円と8/23の2,769円を反映します。</div>
         </div>
         <div class="separator"></div>
         <div class="row"><div class="name">変動生活費 合計</div><div class="value" id="monthlyVariable">¥0</div></div>
@@ -678,7 +679,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'5.8',at:new Date().toISOString(),reason,
+      version:'5.8.1',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -839,7 +840,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'5.8',
+    version:'5.8.1',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -1423,6 +1424,64 @@ function autoClassifyExistingTransactions(silent=false){
   if(!silent)alert(changed?changed+'件を最新の分類エンジンで再分類しました':'分類はすでに最新です');
   return changed;
 }
+
+function restoreKnownApolloTransactionsV581(){
+  if(localStorage.getItem('odyssey_v581_apollo_known_restore_done'))return {added:0,skipped:true};
+
+  const existingApollo=auTransactions.filter(x=>(x.cardType||'au')==='apollo');
+  // 既にapollostation明細がある場合は自動追加せず、重複を避ける。
+  if(existingApollo.length){
+    localStorage.setItem('odyssey_v581_apollo_known_restore_done','existing');
+    return {added:0,skipped:true};
+  }
+
+  // 以前確認済みの請求値と一致する時だけ自動復元する。
+  const matchesKnown=
+    Number(payments.apolloNextBill||0)===20197 &&
+    Number(payments.apolloFollowingBill||0)===2769 &&
+    Number(payments.apolloFuelGross||0)===8362 &&
+    Number(payments.apolloDiscount||0)===265 &&
+    Number(payments.apolloOther||0)===12100;
+
+  if(!matchesKnown){
+    localStorage.setItem('odyssey_v581_apollo_known_restore_done','not-matched');
+    return {added:0,skipped:true};
+  }
+
+  const rows=[
+    {date:'2026-07-19',memo:'apollostation ガソリン',amount:2900,category:'fuel',billGroup:'2026-09-07'},
+    {date:'2026-07-20',memo:'ABC-MART 下北沢4号店',amount:12100,category:'other',billGroup:'2026-09-07'},
+    {date:'2026-07-26',memo:'apollostation ガソリン',amount:2593,category:'fuel',billGroup:'2026-09-07'},
+    {date:'2026-08-07',memo:'apollostation ガソリン',amount:2869,category:'fuel',billGroup:'2026-09-07'},
+    // 値引きは利用日が明細情報だけでは確定できないので支払日へ「請求調整」として置く。
+    {date:'2026-09-07',memo:'apollostation 請求値引き（9/7確定分）',amount:-265,category:'discount',billGroup:'2026-09-07',billingAdjustment:true},
+    {date:'2026-08-23',memo:'セルフ草加弁天町 レギュラーガソリン',amount:2769,category:'fuel',billGroup:'2026-10-07'}
+  ];
+
+  const existing=new Set(auTransactions.map(txKey));
+  let added=0;
+  rows.forEach((r,i)=>{
+    const clean={...r,cardType:'apollo'};
+    const k=txKey(clean);
+    if(existing.has(k))return;
+    existing.add(k);
+    auTransactions.push({
+      id:Date.now()+i+Math.random(),
+      ...clean,
+      time:'',
+      source:'v5.8.1-known-apollo-restore'
+    });
+    added++;
+  });
+
+  if(added){
+    saveAuTransactions();
+    protectedSaveV52('apollostation既知明細復元');
+  }
+  localStorage.setItem('odyssey_v581_apollo_known_restore_done',new Date().toISOString());
+  return {added,skipped:false};
+}
+
 function migrateV49Apollo(){
   let changed=false;
   const saved=JSON.parse(localStorage.getItem('odyssey_payments')||'{}');
@@ -1559,9 +1618,9 @@ function paymentSummary(){
   const apolloImportedFuel=apolloImported.filter(t=>t.category==='fuel').reduce((s,t)=>s+Math.max(0,Number(t.amount||0)),0);
   const apolloImportedDiscount=Math.abs(apolloImported.filter(t=>t.category==='discount'||Number(t.amount||0)<0).reduce((s,t)=>s+Math.min(0,Number(t.amount||0)),0));
   const apolloImportedOther=apolloImported.filter(t=>t.category!=='fuel'&&t.category!=='discount'&&Number(t.amount||0)>0).reduce((s,t)=>s+Number(t.amount||0),0);
-  const apolloFuelGross=Math.max(0,Number(payments.apolloFuelGross||0),apolloImportedFuel);
-  const apolloDiscount=Math.max(0,Number(payments.apolloDiscount||0),apolloImportedDiscount);
-  const apolloOther=Math.max(0,Number(payments.apolloOther||0),apolloImportedOther);
+  const apolloFuelGross=Math.max(0,Number(payments.apolloFuelGross||0)) || apolloImportedFuel;
+  const apolloDiscount=Math.max(0,Number(payments.apolloDiscount||0)) || apolloImportedDiscount;
+  const apolloOther=Math.max(0,Number(payments.apolloOther||0)) || apolloImportedOther;
   const apolloFuelNet=Math.max(0,apolloFuelGross-apolloDiscount);
   const apolloCalculatedBill=Math.max(0,apolloFuelNet+apolloOther);
   // 確定請求額が入っている場合は、値引き込みの最終請求額を最優先。
@@ -2401,6 +2460,7 @@ document.getElementById('syncStatementUnconfirmed').addEventListener('click',syn
 const statementAutoSync=document.getElementById('statementAutoSync');if(statementAutoSync){statementAutoSync.checked=Number(payments.statementAutoSync??1)!==0;statementAutoSync.addEventListener('change',()=>{payments.statementAutoSync=statementAutoSync.checked?1:0;if(statementAutoSync.checked)syncStatementTotalAutomatic();localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();renderTodayTransactions();});}
 document.getElementById('autoClassifyExisting').addEventListener('click',autoClassifyExistingTransactions);
 const reclassifyHome=document.getElementById('reclassifyHome');if(reclassifyHome)reclassifyHome.addEventListener('click',autoClassifyExistingTransactions);
+const apolloRestoreV581=restoreKnownApolloTransactionsV581();
 migrateV49Apollo();
 migrateV48Categories();
 if(stateIsHealthyV52())snapshotV52('v5.4起動時');
@@ -2411,13 +2471,13 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.8',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'5.8.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費（本人負担）','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.8',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.8.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
