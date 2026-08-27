@@ -307,7 +307,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.6</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.6.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -412,15 +412,16 @@
         <div class="card"><div class="label">購入後の既知項目後</div><div class="kpi" id="afterRemain">¥0</div><div class="sub">食費・日用品・光熱費・娯楽・タバコ等の枠</div></div>
         <div class="card full">
           <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">15日の家計ルール</h3><span class="pill" id="rentModePill">産休中</span></div>
-          <div class="row"><div class="name">八十二 → 自分のみずほ</div><div class="value blue" id="ruleOwnMizuho">¥52,500</div></div>
+          <div class="row"><div class="name">八十二 → 自分のみずほ（合計）</div><div class="value blue" id="ruleOwnMizuho">¥102,500</div></div>
           <div class="row"><div class="name">└ 貯金</div><div class="value" id="ruleSaving">¥50,000</div></div>
           <div class="row"><div class="name">└ 県民共済</div><div class="value" id="ruleKyosai">¥2,500</div></div>
-          <div class="row"><div class="name">八十二 → 妻のみずほ（家賃）</div><div class="value blue" id="ruleWifeRent">¥50,000</div></div>
+          <div class="row"><div class="name">└ 家賃中継（妻へ送る分）</div><div class="value" id="ruleRentRelay">¥50,000</div></div>
+          <div class="row"><div class="name">自分のみずほ → 妻のみずほ（家賃）</div><div class="value blue" id="ruleWifeRent">¥50,000</div></div>
           <div class="row"><div class="name">光熱費の夫婦精算（別途・今月）</div><div class="value" id="ruleUtilitySettlement">¥0</div></div>
           <div class="row"><div class="name">八十二 → 楽天銀行（教育資金）</div><div class="value" id="ruleEducation">¥10,000</div></div>
           <div class="row"><div class="name">NISA</div><div class="value" id="ruleNisa">¥0</div></div>
           <div class="row"><div class="name"><strong>15日の固定振り分け合計</strong></div><div class="value good" id="ruleAllocationTotal">¥0</div></div>
-          <div class="sub" id="rentModeNote" style="margin-top:8px">妻の産休中は家賃本人負担を50,000円で計算します。</div>
+          <div class="sub" id="rentModeNote" style="margin-top:8px">妻の産休中は家賃本人負担を50,000円で計算します。家賃は八十二→自分のみずほ→妻のみずほの順で中継し、中継分は貯金額には含めません。</div>
           <div class="row"><div class="name">東京海上日動 自動車保険</div><div class="value">¥15,270 / 26日</div></div>
           <div class="row"><div class="name">NHK</div><div class="value">¥2,200 / 2か月ごと</div></div>
         </div>
@@ -472,10 +473,10 @@
             <div class="row"><div class="name">妻から受け取る額</div><div class="value blue" id="utilityFromWife">¥0</div></div>
             <div class="row"><div class="name"><strong>夫婦の差額精算</strong></div><div class="value good" id="utilityNetSettlement">精算なし</div></div>
             <div class="row"><div class="name"><strong>今、八十二銀行に確保する光熱費</strong></div><div class="value" id="utilityReserve82">¥0</div></div>
-            <div class="row"><div class="name">家賃＋光熱費差額を相殺した妻への目安</div><div class="value blue" id="wifeTransferWithUtilities">¥0</div></div>
+            <div class="row"><div class="name">自分のみずほ → 妻のみずほ（家賃＋光熱費差額の目安）</div><div class="value blue" id="wifeTransferWithUtilities">¥0</div></div>
           </div>
           <div class="btnRow" style="margin-top:11px"><button class="btn" id="saveUtilities" type="button">光熱費を保存</button><button class="btn secondary" id="applyUtilitiesToMonth" type="button">本人負担を月次へ反映</button></div>
-          <div class="note" style="margin-top:10px">ガスは妻のみずほ口座払いを初期設定、電気は払込用紙を初期設定にしています。請求総額は毎月入力し、本人50%・妻50%で計算します。「未払い」で自分が先に払う場合は請求総額を一時的に確保し、妻が先に払う場合は本人負担分を妻への精算として確保します。「精算済」にすると今後の確保額から外れます。</div>
+          <div class="note" style="margin-top:10px">ガスは妻のみずほ口座払いを初期設定、電気は払込用紙を初期設定にしています。家賃は八十二銀行から自分のみずほへ移し、その後、妻のみずほへ振り込みます。請求総額は毎月入力し、本人50%・妻50%で計算します。「未払い」で自分が先に払う場合は請求総額を一時的に確保し、妻が先に払う場合は本人負担分を妻への精算として確保します。「精算済」にすると今後の確保額から外れます。</div>
         </div>
         <div class="card full">
           <div class="sectionTitle" style="margin-top:0"><h3 style="margin:0">💳 カード・口座 支払管理</h3><span class="pill">自由資金を自動計算</span></div>
@@ -607,7 +608,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.6</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.6.1</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -948,7 +949,8 @@
         <div class="scheduleItem"><div class="day">4日</div><div><div class="schedTitle">au PAYゴールド 引落</div><div class="schedSub">auじぶん銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">7日</div><div><div class="schedTitle">apollostation 確定請求 引落</div><div class="schedSub">八十二銀行 / 値引き込みの確定額を優先</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">10日</div><div><div class="schedTitle">3カード締め日</div><div class="schedSub">au PAY・イオン・apollostation</div></div><span class="pill">締め</span></div>
-        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub" id="scheduleAllocationSub">自分みずほ52,500円 / 妻みずほ家賃50,000円 / 教育1万円</div></div><span class="pill">振分</span></div>
+        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub" id="scheduleAllocationSub">八十二→自分みずほ102,500円（家賃中継50,000円含む） / 教育1万円</div></div><span class="pill">振分</span></div>
+        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">家賃を妻へ振込</div><div class="schedSub" id="scheduleRentRelaySub">自分のみずほ → 妻のみずほ 50,000円（産休中）</div></div><span class="pill">家賃</span></div>
         <div class="scheduleItem"><div class="day">随時</div><div><div class="schedTitle">ガス・電気・水道 夫婦精算</div><div class="schedSub">請求額を入力 → 50%ずつ負担 / 支払者に応じて妻へ振込・妻から受取</div></div><span class="pill">精算</span></div>
         <div class="scheduleItem"><div class="day">18日</div><div><div class="schedTitle">au PAY確定＋apollostation確認</div><div class="schedSub">auは確定後、八十二→auじぶんへ一括移動</div></div><span class="pill">確認</span></div>
         <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認 / 妻の給料日</div></div><span class="pill">確認</span></div>
@@ -958,8 +960,8 @@
       </div>
       <div class="card" style="margin-top:14px">
         <h3>口座の役割</h3>
-        <div class="row"><div class="name">八十二銀行</div><div class="value">給与・生活・カード</div></div>
-        <div class="row"><div class="name">みずほ銀行</div><div class="value">防衛資金＋車</div></div>
+        <div class="row"><div class="name">八十二銀行</div><div class="value">給与・生活・カード・みずほ振替元</div></div>
+        <div class="row"><div class="name">みずほ銀行</div><div class="value">防衛資金＋車＋家賃中継</div></div>
         <div class="row"><div class="name">楽天銀行</div><div class="value">教育資金</div></div>
         <div class="row"><div class="name">auじぶん銀行</div><div class="value">au PAY引落</div></div>
       </div>
@@ -1021,7 +1023,7 @@
         </div>
       </div>
       <div class="note" style="margin-top:12px"><strong>v6.6：</strong>月次に①カード請求額と登録明細の差額を確認する「請求突合チェック」、②カードと混ぜずに登録できる現金支出、③カード＋現金の「予算 vs 実績」を追加しました。請求突合はカードの締め日と明細のbillGroupを使って請求月へ割り当て、apollostationの請求値引きも含めて比較します。現金支出はカード自動同期ONのまま利用でき、月次合計・履歴・CSVへ加算します。全体生活費予算はau PAY生活費月間予算を参照し、カテゴリ別予算は設定画面で任意入力できます。現金支出も正常バックアップ・安定版・JSONへ保存します。</div>
-      <div class="note" style="margin-top:12px"><strong>v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
+      <div class="note" style="margin-top:12px"><strong>v6.6.1：家賃の送金ルートを「八十二銀行→自分のみずほ銀行→妻のみずほ銀行」に変更しました。15日は八十二から自分のみずほへ貯金・県民共済・家賃中継分をまとめて移し、その後、自分のみずほから妻のみずほへ家賃を送金します。家賃中継分はみずほの貯金純増には含めず、固定振り分け合計でも二重計上しません。予定表と口座の役割も新ルートへ変更しました。v6.5：</strong>車計画に①購入後の総維持費、②みずほ月末残高からの実績貯金ペース、③車購入GO判定、④生活防衛資金→車頭金の段階進捗を追加しました。月次には「カード月次 完全自動同期」を追加し、読み取ったカード明細は利用日ベースで利用月へ、OCR・支払管理に入った確定/未確定請求は請求月へ自動反映します。カード自動同期は光熱費とみずほ月末残高を上書きしません。車維持費の税金・車検・整備・タイヤ・駐車場は設定から変更できます。</div>
       <div class="note" style="margin-top:12px">v5.6.1：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
@@ -1140,7 +1142,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.6',at:new Date().toISOString(),reason,
+      version:'6.6.1',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1337,7 +1339,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'6.6',
+    version:'6.6.1',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -3451,16 +3453,20 @@ function renderRulesV58(){
   const nextPay=nextPaydayFromV58();
   const rent=effectiveRentV58(nextPay);
   const leave=wifeLeaveActiveV58(nextPay);
-  const own=Math.max(0,Number(settings.saveMonthly||0))+Math.max(0,Number(settings.kyosai||0));
+  const ownBase=Math.max(0,Number(settings.saveMonthly||0))+Math.max(0,Number(settings.kyosai||0));
+  const ownMizuhoInbound=ownBase+rent;
   const ymKey=nextPay.getFullYear()+'-'+String(nextPay.getMonth()+1).padStart(2,'0');
   const nisa=(!settings.nisaStart||ymKey>=settings.nisaStart)?Math.max(0,Number(settings.nisa||0)):0;
-  const allocation=own+rent+Math.max(0,Number(settings.education||0))+nisa;
+  // 家賃は「八十二→自分みずほ→妻みずほ」の中継。
+  // 15日の固定振り分け合計では家賃を1回だけ計上する。
+  const allocation=ownBase+rent+Math.max(0,Number(settings.education||0))+nisa;
   const util=utilitySummaryV58(currentYM());
   const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
 
-  set('ruleOwnMizuho',yen(own));
+  set('ruleOwnMizuho',yen(ownMizuhoInbound));
   set('ruleSaving',yen(settings.saveMonthly||0));
   set('ruleKyosai',yen(settings.kyosai||0));
+  set('ruleRentRelay',yen(rent));
   set('ruleWifeRent',yen(rent));
   set('ruleEducation',yen(settings.education||0));
   set('ruleNisa',yen(nisa));
@@ -3475,12 +3481,15 @@ function renderRulesV58(){
   const pill=document.getElementById('rentModePill');if(pill)pill.textContent=leave?'産休中':'通常';
   const note=document.getElementById('rentModeNote');
   if(note){
-    note.textContent=leave
+    note.textContent=(leave
       ?'妻の産休中：家賃本人負担 '+yen(rent)+'。終了日未定ならこの金額を継続します。'
-      :'通常：家賃本人負担 '+yen(rent)+'。';
+      :'通常：家賃本人負担 '+yen(rent)+'。')
+      +' 家賃は八十二→自分のみずほ→妻のみずほの順で中継し、中継分は貯金残高の純増には含めません。';
   }
   const sched=document.getElementById('scheduleAllocationSub');
-  if(sched)sched.textContent='自分みずほ '+yen(own)+' / 妻みずほ 家賃'+yen(rent)+(leave?'（産休中）':'')+' / 教育 '+yen(settings.education||0)+(nisa>0?' / NISA '+yen(nisa):'');
+  if(sched)sched.textContent='八十二→自分みずほ '+yen(ownMizuhoInbound)+'（家賃中継 '+yen(rent)+'含む） / 教育 '+yen(settings.education||0)+(nisa>0?' / NISA '+yen(nisa):'');
+  const rentSched=document.getElementById('scheduleRentRelaySub');
+  if(rentSched)rentSched.textContent='自分のみずほ → 妻のみずほ '+yen(rent)+(leave?'（産休中）':'');
 }
 function paymentSummary(){
   const needToJibun=Math.max(0,Number(payments.auNextBill||0)-Number(payments.jibunBalance||0));
@@ -3548,6 +3557,9 @@ function paymentSummary(){
   const nextRent=effectiveRentV58(nextPayday);
   const ownMizuhoAllocation=Math.max(0,Number(settings.saveMonthly||0))+Math.max(0,Number(settings.kyosai||0));
   const wifeRentAllocation=nextRent;
+  // 実際の送金ルートは八十二→自分みずほ（貯金等＋家賃）→妻みずほ。
+  // ownMizuhoInboundには家賃中継を含めるが、paydayAllocationでは家賃を1回だけ計上する。
+  const ownMizuhoInbound=ownMizuhoAllocation+wifeRentAllocation;
   const paydayAllocation=ownMizuhoAllocation+wifeRentAllocation+Math.max(0,Number(settings.education||0))+nisaAtNextPayday;
   const balanceAfterAllocation=balanceAfterPayday-paydayAllocation;
   const followingPayday=new Date(nextPayday.getFullYear(),nextPayday.getMonth()+1,15);
@@ -3566,7 +3578,7 @@ function paymentSummary(){
   const nextCycleReserve=nextCycleLiving+nextCycleFixed+nextCycleCards+nextCycleOther;
   const trueSurplus=balanceAfterAllocation-nextCycleReserve;
   const safeExtraSave=Math.max(0,trueSurplus);
-  return {needToJibun,reserveCards82,utilityNow,utilityReserve82,nextRent,ownMizuhoAllocation,wifeRentAllocation,apolloFuelGross,apolloDiscount,apolloOther,apolloFuelNet,apolloCalculatedBill,apolloReservedBill,apolloFollowingBill,auUnconfirmed,auLivingBudget,auLivingSpent,auLivingRemaining,auCloseDay,auPaymentDay,auNextClose,auDaysToClose,auUnconfirmedPayDate,auPlannedUntilClose,auTodayBudget,auTodaySpent,auTodayAvailable,auTodayOver,auTomorrowGuide,auPlannedUntilPayday,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,cashLivingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
+  return {needToJibun,reserveCards82,utilityNow,utilityReserve82,nextRent,ownMizuhoAllocation,ownMizuhoInbound,wifeRentAllocation,apolloFuelGross,apolloDiscount,apolloOther,apolloFuelNet,apolloCalculatedBill,apolloReservedBill,apolloFollowingBill,auUnconfirmed,auLivingBudget,auLivingSpent,auLivingRemaining,auCloseDay,auPaymentDay,auNextClose,auDaysToClose,auUnconfirmedPayDate,auPlannedUntilClose,auTodayBudget,auTodaySpent,auTodayAvailable,auTodayOver,auTomorrowGuide,auPlannedUntilPayday,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,cashLivingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
 }
 function renderPayments(){
   document.querySelectorAll('[data-payment]').forEach(el=>el.value=payments[el.dataset.payment]??0);
@@ -4482,7 +4494,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標は「頭金＋生活防衛資金」で自動更新しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.6',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.6.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -4500,7 +4512,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.6',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.6.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
