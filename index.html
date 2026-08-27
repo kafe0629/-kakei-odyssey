@@ -1,13 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="家計・オデッセイ" />
-  <link rel="manifest" href="manifest.json" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="家計・オデッセイ">
+  <link rel="manifest" href="manifest.json">
   <title>家計・オデッセイ資金管理</title>
   <style>
     :root{
@@ -137,8 +137,8 @@
 <body>
 <div class="app">
   <header>
-    <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.6</span></h1>
+    <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.6.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -201,7 +201,6 @@
           <div class="sub" style="margin-bottom:8px">分類ルールを更新した後でも、過去の「その他」明細をワンタップで再判定できます。</div>
           <div class="statementRegistered" id="todayTxList"></div>
         </div>        </div>
-      </div>
       <div class="grid">
         <div class="card"><div class="label">生活防衛資金 達成率</div><div class="kpi" id="emergencyPct">0%</div><div class="progress"><span id="emergencyProgress"></span></div></div>
         <div class="card"><div class="label">購入目標 達成率</div><div class="kpi" id="purchasePct">0%</div><div class="progress green"><span id="purchaseProgress2"></span></div></div>
@@ -270,7 +269,7 @@
               </div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.6では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、v5.6では反映前に金額を編集・選択できます。請求額が1〜3桁など不自然な候補は自動で未選択にします。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.6.1では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、v5.6.1では反映前に金額を編集・選択できます。請求額が1〜3桁など不自然な候補は自動で未選択にします。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
@@ -322,9 +321,9 @@
           <div class="note" style="margin-top:10px">「携帯料金（八十二・未引落し）」は、八十二銀行からこれから落ちる携帯料金を独立して確保します。現在値は¥56,997です。引落し後は0円に変更してください。「その他 八十二銀行で確保する額」には、保険・NHKなど他の未引落し分だけ入力します。「1日あたり生活費予算」はau PAYカード中心の利用目安として使い、八十二銀行から現金として二重確保しません。「今日のau PAY利用額」を入力すると今日あと使える額と明日以降の1日目安を再計算し、日付が変わると今日利用額は自動で0円へ戻ります。現金・口座払いが必要な分だけ「給料日前の現金・口座払い生活費」に入力してください。「次サイクル1日あたり生活費」は別に設定でき、未入力または0円なら現在の1日生活費を引き継ぎます。v4.8では、au PAYカード利用明細のスクリーンショットをまとめてOCRし、利用日・店名・金額を候補化して重複を除きながら登録できます。自動反映をONにすると、明細の登録・削除と同時に現在の締めサイクル合計を未確定利用額へ反映し、今月の残り予算・今日使える額・将来引落し見込みまで自動再計算します。登録明細は店名から食費・日用品・コンビニ・ガソリン・外食などを自動分類し、月次へも自動集計できます。v4.8では分類処理を一本化し、店名正規化 → 店舗辞書 → ユーザー学習 → 一般ルール → その他、の順でOCR候補・登録・既存明細・月次集計のすべてを判定します。ローソン・LAWSON・ローソンストア100・ナチュラルローソン等は店舗辞書で必ずコンビニ判定します。登録済み明細のカテゴリを手動変更すると、具体カテゴリだけを店名ごとに端末内へ学習して次回以降へ反映します。ホームにも「未分類を再分類」ボタンを追加しています。今月の最多カテゴリ・よく使った店TOP5も表示します。カードの締め日・支払日を設定でき、au PAYカードの締め日・支払日を設定でき、未確定利用額と締め日までの利用予定を将来請求として扱います。次回15日の振り分け後から翌月15日までの生活費と、15日の振り分けに含まれない自動車保険・NHK月平均・ガソリン・au固定的支出を自動で見込みます。次サイクルのカード請求やその他支出が分かっている場合は任意欄へ入力すると、「本当の余裕資金」に反映します。「生活予備費」はそれとは別に自由資金から除外して残しておきたい任意額です。au PAYゴールドはauじぶん銀行の残高を差し引き、不足分だけ八十二銀行から移す前提で計算します。</div>
         </div>
       </div>
-    </section>
+    
 
-    <section id="monthly">
+    </section><section id="monthly">
       <div class="sectionTitle"><h2>月次記録</h2><span class="pill">Money Forward補助</span></div>
       <div class="card">
         <div class="formGrid">
@@ -453,13 +452,14 @@
           <div class="sub" style="margin-top:7px">アプリ更新後に不具合が出た場合でも、保存した時点の設定・支払管理・月次・カード明細へ戻せます。</div>
         </div>
       </div>
-      <div class="note" style="margin-top:12px">v5.6：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
+      <div class="note" style="margin-top:12px">v5.6.1：ホーム・月次・車計画・予定・設定が別ページとして確実に切り替わるよう、画面構造と下部ナビゲーションを修正しました。ブラウザがHTMLを自動補正して各sectionをmainの外へ移動しても、起動時に5画面をmain直下へ戻してから切り替えます。v5.5のカード明細修正・安定版バックアップ機能も維持しています。カード変更時はau PAY未確定利用額・日次利用・月次集計を自動で再計算します。設定画面に「安定版バックアップ」を追加し、正常な状態を保存してワンタップで戻せます。v5.4で修正した0円表示の計算エンジンもそのまま維持しています。支払計算は保存済み明細データ auTransactions を直接使用します。3カード明細もカード別に分離して計算します。v5.0/v5.1で主要金額が一斉に0円になった破損パターンを検出した場合だけ、直近確認済みの値へ復旧します。OCRの0円候補は既存の非ゼロ値を上書きしません。正常状態だけを自動バックアップし、OCR反映前にも復元ポイントを保存します。分類エンジンも引き続き一本化しています。OCR候補・登録済み明細・月次集計がすべて同じ分類関数を使います。過去に誤って「その他」と学習された店は最新の店舗ルールで再判定し、ホームの「未分類を再分類」から過去明細もワンタップで更新できます。ローソン・LAWSON・ローソンストア100・ファミリーマート・セブン-イレブン・ミニストップなどの表記揺れにも対応します。登録済み明細のカテゴリを変更すると、その店の分類を端末内に記憶し、次回以降の同じ店へ自動適用します。au PAYカードの利用明細スクリーンショットを中心に管理します。複数の明細画像をOCRし、利用日・店名・金額を候補として確認してから登録できます。同じ日・店名・金額の明細は重複登録を防止します。登録済み明細の現在締めサイクル合計を「au PAYゴールド未確定利用額」へ反映でき、今日あと使える額・今月残り・将来請求・貯金可能額を再計算します。今月au PAY残り・今すぐ貯金してOK・次回給料後の追加貯金予測も分けて表示します。給料日前（今日→次の15日）と次サイクル（次の15日→翌月15日）を分けて表示し、補充期限・最低確保額・安全に貯金へ移せる額まで予測します。OCR結果を反映すると残高・請求額を自動保存し、八十二→auじぶんの必要振替額、支払確保額、自由資金、追加貯金可能額まで自動計算します。<br>データはこの端末のブラウザ内（localStorage）に保存されます。端末変更やブラウザデータ削除に備えて、定期的に「バックアップ」からJSONを保存してください。</div>
       <div class="note" style="margin-top:10px">固定費計算ではNHK 2,200円を2か月に1回として月平均1,100円で見込みます。NISAは設定した開始月から購入前の月次計算へ自動反映します。タバコ代は月次画面で生活費と分けて表示します。</div>
     </section>
-  </main>
-</div>
+  
 
-<nav class="tabs"><div class="tabsInner">
+
+</main></div>
+      <nav class="tabs"><div class="tabsInner">
   <button class="tab active" data-tab="home" aria-selected="true"><span>🏠</span>ホーム</button>
   <button class="tab" data-tab="monthly" aria-selected="false"><span>🧾</span>月次</button>
   <button class="tab" data-tab="car" aria-selected="false"><span>🚙</span>車計画</button>
@@ -1979,7 +1979,7 @@ document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[[
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=5.6',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=5.6.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
