@@ -334,6 +334,10 @@
     .dailySecondaryV73.dailyCollapsedV73{display:none!important}
     .apolloStatusV73{margin-top:9px;border:1px dashed #35527c;border-radius:13px;padding:10px;font-size:10px;line-height:1.65;color:#b9c7da}
     .apolloStatusV73 strong{color:#dbeafe}
+    .apolloMiniV732{font-size:8px;color:#94a3b8;line-height:1.35;margin-top:3px}
+    .apolloMiniV732.warn{color:#fde68a}
+    .apolloMiniV732.good{color:#86efac}
+
     .apolloUnitPillV73{display:inline-block;margin-left:5px;border:1px solid #35527c;border-radius:999px;padding:3px 7px;color:#93c5fd;font-size:9px}
     @media(max-width:560px){
       .dailyKeyGridV73{grid-template-columns:1fr 1fr}
@@ -538,7 +542,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.3.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.3.2</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -977,7 +981,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.3.1</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.3.2</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1034,11 +1038,13 @@
               <div class="monthlyCardHead"><strong>⛽ apollostation</strong><span class="monthlyCardTotal" id="autoApolloTotal">¥0</span></div>
               <div class="monthlyCardGrid">
                 <div class="monthlyCardStat"><div class="label">ガソリン値引前</div><div class="v" id="autoApolloFuelGross">¥0</div></div>
-                <div class="monthlyCardStat"><div class="label">請求グループ値引き</div><div class="v good" id="autoApolloDiscount">−¥0</div></div>
-                <div class="monthlyCardStat"><div class="label">月別ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">請求グループ確定値引き</div><div class="v good" id="autoApolloDiscount">−¥0</div><div class="apolloMiniV732 warn" id="autoApolloDiscountSubV732">月別配分を確認中</div></div>
+                <div class="monthlyCardStat"><div class="label" id="autoApolloAppliedLabelV732">この月へ反映した値引き</div><div class="v good" id="autoApolloAppliedV732">−¥0</div><div class="apolloMiniV732 good" id="autoApolloAppliedSubV732">月別に正確に紐付けできる分のみ</div></div>
+                <div class="monthlyCardStat"><div class="label" id="autoApolloFuelNetLabelV732">月別ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div><div class="apolloMiniV732" id="autoApolloFuelNetSubV732">値引き確定待ちを含む</div></div>
+                <div class="monthlyCardStat"><div class="label">値引き確定待ち給油</div><div class="v warn" id="autoApolloPendingFuelV732">¥0</div><div class="apolloMiniV732" id="autoApolloPendingSubV732">請求グループ確認待ち</div></div>
                 <div class="monthlyCardStat"><div class="label">ガソリン以外</div><div class="v" id="autoApolloOther">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">登録件数</div><div class="v" id="autoApolloCount">0件</div></div>
-                <div class="monthlyCardStat"><div class="label">カード利用合計</div><div class="v" id="autoApolloTotal2">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">カード利用合計</div><div class="v" id="autoApolloTotal2">¥0</div><div class="apolloMiniV732">値引きの月別配分では変えません</div></div>
               </div>
               <div class="apolloStatusV73" id="apolloUsageStatusV73">apollostationの値引き状況を確認しています。</div>
             </div>
@@ -1049,7 +1055,7 @@
             <div class="row"><div class="name">食費</div><div class="value" id="autoFood">¥0</div></div>
             <div class="row"><div class="name">日用品</div><div class="value" id="autoDaily">¥0</div></div>
             <div class="row"><div class="name">コンビニ</div><div class="value" id="autoConvenience">¥0</div></div>
-            <div class="row"><div class="name">ガソリン（確定分のみ値引反映）</div><div class="value" id="autoFuel">¥0</div></div>
+            <div class="row"><div class="name">ガソリン（月別に確定した値引きのみ反映）</div><div class="value" id="autoFuel">¥0</div></div>
             <div class="row"><div class="name">外食・娯楽</div><div class="value" id="autoFun">¥0</div></div>
             <div class="row"><div class="name">タバコ</div><div class="value" id="autoTobacco">¥0</div></div>
             <div class="row"><div class="name">その他</div><div class="value" id="autoOther">¥0</div></div>
@@ -1579,6 +1585,7 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v7.3.2：</strong>apollostationの計算ロジックは変えず、値引き表示を分かりやすく整理しました。「請求グループ確定値引き」「この月へ反映した値引き」「月別ガソリン実質」「値引き確定待ち給油」を分離し、複数利用月に跨る値引きは「月別未配分」と明示します。8/23など未確定の給油は請求グループ日とともに「値引き確定待ち」と表示します。</div>
       <div class="note" style="margin-top:12px"><strong>v7.3.1：</strong>v7.3で月次フォームのガソリン計算に未定義変数が入り、月次・給料日サイクル・「今日やること」などの描画が途中停止して0円表示になる不具合を修正しました。家計データ自体は削除されておらず、既存データから再描画します。さらに主要画面の描画を分離し、今後1つの表示ブロックにエラーが出ても他のブロックまで止まりにくい保護を追加しました。v7.3の毎日モードとapollostation 2円/L・入会特典5円/L・18日頃の更新目安仕様はそのまま維持します。</div>
       <div class="note" style="margin-top:12px"><strong>v7.3：</strong>毎日使いやすい「今日やること」をホーム最上部に追加し、次の15日まで使える額・今月生活費残り・要確認明細、未処理タスク、カード明細/要確認/現金/振込へのワンタップ導線をまとめました。毎日モードでは重複する支払アラート・15日詳細・車計画を折りたたみます。月締め後は翌月の家賃・母・教育資金・予定手数料を「予定」として自動準備します。apollostationは通常2円/L・入会特典5円/L、値引き単価更新目安18日頃として管理し、給油量が無い明細から金額や率を推測しない方式へ修正しました。</div>
       <div class="note" style="margin-top:12px"><strong>v7.2：</strong>月末締め（1日〜末日）と給料日サイクル（15日〜翌14日）を分離して併用できるようにしました。ホームに今回給与・15日振り分け・カード引落予定・次の15日まで使える額・サイクル実績・残り日数を表示します。カード明細は日付を短縮してコンパクト化し、「今月／要確認／タバコ／コンビニ／全件」のクイック絞り込みを追加。月を締めた後は確定値の月締め完了サマリーを表示します。</div>
@@ -4732,7 +4739,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.3.1',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.3.2',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -4792,27 +4799,47 @@ function renderMonthlyAuto(){
   set('autoAeonTobacco',yen(s.cards.aeon.tobacco));
   set('autoAeonOther',yen(s.cards.aeon.other+s.cards.aeon.fuel+s.cards.aeon.discount));
 
-  // apollostation
+  // apollostation（v7.3.2: 計算は変えず、月別配分の意味を明示）
   const ap=s.cards.apollo,apInfo=s.apolloUsageDiscountV73||apolloUsageDiscountInfoV73(k);
   const apDisplayedDiscount=Math.max(0,Number(apInfo.exactDiscount||0))+Math.max(0,Number(apInfo.mixedGroupDiscount||0));
-  const apFuelNet=Math.max(0,ap.fuel-Math.max(0,Number(apInfo.exactDiscount||0)));
+  const apAppliedDiscount=Math.max(0,Number(apInfo.exactDiscount||0));
+  const apFuelNet=Math.max(0,ap.fuel-apAppliedDiscount);
   const apOther=ap.total-ap.fuel;
+  const monthNum=Number(String(k||'').slice(5,7))||0;
+  const monthLabel=monthNum?monthNum+'月':'この月';
+  const fmtShortDateV732=v=>{const s=String(v||'');return /^\d{4}-\d{2}-\d{2}$/.test(s)?Number(s.slice(5,7))+'/'+Number(s.slice(8,10)):s};
+  const mixedGroupText=(apInfo.mixedGroups||[]).map(g=>{
+    const months=(g.months||[]).map(m=>Number(String(m).slice(5,7))+'月').join('・');
+    return fmtShortDateV732(g.group)+'確定 '+yen(g.discount)+'（'+months+'分 / 月別未配分）';
+  }).join(' / ');
+  const pendingGroupText=(apInfo.pendingGroups||[]).map(g=>{
+    const label=g.group==='未紐付け'?'請求未紐付け':fmtShortDateV732(g.group)+'請求';
+    return label+' '+yen(g.gross)+'・値引き確定待ち';
+  }).join(' / ');
+
   set('autoApolloTotal',yen(ap.total));
   set('autoApolloTotal2',yen(ap.total));
   set('autoApolloFuelGross',yen(ap.fuel));
   set('autoApolloDiscount','−'+yen(apDisplayedDiscount));
+  set('autoApolloAppliedV732','−'+yen(apAppliedDiscount));
   set('autoApolloFuelNet',yen(apFuelNet));
+  set('autoApolloPendingFuelV732',yen(apInfo.pendingFuel||0));
   set('autoApolloOther',yen(apOther));
   set('autoApolloCount',ap.count+'件');
+  set('autoApolloAppliedLabelV732',monthLabel+'へ反映した値引き');
+  set('autoApolloFuelNetLabelV732',monthLabel+'ガソリン実質');
+  set('autoApolloDiscountSubV732',mixedGroupText|| (apDisplayedDiscount>0?'この月へ紐付け可能':'確定値引きなし'));
+  set('autoApolloAppliedSubV732',apAppliedDiscount>0?'月別へ正確に紐付け済み':'月別へ反映できる確定値引きなし');
+  set('autoApolloFuelNetSubV732',apInfo.pendingFuel>0?'値引き確定待ち '+yen(apInfo.pendingFuel)+' を含む':'値引き確定済み');
+  set('autoApolloPendingSubV732',pendingGroupText||'値引き確定待ちなし');
+
   const apStatus=document.getElementById('apolloUsageStatusV73');
   if(apStatus){
-    const mixed=apInfo.mixedGroupDiscount>0
-      ?' 複数利用月に跨る請求グループの確定値引き '+yen(apInfo.mixedGroupDiscount)+' は、給油量(L)が無いため月別へ勝手に配分していません。'
-      :'';
-    const pending=apInfo.pendingFuel>0?' 値引き未確定の給油 '+yen(apInfo.pendingFuel)+'。':'';
     const next=String(apInfo.nextReflectDate||'').slice(5).replace('-','/');
+    const mixed=mixedGroupText?' <strong>月別未配分：</strong>'+mixedGroupText+'。':'';
+    const pending=pendingGroupText?' <strong>確定待ち：</strong>'+pendingGroupText+'。':'';
     apStatus.innerHTML='<strong>いつでも値引き：</strong>適用中 '+Number(apInfo.unitPerL||0)+'円/L（入会特典期間は5円/L） / 値引き単価更新目安 '+next+'頃。'+
-      '月別へ正確に紐付けできる確定値引きだけ '+yen(apInfo.exactDiscount)+' を月次ガソリンへ反映しています。'+mixed+pending;
+      '<strong>'+monthLabel+'へ反映した値引きは '+yen(apAppliedDiscount)+'</strong> です。カード明細に給油量(L)がないため、複数利用月に跨る値引きは推測配分しません。'+mixed+pending;
   }
 
   // 3カード合算
@@ -6603,7 +6630,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.3.1',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.3.2',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));ensureTransactionReviewStateV71();protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -6621,7 +6648,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.3.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.3.2',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
