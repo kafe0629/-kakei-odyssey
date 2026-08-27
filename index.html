@@ -285,7 +285,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.5</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.5.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -585,7 +585,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.5</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.5.1</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1072,7 +1072,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.5',at:new Date().toISOString(),reason,
+      version:'6.5.1',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1108,6 +1108,35 @@ function restoreRecoveryV52(){
 }
 
 
+
+function recoverHealthySnapshotV651(){
+  // v6.5の表示が0円になった主因は描画前のJS停止だったが、
+  // 念のため本当に保存データが破損している場合だけ正常バックアップから自動復旧する。
+  if(!stateLooksCorruptedV52())return false;
+  const keys=['odyssey_recovery_v52','odyssey_recovery_v52_prev','odyssey_stable_backup_v55'];
+  for(const key of keys){
+    try{
+      const raw=localStorage.getItem(key);
+      if(!raw)continue;
+      const s=JSON.parse(raw);
+      const ss={...defaults,...(s.settings||{})};
+      const pp={...paymentDefaults,...(s.payments||{})};
+      const healthy=Number(ss.income||0)>0 && Number(ss.mizuho||0)>=0 && Number(ss.carTotal||0)>0 && Number(pp.auLivingBudget||0)>0;
+      if(!healthy)continue;
+      settings=ss;
+      payments=pp;
+      months=s.months||months||{};
+      auTransactions=Array.isArray(s.auTransactions)?s.auTransactions:auTransactions;
+      utilityMonths=s.utilityMonths||utilityMonths||{};
+      billingMonths=s.billingMonths||billingMonths||{};
+      adoptedLoanPlanV631=s.adoptedLoanPlanV631||adoptedLoanPlanV631||null;
+      persistStateV52();
+      localStorage.setItem('odyssey_v651_auto_recovered',new Date().toISOString());
+      return true;
+    }catch(e){console.warn('v6.5.1 recovery',key,e)}
+  }
+  return false;
+}
 function forceCriticalRecoveryV54(){
   if(localStorage.getItem('odyssey_v54_runtime_recovery_done'))return false;
   let changed=false;
@@ -2929,6 +2958,113 @@ function applyTransactionsToMonth(){
     '3カード合計：'+yen(s.total)
   );
 }
+
+function syncUsageMonthRecordV65(monthKey){
+  if(!monthKey)return false;
+  const s=monthlyTransactionSummary(monthKey);
+  const existing=months[monthKey]||{};
+  const hasTx=s.count>0;
+  const wasAuto=!!existing.autoCardSyncedV65;
+  if(!hasTx && !wasAuto)return false;
+
+  // カード明細由来だけを自動更新。光熱費・みずほ月末残高は維持する。
+  months[monthKey]={
+    ...existing,
+    food:s.food,
+    daily:s.daily,
+    convenience:s.convenience,
+    fuel:s.fuel+s.discount,
+    fun:s.fun,
+    tobacco:s.tobacco,
+    other:s.other,
+    au:s.cards.au.total,
+    aeon:s.cards.aeon.total,
+    apollo:s.cards.apollo.total,
+    utilities:Number(existing.utilities||0),
+    mizuho:Number(existing.mizuho||0),
+    autoCardSyncedV65:true,
+    autoCardSyncedAtV65:new Date().toISOString()
+  };
+  return true;
+}
+function syncUsageRecordsV65(renderAfter=true){
+  if(Number(payments.monthlyUsageAutoSyncV65??1)===0)return {changed:0};
+  const keys=new Set();
+  auTransactions.forEach(x=>{
+    const k=String(x.date||'').slice(0,7);
+    if(/^\d{4}-\d{2}$/.test(k))keys.add(k);
+  });
+  Object.keys(months).forEach(k=>{if(months[k]?.autoCardSyncedV65)keys.add(k)});
+  let changed=0;
+  keys.forEach(k=>{if(syncUsageMonthRecordV65(k))changed++});
+  if(changed)localStorage.setItem('odyssey_months',JSON.stringify(months));
+  if(renderAfter){
+    fillMonthlyFormV65(document.getElementById('monthKey')?.value||currentYM());
+    renderHistory();
+    updateMonthTotals();
+  }
+  return {changed};
+}
+function fillMonthlyFormV65(monthKey){
+  if(!monthKey)return;
+  const rec=months[monthKey]||{};
+  const autoOn=Number(payments.monthlyUsageAutoSyncV65??1)!==0;
+  const s=monthlyTransactionSummary(monthKey);
+  const val=(id,v)=>{const e=document.getElementById(id);if(e)e.value=Number(v||0)};
+
+  if(autoOn){
+    val('mFood',s.food);
+    val('mDaily',s.daily);
+    val('mConvenience',s.convenience);
+    val('mFuel',s.fuel+s.discount);
+    val('mFun',s.fun);
+    val('mTobacco',s.tobacco);
+    val('mOther',s.other);
+    val('mAu',s.cards.au.total);
+    val('mAeon',s.cards.aeon.total);
+    val('mApollo',s.cards.apollo.total);
+  }else{
+    val('mFood',rec.food);
+    val('mDaily',rec.daily);
+    val('mConvenience',rec.convenience);
+    val('mFuel',rec.fuel);
+    val('mFun',rec.fun);
+    val('mTobacco',rec.tobacco);
+    val('mOther',rec.other);
+    val('mAu',rec.au);
+    val('mAeon',rec.aeon);
+    val('mApollo',rec.apollo);
+  }
+
+  // ここはカードOCRでは上書きしない。
+  val('mUtilities',rec.utilities);
+  val('mMizuho',rec.mizuho);
+  updateMonthTotals();
+}
+function syncBillingAutoV65(renderAfter=true){
+  if(Number(payments.billingAutoSyncV65??1)===0)return {changed:0};
+  const result=syncBillingFromPaymentsV59(false,false,new Date());
+  if(renderAfter)renderBillingMonthV59();
+  return result;
+}
+function renderAutoSyncStatusV65(extra=''){
+  const usageOn=Number(payments.monthlyUsageAutoSyncV65??1)!==0;
+  const billingOn=Number(payments.billingAutoSyncV65??1)!==0;
+  const el=document.getElementById('autoSyncStatusV65');
+  if(el)el.textContent='利用月 '+(usageOn?'自動ON':'手動')+' / 請求月 '+(billingOn?'自動ON':'手動')+(extra?' ・ '+extra:'');
+}
+function runFullAutoSyncV65(showAlert=true){
+  let u={changed:0},b={changed:0};
+  try{u=syncUsageRecordsV65(false)||u}catch(e){console.warn('利用月自動同期',e)}
+  try{b=syncBillingAutoV65(false)||b}catch(e){console.warn('請求月自動同期',e)}
+  try{localStorage.setItem('odyssey_payments',JSON.stringify(payments))}catch(e){}
+  try{fillMonthlyFormV65(document.getElementById('monthKey')?.value||currentYM())}catch(e){console.warn('月次フォーム反映',e)}
+  try{renderMonthlyAuto()}catch(e){console.warn('月次自動集計表示',e)}
+  try{renderHistory()}catch(e){console.warn('月次履歴表示',e)}
+  renderAutoSyncStatusV65('利用月 '+Number(u.changed||0)+'か月更新 / 請求 '+Number(b.changed||0)+'項目更新');
+  if(showAlert)alert('カード利用月と請求月を同期しました。\n利用月：'+Number(u.changed||0)+'か月更新\n請求月：'+Number(b.changed||0)+'項目更新');
+  return {usage:u,billing:b};
+}
 function merchantSummary(monthKey){
   const map=new Map();
   auTransactions.filter(x=>String(x.date||'').slice(0,7)===monthKey).forEach(x=>{
@@ -4011,6 +4147,7 @@ document.querySelectorAll('[data-import-card]').forEach(btn=>{
 updateImportCardUI();
 const restoreV53=document.getElementById('restoreRecoveryV52');
 if(restoreV53)restoreV53.addEventListener('click',restoreRecoveryV52);
+const recoveredV651=recoverHealthySnapshotV651();
 const runtimeRecoveredV54=forceCriticalRecoveryV54();
 const criticalRecoveredV53=forceCriticalRecoveryV53();
 const repairedAtBootV53=migrateV52ProtectedState();
@@ -4075,10 +4212,10 @@ if(!localStorage.getItem('odyssey_billing_month_v591')){
   }
   if(firstBillingV591)localStorage.setItem('odyssey_billing_month_v591',firstBillingV591);
 }
-migrateV49Apollo();
-migrateV48Categories();
-runFullAutoSyncV65(false);
-if(stateIsHealthyV52())snapshotV52('v5.4起動時');
+try{migrateV49Apollo()}catch(e){console.warn('migrateV49Apollo',e)}
+try{migrateV48Categories()}catch(e){console.warn('migrateV48Categories',e)}
+try{runFullAutoSyncV65(false)}catch(e){console.warn('v6.5 auto sync startup',e)}
+if(stateIsHealthyV52())snapshotV52('v6.5.1起動時');
 document.getElementById('applyTransactionsToMonth').addEventListener('click',applyTransactionsToMonth);
 
 document.querySelectorAll('[data-loan-target-v60]').forEach(b=>{
@@ -4179,7 +4316,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.5',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.5.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
