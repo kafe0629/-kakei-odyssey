@@ -170,6 +170,22 @@
     .loanApplyBtnV60{width:100%;margin-top:10px}
     .loanSameDownTableV60{margin-top:10px}
     .loanPlanSummaryV60{border:1px solid #22543d;border-radius:14px;padding:12px;background:rgba(34,84,61,.10);margin-top:10px}
+    .loanRecommendV61{border:1px solid #22543d;border-radius:16px;padding:14px;background:rgba(34,84,61,.12);margin:14px 0}
+    .loanRecommendTitleV61{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .loanRecommendMainV61{font-size:27px;font-weight:950;margin:10px 0 2px}
+    .loanRecommendReasonV61{display:grid;gap:7px;margin-top:11px}
+    .loanReasonRowV61{display:flex;gap:8px;align-items:flex-start;padding:8px 9px;border:1px solid rgba(148,163,184,.15);border-radius:11px;background:#091528}
+    .loanReasonIconV61{width:22px;flex:0 0 22px}
+    .loanJudgeGridV61{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .loanJudgeCardV61{border:1px solid #29446b;border-radius:13px;padding:10px;background:#091528}
+    .loanJudgeCardV61.recommended{border-color:#22a06b;background:rgba(34,160,107,.10)}
+    .loanJudgeTargetV61{font-size:18px;font-weight:900}
+    .loanJudgeBadgeV61{font-size:10px;margin-top:5px;color:#9fb0c7}
+    .loanJudgeCardV61.recommended .loanJudgeBadgeV61{color:#86efac;font-weight:800}
+    .loanJudgeDetailV61{font-size:11px;line-height:1.55;color:#aab8ca;margin-top:7px}
+    .loanRecommendFootV61{font-size:11px;color:#94a3b8;line-height:1.6;margin-top:10px}
+    @media(max-width:430px){.loanJudgeGridV61{grid-template-columns:1fr}}
+
     @media(max-width:430px){
       .loanTargetButtonsV60{grid-template-columns:1fr 1fr}
       .loanCompareGridV60{grid-template-columns:1fr}
@@ -204,7 +220,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.0.1</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -627,6 +643,26 @@
           <div class="row"><div class="name">頭金後に残す生活防衛資金</div><div class="value good" id="loanEmergencyKeepV60">¥0</div></div>
         </div>
 
+        <div class="loanRecommendV61">
+          <div class="loanRecommendTitleV61">
+            <strong>🛡️ 家計から自動おすすめ判定</strong>
+            <span class="pill" id="loanRecommendGradeV61">計算中</span>
+          </div>
+          <div class="loanRecommendMainV61 good" id="loanRecommendMainV61">—</div>
+          <div class="sub" id="loanRecommendSubV61">3.5万円・4万円・4.5万円を比較しています。</div>
+
+          <div class="loanRecommendReasonV61" id="loanRecommendReasonsV61"></div>
+
+          <div class="loanJudgeGridV61" id="loanJudgeGridV61"></div>
+
+          <button class="btn loanApplyBtnV60" id="applyRecommendedLoanV61" type="button">おすすめプランを採用</button>
+          <div class="loanRecommendFootV61">
+            判定ルール：①購入後の既知支出後に10万円以上残る、②現在予定の頭金から追加10万円以内を優先、
+            ③返済期間9年以内を優先、その条件を満たす中で月返済が最も低い案をおすすめします。
+            条件を満たす案がない場合は、月額・追加頭金・返済期間のバランス点で選びます。
+          </div>
+        </div>
+
         <div class="separator"></div>
         <strong>目標の月返済額</strong>
         <div class="loanTargetButtonsV60">
@@ -838,7 +874,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.0.1',at:new Date().toISOString(),reason,
+      version:'6.1',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1001,7 +1037,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'6.0.1',
+    version:'6.1',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -1116,6 +1152,135 @@ function sameDownPlanV60(years,ratePct){
   const remain=Math.round(Number(settings.income||0)-knownAfterWithoutLoanV60()-monthly);
   return {years,principal,monthly,interest,remain};
 }
+
+function choosePlanForTargetV61(targetMonthly,ratePct){
+  const currentDown=Math.max(0,Number(settings.downPayment||0));
+  const plans=[7,8,9,10].map(y=>{
+    const p=loanPlanForTargetV60(targetMonthly,y,ratePct);
+    p.extraDown=Math.max(0,p.requiredDown-currentDown);
+    p.downDifference=p.requiredDown-currentDown;
+    return p;
+  });
+
+  // まず「現在予定の頭金 + 10万円以内」で達成できる最短期間を選ぶ。
+  const nearCurrent=plans.filter(p=>p.extraDown<=100000);
+  if(nearCurrent.length){
+    return nearCurrent.sort((a,b)=>a.years-b.years || a.extraDown-b.extraDown)[0];
+  }
+
+  // それがなければ追加頭金が最も少ない案を代表案とする。
+  return plans.sort((a,b)=>a.extraDown-b.extraDown || a.years-b.years)[0];
+}
+function loanRecommendationV61(ratePct){
+  const currentPrincipal=Math.max(0,Number(settings.carTotal||0)-Number(settings.downPayment||0));
+  const currentMonthly=loanPaymentV60(currentPrincipal,Number(settings.ratePct||0),Number(settings.loanYears||0));
+  const targets=[35000,40000,45000];
+  const candidates=targets.map(target=>{
+    const p=choosePlanForTargetV61(target,ratePct);
+    const monthlySaving=Math.max(0,currentMonthly-p.actualMonthly);
+    const safeRemain=p.remain>=100000;
+    const downWithin100k=p.extraDown<=100000;
+    const termPreferred=p.years<=9;
+    const allPreferred=safeRemain&&downWithin100k&&termPreferred;
+
+    // フォールバック用の透明なバランス点。
+    // 月額削減を評価しつつ、追加頭金と長期化を強めに減点。
+    let score=0;
+    score += monthlySaving/1000;
+    score += safeRemain?8:(p.remain>=50000?2:-20);
+    score += downWithin100k?8:-(p.extraDown/50000)*2;
+    score += termPreferred?6:0;
+    score -= Math.max(0,p.years-Number(settings.loanYears||7))*3;
+
+    return {...p,target,monthlySaving,safeRemain,downWithin100k,termPreferred,allPreferred,score};
+  });
+
+  const preferred=candidates.filter(c=>c.allPreferred);
+  let recommended;
+  if(preferred.length){
+    // 条件を全部満たす中で最も月額が低い。月額同値なら期間が短い。
+    recommended=preferred.sort((a,b)=>a.target-b.target || a.years-b.years)[0];
+  }else{
+    recommended=candidates.sort((a,b)=>b.score-a.score)[0];
+  }
+
+  return {recommended,candidates,currentMonthly};
+}
+function recommendationLabelV61(c,recommended){
+  if(c.target===recommended.target)return 'おすすめ';
+  if(c.target<recommended.target)return '月額重視';
+  return '期間・購入時期重視';
+}
+function renderLoanRecommendationV61(){
+  const main=document.getElementById('loanRecommendMainV61');
+  if(!main)return;
+  const rate=Math.max(0,Number(document.getElementById('loanRateCompareV60')?.value||settings.ratePct));
+  const r=loanRecommendationV61(rate);
+  const p=r.recommended;
+
+  main.textContent='月 '+yen(p.target)+' / '+p.years+'年';
+  const grade=document.getElementById('loanRecommendGradeV61');
+  if(grade)grade.textContent=p.allPreferred?'バランス◎':'条件内ベスト';
+
+  const sub=document.getElementById('loanRecommendSubV61');
+  if(sub){
+    sub.textContent='現在プランより月 約'+yen(p.monthlySaving)+'軽くしながら、必要頭金 '+yen(p.requiredDown)+'で組む案です。';
+  }
+
+  const reasons=document.getElementById('loanRecommendReasonsV61');
+  if(reasons){
+    const downMsg=p.extraDown<=0
+      ?'現在予定の頭金 '+yen(settings.downPayment)+'以内で達成できます。'
+      :'現在予定の頭金より '+yen(p.extraDown)+'追加で必要です。';
+    const termMsg=p.years<=9
+      ?'返済期間は'+p.years+'年で、10年ローンを避けられます。'
+      :'月額をさらに下げる代わりに10年返済になります。';
+    const remainMsg='購入後の既知支出後も月 '+yen(p.remain)+'残る試算です。';
+    const emergencyMsg='生活防衛資金 '+yen(settings.emergencyTarget)+'を頭金とは別に残す前提です。';
+    reasons.innerHTML=[
+      ['💰',downMsg],
+      ['📆',termMsg],
+      ['🏠',remainMsg],
+      ['🛡️',emergencyMsg]
+    ].map(x=>`<div class="loanReasonRowV61"><div class="loanReasonIconV61">${x[0]}</div><div>${escapeHtml(x[1])}</div></div>`).join('');
+  }
+
+  const grid=document.getElementById('loanJudgeGridV61');
+  if(grid){
+    grid.innerHTML=r.candidates.map(c=>{
+      const cls=c.target===p.target?' recommended':'';
+      const downText=c.extraDown<=0?'追加頭金なし':'追加 '+yen(c.extraDown);
+      const detail=c.target===p.target
+        ?'月額・頭金・期間のバランスが現在の条件に最も合います。'
+        :(c.target<p.target
+          ?'月額はさらに軽くなりますが、頭金または返済期間の負担が増えます。'
+          :'購入条件は作りやすい一方、月々の削減幅は小さくなります。');
+      return `<div class="loanJudgeCardV61${cls}">
+        <div class="loanJudgeTargetV61">${yen(c.target)}</div>
+        <div class="loanJudgeBadgeV61">${recommendationLabelV61(c,p)} / ${c.years}年</div>
+        <div class="loanJudgeDetailV61">
+          必要頭金 ${yen(c.requiredDown)}<br>
+          ${downText}<br>
+          現在より月 ${yen(c.monthlySaving)}削減<br>
+          購入後残り ${yen(c.remain)}<br>
+          ${detail}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const btn=document.getElementById('applyRecommendedLoanV61');
+  if(btn){
+    btn.dataset.years=String(p.years);
+    btn.dataset.down=String(Math.round(p.requiredDown));
+    btn.textContent='おすすめ（月'+yen(p.target)+' / '+p.years+'年）を採用';
+  }
+}
+function applyRecommendedLoanV61(){
+  const btn=document.getElementById('applyRecommendedLoanV61');
+  if(!btn)return;
+  applyLoanPlanV60(Number(btn.dataset.years||0),Number(btn.dataset.down||0));
+}
 function setLoanTargetV60(value){
   const input=document.getElementById('loanTargetMonthlyV60');
   if(input)input.value=Math.max(0,Number(value||0));
@@ -1208,6 +1373,7 @@ function renderLoanPlannerV60(){
   document.querySelectorAll('[data-loan-target-v60]').forEach(b=>{
     b.classList.toggle('active',Number(b.dataset.loanTargetV60)===target);
   });
+  renderLoanRecommendationV61();
 }
 function loanMonthly(){const principal=Math.max(0,settings.carTotal-settings.downPayment);const n=settings.loanYears*12;const r=(settings.ratePct/100)/12;if(!n)return 0;if(r===0)return principal/n;return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
 function addMonths(date,months){const d=new Date(date);d.setMonth(d.getMonth()+months);return d}
@@ -3134,6 +3300,8 @@ document.getElementById('applyTransactionsToMonth').addEventListener('click',app
 document.querySelectorAll('[data-loan-target-v60]').forEach(b=>{
   b.addEventListener('click',()=>setLoanTargetV60(Number(b.dataset.loanTargetV60)));
 });
+const applyRecommendedLoanV61Btn=document.getElementById('applyRecommendedLoanV61');
+if(applyRecommendedLoanV61Btn)applyRecommendedLoanV61Btn.addEventListener('click',applyRecommendedLoanV61);
 const loanTargetMonthlyV60=document.getElementById('loanTargetMonthlyV60');
 if(loanTargetMonthlyV60)loanTargetMonthlyV60.addEventListener('input',renderLoanPlannerV60);
 const loanRateCompareV60=document.getElementById('loanRateCompareV60');
@@ -3184,7 +3352,7 @@ document.getElementById('savePayments').addEventListener('click',()=>{document.q
 document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;months[k]={food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));document.querySelectorAll('[data-setting-text]').forEach(el=>settings[el.dataset.settingText]=el.value||'');snapshotV52('設定変更前');protectedSaveV52('設定保存');render();alert('設定を保存し、正常バックアップも更新しました')});
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.0.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
+document.getElementById('exportJson').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:'6.1',exportedAt:new Date().toISOString(),settings,months,payments,auTransactions,utilityMonths,billingMonths},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href)});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費','日用品','コンビニ','ガソリン','光熱費（本人負担）','外食・娯楽','タバコ','その他','au PAYゴールド利用','イオンカード利用','apollostation利用','みずほ月末残高']];Object.keys(months).sort().forEach(k=>{const m=months[k];rows.push([k,m.food,m.daily,m.convenience||0,m.fuel||0,m.utilities,m.fun,m.tobacco,m.other,m.au,m.aeon||0,m.apollo||0,m.mizuho])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -3202,7 +3370,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.0.1',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
