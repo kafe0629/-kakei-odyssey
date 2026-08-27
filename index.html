@@ -404,7 +404,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.9</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v6.9.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -752,7 +752,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.9</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v6.9.1</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1179,6 +1179,7 @@
         <div class="scheduleItem"><div class="day">10日</div><div><div class="schedTitle">3カード締め日</div><div class="schedSub">au PAY・イオン・apollostation</div></div><span class="pill">締め</span></div>
         <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub" id="scheduleAllocationSub">八十二→自分みずほ102,500円（家賃中継50,000円含む） / 教育1万円</div></div><span class="pill">振分</span></div>
         <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">家賃を妻へ振込</div><div class="schedSub" id="scheduleRentRelaySub">自分のみずほ → 妻のみずほ 50,000円（産休中）</div></div><span class="pill">家賃</span></div>
+        <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">母へ振込（8〜11月）</div><div class="schedSub">八十二銀行 → 母の八十二銀行 / 8月・9月・10月 20,000円、11月 10,000円</div></div><span class="pill">家族</span></div>
         <div class="scheduleItem"><div class="day">随時</div><div><div class="schedTitle">ガス・電気・水道 夫婦精算</div><div class="schedSub">請求額を入力 → 50%ずつ負担 / 支払者に応じて妻へ振込・妻から受取</div></div><span class="pill">精算</span></div>
         <div class="scheduleItem"><div class="day">18日</div><div><div class="schedTitle">au PAY確定＋apollostation確認</div><div class="schedSub">auは確定後、八十二→auじぶんへ一括移動</div></div><span class="pill">確認</span></div>
         <div class="scheduleItem"><div class="day">25日</div><div><div class="schedTitle">イオン最終請求額確認</div><div class="schedSub">23日〜月末更新の最終額を確認 / 妻の給料日</div></div><span class="pill">確認</span></div>
@@ -1188,10 +1189,10 @@
         <div class="scheduleItem"><div class="day">月末</div><div><div class="schedTitle">Money Forward ME 月次確認</div><div class="schedSub">支出・未分類・タバコ・貯金進捗を確認してアプリと照合</div></div><span class="pill">点検</span></div>
       </div>
       <div class="familyTransferBoxV69">
-        <div class="sectionTitle" style="margin:0"><h3 style="margin:0">👪 母への振込予定</h3><span class="pill">八十二 → 八十二</span></div>
-        <div class="sub">自分の八十二銀行から母の八十二銀行へ振り込む予定です。これは自分名義口座間の移動ではないため、家計では「家族への特別支出」として扱います。</div>
+        <div class="sectionTitle" style="margin:0"><h3 style="margin:0">👪 母への振込予定</h3><span class="pill">毎月15日</span></div>
+        <div class="sub">毎月15日に、自分の八十二銀行から母の八十二銀行へ振り込みます。これは自分名義口座間の移動ではないため、家計では「家族への特別支出」として扱います。</div>
         <div class="familyTransferRowsV69" id="familyTransferRowsV69"></div>
-        <div class="note" style="margin-top:9px">8月20,000円は「振込済み」で初期登録しています。9月20,000円・10月20,000円・11月10,000円は未振込として登録し、未振込の月は八十二銀行の自由資金計算でも確保します。</div>
+        <div class="note" style="margin-top:9px">振込日はすべて15日です。8月15日の20,000円は「振込済み」、9月15日20,000円・10月15日20,000円・11月15日10,000円は未振込として管理し、未振込の月は八十二銀行の自由資金計算でも確保します。</div>
       </div>
 
       <div class="card" style="margin-top:14px">
@@ -1268,6 +1269,7 @@
           <div class="note" id="backupHealthMessageV69" style="margin-top:9px">バックアップ状態を確認しています。</div>
         </div>
       </div>
+      <div class="note" style="margin-top:12px"><strong>v6.9.1：</strong>母への振込日を8〜11月すべて「15日」に統一しました。予定ページ・ホーム・月末チェック・月次レポートにも15日を表示します。8月は8月15日20,000円を振込済みとして維持します。また月次レポートで店舗データが空の場合に「undefined ¥0」と出る問題を修正し、「実績なし」と表示するようにしました。</div>
       <div class="note" style="margin-top:12px"><strong>v6.9：</strong>ホームに今月の月末進捗、月次に月次レポート、設定にバックアップ健康チェックを追加しました。さらに2026年8〜11月の「母への振込」を家族への特別支出として独立管理します。振込経路は八十二銀行→母の八十二銀行で、8月20,000円は振込済み、9月20,000円・10月20,000円・11月10,000円は未振込で初期登録しています。未振込額は八十二銀行の自由資金計算に確保し、対象月の月末締めチェックにも自動追加します。</div>
       <div class="note" style="margin-top:12px"><strong>v6.8：</strong>月次に「夫婦精算・月末締め」を追加しました。家賃＋光熱費差額から妻へ振り込む額／妻から受け取る額を月ごとに算出し、精算済み状態を保存できます。月末チェックはカード請求・現金・光熱費・夫婦精算・みずほ月末残高の5項目で、全て揃うと月締めできます。締めた月は月次・カード利用集計・請求・現金・光熱費・夫婦精算をスナップショット保存し、自動同期や分類変更で過去月が勝手に変わらないようにしました。必要な時だけ締め解除して再集計できます。</div>
       <div class="note" style="margin-top:12px"><strong>v6.6：</strong>月次に①カード請求額と登録明細の差額を確認する「請求突合チェック」、②カードと混ぜずに登録できる現金支出、③カード＋現金の「予算 vs 実績」を追加しました。請求突合はカードの締め日と明細のbillGroupを使って請求月へ割り当て、apollostationの請求値引きも含めて比較します。現金支出はカード自動同期ONのまま利用でき、月次合計・履歴・CSVへ加算します。全体生活費予算はau PAY生活費月間予算を参照し、カテゴリ別予算は設定画面で任意入力できます。現金支出も正常バックアップ・安定版・JSONへ保存します。</div>
@@ -1347,14 +1349,22 @@ let monthEndChecksV68=safeParseStorage('odyssey_month_end_checks_v68',{});
 if(!monthEndChecksV68 || typeof monthEndChecksV68!=='object' || Array.isArray(monthEndChecksV68))monthEndChecksV68={};
 let buildingClosureSnapshotV68=false;
 const familyTransferDefaultsV69={
-  '2026-08':{amount:20000,status:'paid',route:'八十二銀行 → 母の八十二銀行',note:'v6.9導入時点で振込済み'},
-  '2026-09':{amount:20000,status:'pending',route:'八十二銀行 → 母の八十二銀行',note:''},
-  '2026-10':{amount:20000,status:'pending',route:'八十二銀行 → 母の八十二銀行',note:''},
-  '2026-11':{amount:10000,status:'pending',route:'八十二銀行 → 母の八十二銀行',note:''}
+  '2026-08':{amount:20000,status:'paid',day:15,scheduledDate:'2026-08-15',route:'八十二銀行 → 母の八十二銀行',note:'8月15日 振込済み'},
+  '2026-09':{amount:20000,status:'pending',day:15,scheduledDate:'2026-09-15',route:'八十二銀行 → 母の八十二銀行',note:''},
+  '2026-10':{amount:20000,status:'pending',day:15,scheduledDate:'2026-10-15',route:'八十二銀行 → 母の八十二銀行',note:''},
+  '2026-11':{amount:10000,status:'pending',day:15,scheduledDate:'2026-11-15',route:'八十二銀行 → 母の八十二銀行',note:''}
 };
 let familyTransfersV69=safeParseStorage('odyssey_family_transfers_v69',null);
 if(!familyTransfersV69 || typeof familyTransfersV69!=='object' || Array.isArray(familyTransfersV69))familyTransfersV69={};
-Object.entries(familyTransferDefaultsV69).forEach(([k,v])=>{if(!Object.prototype.hasOwnProperty.call(familyTransfersV69,k))familyTransfersV69[k]={...v};});
+Object.entries(familyTransferDefaultsV69).forEach(([k,v])=>{
+  if(!Object.prototype.hasOwnProperty.call(familyTransfersV69,k))familyTransfersV69[k]={...v};
+  else{
+    familyTransfersV69[k].day=15;
+    familyTransfersV69[k].scheduledDate=v.scheduledDate;
+    familyTransfersV69[k].route=familyTransfersV69[k].route||v.route;
+    if(k==='2026-08'&&familyTransfersV69[k].status==='paid'&&!familyTransfersV69[k].note)familyTransfersV69[k].note='8月15日 振込済み';
+  }
+});
 localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));
 
 
@@ -1443,7 +1453,7 @@ function snapshotV52(reason='自動'){
     // 壊れた0円状態を「正常バックアップ」で上書きしない。
     if(!stateIsHealthyV52())return false;
     const snap={
-      version:'6.9',at:new Date().toISOString(),reason,
+      version:'6.9.1',at:new Date().toISOString(),reason,
       settings:JSON.parse(JSON.stringify(settings)),
       payments:JSON.parse(JSON.stringify(payments)),
       months:JSON.parse(JSON.stringify(months)),
@@ -1652,7 +1662,7 @@ function protectedSaveV52(reason='保存'){
 
 function stableBackupDataV55(){
   return {
-    version:'6.9',
+    version:'6.9.1',
     at:new Date().toISOString(),
     settings:JSON.parse(JSON.stringify(settings)),
     payments:JSON.parse(JSON.stringify(payments)),
@@ -3504,7 +3514,7 @@ function familyTransferRecordV69(monthKey){
   const closed=closedSnapshotV68(monthKey);
   if(!buildingClosureSnapshotV68&&closed?.familyTransfer)return deepCloneV68(closed.familyTransfer);
   const r=familyTransfersV69?.[monthKey];
-  return r?{monthKey,amount:Math.max(0,Number(r.amount||0)),status:r.status==='paid'?'paid':'pending',route:r.route||'八十二銀行 → 母の八十二銀行',note:r.note||'',paidAt:r.paidAt||''}:{monthKey,amount:0,status:'none',route:'',note:'',paidAt:''};
+  return r?{monthKey,amount:Math.max(0,Number(r.amount||0)),status:r.status==='paid'?'paid':'pending',day:Number(r.day||15),scheduledDate:r.scheduledDate||monthKey+'-15',route:r.route||'八十二銀行 → 母の八十二銀行',note:r.note||'',paidAt:r.paidAt||''}:{monthKey,amount:0,status:'none',day:15,scheduledDate:monthKey+'-15',route:'',note:'',paidAt:''};
 }
 function familyTransferReserveV69(monthKey){const r=familyTransferRecordV69(monthKey);return r.amount>0&&r.status!=='paid'?r.amount:0}
 function familyTransferPaidAmountV69(monthKey){const r=familyTransferRecordV69(monthKey);return r.status==='paid'?r.amount:0}
@@ -3524,7 +3534,7 @@ function renderFamilyTransfersV69(){
   const box=document.getElementById('familyTransferRowsV69');if(!box)return;
   box.innerHTML=Object.keys(familyTransfersV69).sort().map(k=>{
     const r=familyTransferRecordV69(k),closed=isMonthClosedV68(k),status=r.status==='paid'?'振込済み':'未振込';
-    return `<div class="familyTransferRowV69"><div class="familyTransferMonthV69">${escapeHtml(k.slice(5))}月</div><div><strong>${yen(r.amount)}</strong><div class="familyTransferRouteV69">${escapeHtml(r.route)}${closed?' / 月締め済み':''}</div></div><div class="familyTransferActionsV69"><span class="familyTransferStatusV69 ${r.status==='paid'?'paid':'pending'}">${status}</span>${closed?'':r.status==='paid'?`<button class="tinyBtn" type="button" data-family-pending-v69="${k}">未振込へ</button>`:`<button class="tinyBtn" type="button" data-family-paid-v69="${k}">振込済みにする</button>`}</div></div>`;
+    return `<div class="familyTransferRowV69"><div class="familyTransferMonthV69">${escapeHtml(k.slice(5))}月<br><span style="font-size:10px;color:#94a3b8">15日</span></div><div><strong>${yen(r.amount)}</strong><div class="familyTransferRouteV69">${escapeHtml(r.route)} / 振込日 15日${closed?' / 月締め済み':''}</div></div><div class="familyTransferActionsV69"><span class="familyTransferStatusV69 ${r.status==='paid'?'paid':'pending'}">${status}</span>${closed?'':r.status==='paid'?`<button class="tinyBtn" type="button" data-family-pending-v69="${k}">未振込へ</button>`:`<button class="tinyBtn" type="button" data-family-paid-v69="${k}">振込済みにする</button>`}</div></div>`;
   }).join('');
   box.querySelectorAll('[data-family-paid-v69]').forEach(b=>b.addEventListener('click',()=>markFamilyTransferV69(b.dataset.familyPaidV69,'paid')));
   box.querySelectorAll('[data-family-pending-v69]').forEach(b=>b.addEventListener('click',()=>markFamilyTransferV69(b.dataset.familyPendingV69,'pending')));
@@ -3549,9 +3559,11 @@ function renderMonthlyReportV69(){
   set('reportPrevDiffV69',prev?(out.total-prev.total===0?yen(0):(out.total-prev.total>0?'+':'−')+yen(Math.abs(out.total-prev.total))):'比較待ち');
   set('reportMizuhoDeltaV69',mzDiff===null?'実績待ち':(mzDiff===0?yen(0):(mzDiff>0?'+':'−')+yen(Math.abs(mzDiff))));
   set('reportBudgetRemainV69',budget>0?(budgetRemain>=0?yen(budgetRemain):'超過 '+yen(-budgetRemain)):'未設定');
-  set('reportTopCategoryV69',topCat?topCat.label+' '+yen(topCat.amount):'実績なし');set('reportTopMerchantV69',topMerchant?topMerchant.name+' '+yen(topMerchant.total):'実績なし');
+  set('reportTopCategoryV69',topCat?topCat.label+' '+yen(topCat.amount):'実績なし');
+  const validTopMerchant=topMerchant&&topMerchant.name&&String(topMerchant.name)!=='undefined'&&Number(topMerchant.total||0)>0;
+  set('reportTopMerchantV69',validTopMerchant?topMerchant.name+' '+yen(topMerchant.total):'実績なし');
   const pill=document.getElementById('monthlyReportPillV69');if(pill)pill.textContent=isMonthClosedV68(k)?'締め済み':'集計中';
-  const summary=document.getElementById('monthlyReportSummaryV69');if(summary){const ft=family.amount>0?(family.status==='paid'?'母への振込 '+yen(family.amount)+' は振込済み。':'母への振込 '+yen(family.amount)+' は未振込。'):'母への振込予定なし。';const pt=prev?('前月より '+(out.total-prev.total>=0?'+':'−')+yen(Math.abs(out.total-prev.total))+'。'):'前月比較は記録がたまると表示します。';summary.textContent=k+'：記録分の月支出 '+yen(out.total)+'。'+ft+' '+pt}
+  const summary=document.getElementById('monthlyReportSummaryV69');if(summary){const ft=family.amount>0?(family.status==='paid'?'母への振込 '+yen(family.amount)+'（15日）は振込済み。':'母への振込 '+yen(family.amount)+'（15日）は未振込。'):'母への振込予定なし。';const pt=prev?('前月より '+(out.total-prev.total>=0?'+':'−')+yen(Math.abs(out.total-prev.total))+'。'):'前月比較は記録がたまると表示します。';summary.textContent=k+'：記録分の月支出 '+yen(out.total)+'。'+ft+' '+pt}
 }
 function renderHomeMonthEndV69(){
   const k=currentYM(),st=monthEndStateV68(k),family=familyTransferRecordV69(k),next=nextFamilyTransferV69(k),total=st.total,done=st.done;
@@ -3560,7 +3572,7 @@ function renderHomeMonthEndV69(){
   const missing=[];if(!st.checks.cardsReviewed)missing.push('カード');if(!st.checks.cashReviewed)missing.push('現金');if(!st.checks.utilitiesReviewed)missing.push('光熱費');if(!st.spouseOk)missing.push('妻精算');if(!st.mizuhoOk)missing.push('月末残高');if(st.familyRequired&&!st.familyOk)missing.push('母振込');
   set('homeMonthEndMissingV69',st.closed?'今月は締め済み':missing.length?'残り：'+missing.join('・'):'月締め準備OK');
   set('homeFamilyTransferV69',family.amount>0?(family.status==='paid'?'✅ '+yen(family.amount)+' 済':'⏳ '+yen(family.amount)+' 未振込'):'対象なし');
-  set('homeFamilyTransferNextV69',next?'次回 '+next.monthKey.slice(5)+'月 '+yen(next.amount):'予定分はすべて完了');
+  set('homeFamilyTransferNextV69',next?'次回 '+next.monthKey.slice(5)+'月15日 '+yen(next.amount):'予定分はすべて完了');
   const pill=document.getElementById('homeMonthEndPillV69');if(pill)pill.textContent=st.closed?'締め済み':st.ready?'締め準備OK':'進行中';
   const bar=document.getElementById('homeMonthEndBarV69');if(bar)bar.style.width=(total?done/total*100:0)+'%';
 }
@@ -3690,7 +3702,7 @@ function renderMonthEndV68(){
   const mzCheck=document.getElementById('checkMizuhoV68');if(mzCheck)mzCheck.checked=st.mizuhoOk;
   const familyRow=document.getElementById('checkFamilyTransferRowV69'),familyCheck=document.getElementById('checkFamilyTransferV69');
   if(familyRow)familyRow.style.display=st.familyRequired?'':'none';if(familyCheck)familyCheck.checked=st.familyOk;
-  set('checkFamilyTransferMetaV69',st.familyRequired?(st.familyOk?'振込済み '+yen(st.family.amount):'未振込 '+yen(st.family.amount)):'対象なし');
+  set('checkFamilyTransferMetaV69',st.familyRequired?(st.familyOk?'15日 振込済み '+yen(st.family.amount):'15日 未振込 '+yen(st.family.amount)):'対象なし');
 
   const r=st.reconciliation;
   set('checkCardsMetaV68',r.relevant>0?'請求突合 '+r.matches+'/'+r.relevant+'一致 / 差額 '+(r.grandDiff===0?yen(0):(r.grandDiff>0?'+':'−')+yen(Math.abs(r.grandDiff))):'請求・明細の登録状況を確認');
@@ -3732,7 +3744,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'6.9',monthKey:k,closedAt:new Date().toISOString(),
+      version:'6.9.1',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -5356,7 +5368,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標は「頭金＋生活防衛資金」で自動更新しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'6.9',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);renderBackupHealthV69();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'6.9.1',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);renderBackupHealthV69();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));protectedSaveV52('JSON復元後');render();alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -5374,7 +5386,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=6.9',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=6.9.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
