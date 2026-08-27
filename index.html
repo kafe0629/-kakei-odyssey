@@ -138,7 +138,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.0</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v5.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -172,8 +172,13 @@
           </div>
         </div>
         <div class="quickSpend">
-          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 au PAYカード明細を取り込む</h3><span class="pill">カード明細中心</span></div>
-          <div class="sub">au PAYカードの利用明細スクリーンショットをまとめて選択します。OCR後に利用日・店名・金額を確認してから登録できます。</div>
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 カード明細を取り込む</h3><span class="pill" id="importCardPill">au PAY</span></div>
+          <div class="cardImportSelector">
+            <button type="button" class="cardImportBtn active" data-import-card="au">au PAY</button>
+            <button type="button" class="cardImportBtn" data-import-card="aeon">イオン</button>
+            <button type="button" class="cardImportBtn" data-import-card="apollo">apollostation</button>
+          </div>
+          <div class="sub" id="importCardHelp">au PAYカードの利用明細を取り込みます。au PAY以外の明細は混ぜません。</div>
           <input id="statementImages" type="file" accept="image/*" multiple style="display:none">
           <div class="btnRow" style="margin-top:10px"><button class="btn secondary" id="pickStatementImages" type="button">明細画像を選ぶ</button><button class="btn secondary" id="clearStatement" type="button">候補を消す</button></div>
           <div class="ocrProgress"><span id="statementProgress"></span></div>
@@ -259,10 +264,13 @@
             <div class="ocrStatus" id="ocrStatus">「自動判定」のまま複数画像をまとめて選べます。画像ごとに銀行・カードの種類を判定して、必要な金額だけを抽出します。失敗した画像だけ種類を指定して再読み取りできます。</div>
             <div class="ocrResult" id="ocrResult">
               <div class="ocrDetected" id="ocrDetected"></div>
-              <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
+              <div class="btnRow" style="margin-top:10px">
+                <button class="btn" id="applyOcr" type="button">確認した項目だけ反映</button>
+                <button class="btn secondary" id="restoreRecoveryV51" type="button">直前の状態へ戻す</button>
+              </div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.0では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v5.1では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、v5.1では反映前に金額を編集・選択できます。請求額が1〜3桁など不自然な候補は自動で未選択にします。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
@@ -450,19 +458,7 @@
   <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
 </div></nav>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
-document.querySelectorAll('[data-import-card]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    importCardType=btn.dataset.importCard;
-    localStorage.setItem('odyssey_import_card',importCardType);
-    ocrCandidates=[];
-    updateImportCardUI();
-    renderOcrCandidates();
-  });
-});
-updateImportCardUI();
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:1500000,downPayment:2000000,purchaseTarget:3500000,carTotal:5800000,ratePct:2.7,loanYears:7,rent:45000,kyosai:2500,education:10000,educationWife:10000,nisa:10000,nisaStart:'2026-12',insurance:15270,nhk:2200,fuelNow:9000,auFixed:23684,afterSave:30000,fuelAfter:10000};
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
@@ -470,6 +466,56 @@ let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
 let auTransactions=JSON.parse(localStorage.getItem('odyssey_au_transactions')||'[]');
 const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1};
 let payments={...paymentDefaults,...JSON.parse(localStorage.getItem('odyssey_payments')||'{}')};
+function snapshotV51(reason='自動'){
+  try{
+    const snap={
+      at:new Date().toISOString(),reason,
+      settings:JSON.parse(JSON.stringify(settings)),
+      payments:JSON.parse(JSON.stringify(payments)),
+      months:JSON.parse(JSON.stringify(months)),
+      auTransactions:JSON.parse(JSON.stringify(auTransactions))
+    };
+    localStorage.setItem('odyssey_recovery_v51',JSON.stringify(snap));
+  }catch(e){console.warn('snapshotV51',e)}
+}
+function restoreRecoveryV51(){
+  try{
+    const raw=localStorage.getItem('odyssey_recovery_v51');
+    if(!raw){alert('復元できる直前データがありません。');return;}
+    const s=JSON.parse(raw);
+    if(!confirm('直前の保存状態へ戻しますか？'))return;
+    settings={...defaults,...(s.settings||{})};
+    payments={...paymentDefaults,...(s.payments||{})};
+    months=s.months||{};
+    auTransactions=s.auTransactions||[];
+    localStorage.setItem('odyssey_settings',JSON.stringify(settings));
+    localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+    localStorage.setItem('odyssey_months',JSON.stringify(months));
+    localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));
+    render();
+    alert('直前の状態へ戻しました。');
+  }catch(e){console.error(e);alert('復元に失敗しました。')}
+}
+function migrateV51KnownState(){
+  // v5.0で保存値が全面的に0になった場合だけ、直近確認済みの値を安全側で復元。
+  const looksBlank =
+    Number(settings.mizuho||0)===0 &&
+    Number(payments.bank82Balance||0)===0 &&
+    Number(payments.jibunBalance||0)===0 &&
+    Number(payments.mobilePending82||0)===0 &&
+    Number(payments.apolloNextBill||0)===0;
+  if(!looksBlank || localStorage.getItem('odyssey_v51_blank_recovered')) return;
+  settings.mizuho=159012;
+  payments.bank82Balance=93870;
+  payments.jibunBalance=866;
+  payments.mobilePending82=56997;
+  payments.apolloNextBill=20197;
+  payments.apolloFollowingBill=2769;
+  localStorage.setItem('odyssey_settings',JSON.stringify(settings));
+  localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+  localStorage.setItem('odyssey_v51_blank_recovered','1');
+}
+
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
 function loanMonthly(){const principal=Math.max(0,settings.carTotal-settings.downPayment);const n=settings.loanYears*12;const r=(settings.ratePct/100)/12;if(!n)return 0;if(r===0)return principal/n;return principal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
@@ -482,6 +528,21 @@ function knownBefore(){return settings.rent+settings.kyosai+settings.saveMonthly
 function knownAfter(){return settings.rent+settings.kyosai+settings.afterSave+settings.education+settings.nisa+settings.insurance+nhkMonthly()+settings.fuelAfter+settings.auFixed+loanMonthly()}
 function localDateKey(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function saveAuTransactions(){localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions))}
+
+let importCardType=localStorage.getItem('odyssey_import_card')||'au';
+function importCardLabel(type){return type==='apollo'?'apollostation':type==='aeon'?'イオン':'au PAY'}
+function updateImportCardUI(){
+  document.querySelectorAll('[data-import-card]').forEach(b=>b.classList.toggle('active',b.dataset.importCard===importCardType));
+  const p=document.getElementById('importCardPill'); if(p)p.textContent=importCardLabel(importCardType);
+  const h=document.getElementById('importCardHelp');
+  if(h){
+    h.textContent=importCardType==='apollo'
+      ?'apollostationカード明細を取り込みます。ガソリン・値引き・その他利用として分離し、au PAYには混ぜません。'
+      :importCardType==='aeon'
+      ?'イオンカード明細を取り込みます。au PAY未確定利用額には反映しません。'
+      :'au PAYカード明細を取り込みます。登録したau PAY明細だけ未確定利用額へ反映します。';
+  }
+}
 const txCategoryLabels={food:'食費',daily:'日用品',convenience:'コンビニ',fuel:'ガソリン',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
 let merchantCategoryMemory=JSON.parse(localStorage.getItem('odyssey_merchant_category_memory')||'{}');
 function normalizeMerchantName(memo=''){
@@ -651,7 +712,7 @@ async function runStatementOcr(files){
 }
 function importStatementCandidates(){
   const existing=new Set(auTransactions.map(txKey)); let added=0,dup=0;
-  for(const x of statementCandidates){if(!x.checked||Number(x.amount)<=0)continue;const memo=(x.memo||'カード利用').trim()||'カード利用';const clean={date:x.date||localDateKey(),memo,amount:Math.round(Number(x.amount)),category:classifyMerchant(memo,x.category)};const k=txKey(clean);if(existing.has(k)){dup++;continue}existing.add(k);auTransactions.push({id:Date.now()+Math.random(),...clean,time:'',source:'statement'});added++}
+  for(const x of statementCandidates){if(!x.checked||Number(x.amount)<=0)continue;const memo=(x.memo||'カード利用').trim()||'カード利用';const clean={date:x.date||localDateKey(),memo,amount:Math.round(Number(x.amount)),category:classifyMerchantForCard(memo,x.category,importCardType,amount),cardType:importCardType};const k=txKey(clean);if(existing.has(k)){dup++;continue}existing.add(k);auTransactions.push({id:Date.now()+Math.random(),...clean,time:'',source:'statement'});added++}
   saveAuTransactions();syncTodaySpentFromTransactions();const autoSynced=syncStatementTotalAutomatic();localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();renderTodayTransactions();renderMonthlyAuto();
   statementCandidates=[];renderStatementCandidates();document.getElementById('statementStatus').textContent=`${added}件を登録しました${dup?`（重複 ${dup}件は除外）`:''}${autoSynced?'。締めサイクル合計を未確定利用額へ自動反映しました。':'。'} `;
 }
@@ -1006,8 +1067,13 @@ function extractDedicatedCrop(text,target,sourceName){
     v=m?moneyNum(m[1]):null;
     if(v!==null && (v===2026 || v===100000 || v===94303 || v===255)) v=null;
   }else if(target==='apolloNextBill'){
-    let m=/(?:確定|お支払い日)[\s\S]{0,130}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(t);
+    let m=/(?:お支払(?:い)?金額|お支払額|確定|未確定)[\s\S]{0,160}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(t);
     v=m?moneyNum(m[1]):zeroAwareMoney(t);
+    if(v!==null){
+      // 20,197円→97円のような切れOCRは自動反映させない。
+      setOcrCandidate(target,v,sourceName+(v>0&&v<500?'（要確認・桁欠け疑い）':''),v>0&&v<500?6:70);
+      return;
+    }
   }else if(target==='bank82Balance'){
     // 口座番号559420、日付、取引明細を排除。専用の上部残高クロップだけを見る。
     const vals=currencyCandidates(t).filter(x=>x.value!==559420 && x.value!==15270 && x.value!==2200);
@@ -1074,9 +1140,12 @@ function extractOcrCandidates(raw,sourceName,target='auto'){
     if(v!==null)setOcrCandidate('rakutenBalance',v,sourceName,12);
   }
   if(/apollostation|出光カード|idemitsu/i.test(compact)){
-    let m=/(?:お支払い日|確定)[\s\S]{0,180}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(compact);
-    if(!m)m=/(?:お支払(?:い)?金額|お支払額)[\s\S]{0,100}?([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)\s*円/.exec(compact);
-    if(m)setOcrCandidate('apolloNextBill',moneyNum(m[1]),sourceName,14);
+    let m=/(?:お支払(?:い)?金額|お支払額|ご請求金額)[\s\S]{0,130}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{3,})\s*円/.exec(compact);
+    if(!m)m=/(?:確定|未確定)[\s\S]{0,170}?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,})\s*円/.exec(compact);
+    if(m){
+      const av=moneyNum(m[1]);
+      setOcrCandidate('apolloNextBill',av,sourceName+'（支払金額ラベル近傍）',av>0&&av<500?8:95);
+    }
   }
   if(/イオンカード|AEON\s*Pay|AEON/i.test(compact)){
     if(/(?:お支払い額|お支払額)[\s\S]{0,50}?(?:¥|￥)\s*(?:--|-|ー)/.test(compact)){
@@ -1102,17 +1171,34 @@ function extractOcrCandidates(raw,sourceName,target='auto'){
 }
 function showOcrCandidates(){
   const box=document.getElementById('ocrResult'),det=document.getElementById('ocrDetected');
-  const lines=[];
+  let htmlOut='';
   if(ocrClassifications.length){
-    lines.push('【画像の自動判定】');
-    ocrClassifications.forEach(x=>lines.push(x.file+' → '+(screenTypeLabels[x.type]||x.type)));
-    lines.push('');
+    htmlOut+='<div style="font-weight:800;margin-bottom:8px">【画像の自動判定】</div>';
+    htmlOut+=ocrClassifications.map(x=>'<div class="ocrReviewMeta">'+escapeHtml(x.file)+' → '+escapeHtml(screenTypeLabels[x.type]||x.type)+'</div>').join('');
+    htmlOut+='<div style="height:8px"></div>';
   }
-  Object.entries(ocrCandidates).forEach(([k,o])=>{
-    if(k==='_auUsed') lines.push('au PAYゴールド 未確定利用額候補 '+yen(o.value)+'（利用可能額から算出）');
-    else lines.push((ocrFieldLabels[k]||k)+' → '+yen(o.value)+' 〔'+o.source+'〕');
-  });
-  det.textContent=lines.length?lines.join('\n'):'対応する金額を見つけられませんでした。別の画面か、金額がはっきり見える画像を試してください。';
+  htmlOut+='<div style="font-weight:800">【反映前確認】</div><div class="ocrReview">';
+  const entries=Object.entries(ocrCandidates).filter(([k])=>!k.startsWith('_'));
+  for(const [k,o] of entries){
+    const billField=['auNextBill','aeonNextBill','apolloNextBill'].includes(k);
+    const suspicious=billField && Number(o.value)>0 && Number(o.value)<500;
+    const checked=!suspicious;
+    htmlOut+='<label class="ocrReviewRow '+(suspicious?'suspicious':'')+'">'+
+      '<input type="checkbox" data-ocr-check="'+escapeHtml(k)+'" '+(checked?'checked':'')+'>'+
+      '<div><div style="font-weight:800">'+escapeHtml(ocrFieldLabels[k]||k)+'</div>'+
+      '<div class="ocrReviewMeta">'+escapeHtml(o.source||'')+(suspicious?' ／ ⚠️ 桁欠けの可能性があるため未選択':'')+'</div></div>'+
+      '<input type="number" inputmode="numeric" data-ocr-value="'+escapeHtml(k)+'" value="'+Number(o.value||0)+'">'+
+      '</label>';
+  }
+  if(ocrCandidates._auUsed){
+    const o=ocrCandidates._auUsed;
+    htmlOut+='<label class="ocrReviewRow"><input type="checkbox" data-ocr-check="_auUsed">'+
+      '<div><div style="font-weight:800">au PAY 未確定利用額候補</div><div class="ocrReviewMeta">'+escapeHtml(o.source||'')+'</div></div>'+
+      '<input type="number" inputmode="numeric" data-ocr-value="_auUsed" value="'+Number(o.value||0)+'"></label>';
+  }
+  htmlOut+='</div>';
+  if(!entries.length && !ocrCandidates._auUsed) htmlOut+='<div class="ocrReviewMeta" style="margin-top:8px">対応する金額を見つけられませんでした。別の画面か、金額がはっきり見える画像を試してください。</div>';
+  det.innerHTML=htmlOut;
   document.getElementById('ocrRawText').textContent=ocrRawChunks.join('\n\n===== 次の画像 =====\n\n');
   box.classList.add('show');
 }
@@ -1149,8 +1235,8 @@ async function preprocessImage(file,preset='default'){
       sx=Math.round(bmp.width*0.055); sy=Math.round(bmp.height*0.292);
       sw=Math.round(bmp.width*0.88); sh=Math.round(bmp.height*0.075);
     }else if(preset==='apolloBill'){
-      sx=Math.round(bmp.width*0.50); sy=Math.round(bmp.height*0.13);
-      sw=Math.round(bmp.width*0.45); sh=Math.round(bmp.height*0.16);
+      sx=Math.round(bmp.width*0.28); sy=Math.round(bmp.height*0.155);
+      sw=Math.round(bmp.width*0.64); sh=Math.round(bmp.height*0.115);
     }
     const specialized=['mizuhoBalance','bank82Balance','jibunBalance','jibunDigit','rakutenBalance','auBill','auDigit','aeonBill','apolloBill'].includes(preset);
     const maxW=specialized?2200:1800;
@@ -1347,7 +1433,8 @@ async function runOcr(files){
         const rc=await worker.recognize(crop); const cropTxt=rc?.data?.text||'';
         ocrRawChunks.push('['+files[i].name+' / apollostationお支払額エリア]\n'+cropTxt);
         extractDedicatedCrop(cropTxt,'apolloNextBill',files[i].name);
-        if(!ocrCandidates.apolloNextBill) extractOcrCandidates(txt,files[i].name,'apolloNextBill');
+        // 専用クロップが97円などに切れても、全体OCRの「お支払金額」近傍を必ず比較する。
+        extractOcrCandidates(txt,files[i].name,'apolloNextBill');
       }else if(detected!=='unknown'){
         extractOcrCandidates(txt,files[i].name,detected);
       }else{
@@ -1356,17 +1443,29 @@ async function runOcr(files){
       }
       bar.style.width=Math.round(((i+1)/files.length)*96)+'%';
     }
-    bar.style.width='100%';status.textContent='自動判定と読み取りが完了しました。画像ごとの判定と金額を確認してから「認識結果を反映」を押してください。';showOcrCandidates();
+    bar.style.width='100%';status.textContent='自動判定と読み取りが完了しました。画像ごとの判定と金額を確認し、反映する項目だけチェックして金額を確認してください。';showOcrCandidates();
   }catch(e){console.error(e);status.textContent='読み取りに失敗しました。失敗した画像だけ種類を指定して1枚ずつ試してください。';bar.style.width='0%';}
   finally{if(worker)try{await worker.terminate()}catch{}}
 }
 function applyOcrCandidates(){
-  Object.entries(ocrCandidates).forEach(([k,o])=>{
-    if(k==='_auUsed'){payments.auUnconfirmed=o.value;return;}
-    if(k.startsWith('_'))return;
-    if(k==='mizuho'){settings.mizuho=o.value;return;}
-    if(k==='rakutenBalance'){localStorage.setItem('odyssey_rakuten_balance',String(o.value));return;}
-    if(k in payments)payments[k]=o.value;
+  const chosen=[];
+  document.querySelectorAll('[data-ocr-check]').forEach(ch=>{
+    if(!ch.checked)return;
+    const k=ch.dataset.ocrCheck;
+    const input=document.querySelector('[data-ocr-value="'+CSS.escape(k)+'"]');
+    const v=Number(input?.value||0);
+    if(!Number.isFinite(v)||v<0)return;
+    chosen.push([k,v]);
+  });
+  if(!chosen.length){alert('反映する項目を1つ以上選んでください。');return;}
+  const summary=chosen.map(([k,v])=>(k==='_auUsed'?'au PAY未確定利用額':(ocrFieldLabels[k]||k))+'：'+yen(v)).join('\n');
+  if(!confirm('次の内容を反映します。\n\n'+summary+'\n\nよろしいですか？'))return;
+  snapshotV51('OCR反映前');
+  chosen.forEach(([k,v])=>{
+    if(k==='_auUsed'){payments.auUnconfirmed=v;return;}
+    if(k==='mizuho'){settings.mizuho=v;return;}
+    if(k==='rakutenBalance'){localStorage.setItem('odyssey_rakuten_balance',String(v));return;}
+    if(k in payments)payments[k]=v;
   });
   localStorage.setItem('odyssey_settings',JSON.stringify(settings));
   localStorage.setItem('odyssey_payments',JSON.stringify(payments));
@@ -1374,9 +1473,9 @@ function applyOcrCandidates(){
   const p=paymentSummary();
   const msg=document.getElementById('autoCalcMessage');
   if(msg){
-    msg.innerHTML='✅ OCR結果を反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 今日あとau PAY：<strong>'+yen(p.auTodayAvailable)+'</strong> ／ 給料日までカード予算：<strong>'+yen(p.auPlannedUntilPayday)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong> ／ 追加貯金上限：<strong>'+yen(p.extraSavePossible)+'</strong>';
+    msg.innerHTML='✅ 確認済みOCR項目だけ反映・自動保存しました。<br>八十二→auじぶん：<strong>'+yen(p.needToJibun)+'</strong> ／ 支払確保：<strong>'+yen(p.paymentNeed82)+'</strong> ／ 今日あとau PAY：<strong>'+yen(p.auTodayAvailable)+'</strong> ／ 自由資金：<strong>'+(p.free82>=0?yen(p.free82):'不足 '+yen(-p.free82))+'</strong>';
   }
-  alert('認識結果を反映・保存しました。必要振替額と自由資金も自動計算しました。');
+  alert('確認した項目だけ反映しました。誤りがあれば「直前の状態へ戻す」で復元できます。');
 }
 function render(){
   const emRatio=settings.mizuho/settings.emergencyTarget*100; const puRatio=settings.mizuho/settings.purchaseTarget*100;
@@ -1401,6 +1500,22 @@ function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel',
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));
 ['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
 const now=new Date();document.getElementById('monthKey').value=now.toISOString().slice(0,7);
+
+document.querySelectorAll('[data-import-card]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    importCardType=btn.dataset.importCard;
+    localStorage.setItem('odyssey_import_card',importCardType);
+    statementCandidates=[];
+    updateImportCardUI();
+    renderStatementCandidates();
+  });
+});
+updateImportCardUI();
+const restoreV51=document.getElementById('restoreRecoveryV51');
+if(restoreV51)restoreV51.addEventListener('click',restoreRecoveryV51);
+migrateV51KnownState();
+if(!localStorage.getItem('odyssey_recovery_v51'))snapshotV51('v5.1初回');
+
 document.getElementById('pickOcrImages').addEventListener('click',()=>document.getElementById('ocrImages').click());
 document.getElementById('ocrImages').addEventListener('change',e=>{const fs=[...(e.target.files||[])];if(fs.length)runOcr(fs)});
 document.getElementById('applyOcr').addEventListener('click',applyOcrCandidates);
