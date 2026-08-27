@@ -138,7 +138,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD & ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v4.8</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v4.9</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -162,6 +162,15 @@
           <div class="card" style="box-shadow:none"><div class="label">次回給料後の追加貯金予測</div><div class="kpi good" id="quickSafeSave">¥0</div><div class="sub" id="quickNextSaveDate">次サイクル必要額まで確保後</div></div>
         </div>
         <div class="note" id="quickTodayStatus" style="margin-top:10px">今日のau PAY利用額を入力すると、残り利用可能額と使いすぎ状況を表示します。</div>
+        <div class="card" style="box-shadow:none;margin-top:12px;border-color:#29446b">
+          <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 3カード支払ナビ</h3><span class="pill">au PAY・イオン・apollostation</span></div>
+          <div class="spendInsight" style="margin-top:10px">
+            <div class="spendInsightItem"><div class="label">au PAY</div><div class="v blue" id="cardNavAu">¥0</div><div class="sub">4日・確定請求</div></div>
+            <div class="spendInsightItem"><div class="label">イオン</div><div class="v" id="cardNavAeon">¥0</div><div class="sub">2日・次回請求</div></div>
+            <div class="spendInsightItem"><div class="label">apollostation</div><div class="v" id="cardNavApollo">¥0</div><div class="sub">7日・確定請求</div></div>
+            <div class="spendInsightItem"><div class="label">apollo翌月</div><div class="v good" id="cardNavApolloNext">¥0</div><div class="sub">未確定</div></div>
+          </div>
+        </div>
         <div class="quickSpend">
           <div class="sectionTitle" style="margin:0"><h3 style="margin:0">💳 au PAYカード明細を取り込む</h3><span class="pill">カード明細中心</span></div>
           <div class="sub">au PAYカードの利用明細スクリーンショットをまとめて選択します。OCR後に利用日・店名・金額を確認してから登録できます。</div>
@@ -215,7 +224,11 @@
             <div class="field"><label>au PAYカード 締め日</label><input data-payment="auCloseDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
             <div class="field"><label>au PAYカード 支払日</label><input data-payment="auPaymentDay" type="number" inputmode="numeric" min="1" max="31" placeholder="4"></div>
              <div class="field"><label>イオンカード 次回請求（2日）</label><input data-payment="aeonNextBill" type="number" inputmode="numeric" placeholder="0"></div>
-            <div class="field"><label>apollostation 次回請求（7日）</label><input data-payment="apolloNextBill" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollostation 確定請求（7日）</label><input data-payment="apolloNextBill" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollostation 翌月未確定</label><input data-payment="apolloFollowingBill" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollo ガソリン利用額（値引前）</label><input data-payment="apolloFuelGross" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollo 値引き合計</label><input data-payment="apolloDiscount" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>apollo ガソリン以外</label><input data-payment="apolloOther" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>携帯料金（八十二・未引落し）</label><input data-payment="mobilePending82" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>その他 八十二銀行で確保する額</label><input data-payment="other82Reserve" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>八十二銀行に残す生活予備費（任意）</label><input data-payment="safetyBuffer82" type="number" inputmode="numeric" placeholder="0"></div>
@@ -225,6 +238,17 @@
             <div class="field"><label>次サイクル1日あたり生活費（任意）</label><input data-payment="nextCycleDailyLivingCost" type="number" inputmode="numeric" placeholder="未入力なら上と同額"></div>
             <div class="field"><label>次サイクルのカード請求見込み（任意）</label><input data-payment="nextCycleCards" type="number" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>次サイクルのその他支出見込み（任意）</label><input data-payment="nextCycleOther" type="number" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div class="note" style="margin-top:12px">
+            <strong>⛽ apollostation請求内訳</strong><br>
+            <span style="color:#94a3b8">確定請求は値引き込みの最終請求額を最優先します。内訳は「ガソリン値引前 − 値引き + ガソリン以外」で照合します。</span>
+            <div class="row" style="margin-top:8px"><div class="name">ガソリン値引前</div><div class="value" id="apolloFuelGrossOut">¥0</div></div>
+            <div class="row"><div class="name">値引き</div><div class="value good" id="apolloDiscountOut">−¥0</div></div>
+            <div class="row"><div class="name">ガソリン実質</div><div class="value" id="apolloFuelNetOut">¥0</div></div>
+            <div class="row"><div class="name">ガソリン以外</div><div class="value" id="apolloOtherOut">¥0</div></div>
+            <div class="row"><div class="name"><strong>内訳からの計算額</strong></div><div class="value" id="apolloCalculatedBillOut">¥0</div></div>
+            <div class="row"><div class="name"><strong>確定請求との差</strong></div><div class="value" id="apolloDiffOut">¥0</div></div>
+            <div class="row"><div class="name">翌月未確定</div><div class="value blue" id="apolloFollowingBillOut">¥0</div></div>
           </div>
           <div class="ocrBox">
             <div class="ocrHead"><div><strong>📷 スクショから自動入力</strong><div class="sub">銀行・カードのスクリーンショットを選択</div></div><span class="pill">端末内OCR</span></div>
@@ -238,7 +262,7 @@
               <div class="btnRow" style="margin-top:10px"><button class="btn" id="applyOcr" type="button">認識結果を反映</button></div>
               <details class="ocrRaw"><summary>読み取った文字を確認</summary><pre id="ocrRawText"></pre></details>
             </div>
-            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v4.0では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
+            <div class="note" style="margin-top:10px">画像はこのiPhone内で文字認識します。v4.9では複数のスクリーンショットをまとめて選ぶと、八十二銀行・みずほ銀行・auじぶん銀行・楽天銀行・au PAYゴールド・イオンカード・apollostationを画像ごとに自動判定します。auじぶん銀行とau PAYゴールドは大きな金額数字だけをさらに狭く切り出して再認識し、0円を優先判定します。誤認識もあり得るため、反映前に必ず金額を確認してください。</div>
           </div>
           <div class="separator"></div>
           <div class="note" style="margin-bottom:10px"><strong>① 給料日前｜今日 → 次の15日</strong><br><span style="color:#94a3b8">今ある八十二銀行残高で、給料日までの支払いと生活費を守れるかを確認します。</span></div>
@@ -365,7 +389,7 @@
       <div class="schedule">
         <div class="scheduleItem"><div class="day">2日</div><div><div class="schedTitle">イオンカード 引落</div><div class="schedSub">八十二銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">4日</div><div><div class="schedTitle">au PAYゴールド 引落</div><div class="schedSub">auじぶん銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
-        <div class="scheduleItem"><div class="day">7日</div><div><div class="schedTitle">apollostation 引落</div><div class="schedSub">八十二銀行 / 休日は翌営業日</div></div><span class="pill">引落</span></div>
+        <div class="scheduleItem"><div class="day">7日</div><div><div class="schedTitle">apollostation 確定請求 引落</div><div class="schedSub">八十二銀行 / 値引き込みの確定額を優先</div></div><span class="pill">引落</span></div>
         <div class="scheduleItem"><div class="day">10日</div><div><div class="schedTitle">3カード締め日</div><div class="schedSub">au PAY・イオン・apollostation</div></div><span class="pill">締め</span></div>
         <div class="scheduleItem"><div class="day">15日</div><div><div class="schedTitle">給与・資金振り分け</div><div class="schedSub">みずほ97,500円 / 教育1万円 / NISAは2026年12月開始</div></div><span class="pill">振分</span></div>
         <div class="scheduleItem"><div class="day">18日</div><div><div class="schedTitle">au PAY確定＋apollostation確認</div><div class="schedSub">auは確定後、八十二→auじぶんへ一括移動</div></div><span class="pill">確認</span></div>
@@ -432,7 +456,7 @@ const defaults={income:310000,mizuho:159012,saveMonthly:50000,emergencyTarget:15
 let settings={...defaults,...JSON.parse(localStorage.getItem('odyssey_settings')||'{}')};
 let months=JSON.parse(localStorage.getItem('odyssey_months')||'{}');
 let auTransactions=JSON.parse(localStorage.getItem('odyssey_au_transactions')||'[]');
-const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1};
+const paymentDefaults={bank82Balance:0,jibunBalance:0,auNextBill:0,auUnconfirmed:0,auLivingBudget:90000,auCloseDay:15,auPaymentDay:4,aeonNextBill:0,apolloNextBill:20197,apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100,mobilePending82:56997,other82Reserve:0,safetyBuffer82:0,dailyLivingCost:3000,auTodaySpent:0,auTodaySpentDate:'',cashLivingUntilPayday:0,nextCycleDailyLivingCost:0,nextCycleCards:0,nextCycleOther:0,statementAutoSync:1};
 let payments={...paymentDefaults,...JSON.parse(localStorage.getItem('odyssey_payments')||'{}')};
 const yen=n=>'¥'+Math.round(Number(n||0)).toLocaleString('ja-JP');
 const pct=n=>(Math.max(0,Math.min(100,n))*100/100).toFixed(1)+'%';
@@ -453,7 +477,7 @@ function normalizeMerchantName(memo=''){
     .replace(/[\s　・･._\-—–ー/\\()（）［］【】「」『』]/g,'')
     .replace(/(株式会社|有限会社|合同会社|㈱|（株）|\(株\))/g,'').trim();
 }
-// v4.8: 店名判定を1本化。OCR候補・登録・既存明細・月次集計はすべてこの正規化キーを使う。
+// v4.9: 店名判定を1本化。OCR候補・登録・既存明細・月次集計はすべてこの正規化キーを使う。
 function canonicalMerchantKey(memo=''){
   const t=normalizeMerchantName(memo);
   if(!t)return '';
@@ -684,6 +708,15 @@ function autoClassifyExistingTransactions(silent=false){
   if(!silent)alert(changed?changed+'件を最新の分類エンジンで再分類しました':'分類はすでに最新です');
   return changed;
 }
+function migrateV49Apollo(){
+  let changed=false;
+  const saved=JSON.parse(localStorage.getItem('odyssey_payments')||'{}');
+  const seed={apolloFollowingBill:2769,apolloFuelGross:8362,apolloDiscount:265,apolloOther:12100};
+  for(const [k,v] of Object.entries(seed)){
+    if(saved[k]===undefined){payments[k]=v;changed=true}
+  }
+  if(changed)localStorage.setItem('odyssey_payments',JSON.stringify(payments));
+}
 function migrateV48Categories(){
   // バージョンごとの一度限りフラグに頼らず、v4.8初回は全明細を統一分類関数で再評価する。
   if(localStorage.getItem('odyssey_v48_category_migrated'))return;
@@ -692,7 +725,15 @@ function migrateV48Categories(){
 }
 function paymentSummary(){
   const needToJibun=Math.max(0,Number(payments.auNextBill||0)-Number(payments.jibunBalance||0));
-  const reserveCards82=Number(payments.aeonNextBill||0)+Number(payments.apolloNextBill||0);
+  const apolloFuelGross=Math.max(0,Number(payments.apolloFuelGross||0));
+  const apolloDiscount=Math.max(0,Number(payments.apolloDiscount||0));
+  const apolloOther=Math.max(0,Number(payments.apolloOther||0));
+  const apolloFuelNet=Math.max(0,apolloFuelGross-apolloDiscount);
+  const apolloCalculatedBill=Math.max(0,apolloFuelNet+apolloOther);
+  // 確定請求額が入っている場合は、値引き込みの最終請求額を最優先。
+  const apolloReservedBill=Math.max(0,Number(payments.apolloNextBill||0)) || apolloCalculatedBill;
+  const apolloFollowingBill=Math.max(0,Number(payments.apolloFollowingBill||0));
+  const reserveCards82=Number(payments.aeonNextBill||0)+apolloReservedBill;
    const auUnconfirmed=Math.max(0,Number(payments.auUnconfirmed||0));
    const auLivingBudget=Math.max(0,Number(payments.auLivingBudget||0));
    const auLivingSpent=auUnconfirmed;
@@ -748,18 +789,34 @@ function paymentSummary(){
   const nextCycleLiving=nextCycleDays*nextCycleDailyLivingCost;
   // 15日の振り分けに含まれない、毎月の既知支出を次サイクルの固定費として自動見込み。
   // ガソリンは別枠で管理しているためここに含める。NHKは2か月ごとの月平均で計算。
-  const nextCycleFixed=Math.max(0,Number(settings.insurance||0))+nhkMonthly()+Math.max(0,Number(settings.fuelNow||0))+Math.max(0,Number(settings.auFixed||0));
+  // ガソリンはapollostationで管理。翌月未確定ガソリンを含めても月予算を二重計上しないよう、
+  // ガソリン確保額は「通常のガソリン月予算」と「apollo翌月未確定」の大きい方を採用。
+  const nextCycleFuelReserve=Math.max(Math.max(0,Number(settings.fuelNow||0)),apolloFollowingBill);
+  const nextCycleFixed=Math.max(0,Number(settings.insurance||0))+nhkMonthly()+nextCycleFuelReserve+Math.max(0,Number(settings.auFixed||0));
   const nextCycleCards=Math.max(0,Number(payments.nextCycleCards||0))+auUnconfirmed+auPlannedUntilClose;
   const nextCycleOther=Math.max(0,Number(payments.nextCycleOther||0));
   const nextCycleReserve=nextCycleLiving+nextCycleFixed+nextCycleCards+nextCycleOther;
   const trueSurplus=balanceAfterAllocation-nextCycleReserve;
   const safeExtraSave=Math.max(0,trueSurplus);
-  return {needToJibun,reserveCards82,auUnconfirmed,auLivingBudget,auLivingSpent,auLivingRemaining,auCloseDay,auPaymentDay,auNextClose,auDaysToClose,auUnconfirmedPayDate,auPlannedUntilClose,auTodayBudget,auTodaySpent,auTodayAvailable,auTodayOver,auTomorrowGuide,auPlannedUntilPayday,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,cashLivingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
+  return {needToJibun,reserveCards82,apolloFuelGross,apolloDiscount,apolloOther,apolloFuelNet,apolloCalculatedBill,apolloReservedBill,apolloFollowingBill,auUnconfirmed,auLivingBudget,auLivingSpent,auLivingRemaining,auCloseDay,auPaymentDay,auNextClose,auDaysToClose,auUnconfirmedPayDate,auPlannedUntilClose,auTodayBudget,auTodaySpent,auTodayAvailable,auTodayOver,auTomorrowGuide,auPlannedUntilPayday,auFutureBill,mobilePending82,other82Reserve,paymentNeed82,safetyBuffer82,daysToPayday,dailyLivingCost,livingUntilPayday,cashLivingUntilPayday,reserveTotal82,bank82Balance,free82,extraSavePossible,shortage,jibunAfter,nextPayday,nextIncome,balanceAfterPayday,nisaAtNextPayday,paydayAllocation,balanceAfterAllocation,followingPayday,nextCycleDays,nextCycleDailyLivingCost,nextCycleLiving,nextCycleFixed,nextCycleCards,nextCycleOther,nextCycleReserve,trueSurplus,safeExtraSave};
 }
 function renderPayments(){
   document.querySelectorAll('[data-payment]').forEach(el=>el.value=payments[el.dataset.payment]??0);
   const sas=document.getElementById('statementAutoSync');if(sas)sas.checked=Number(payments.statementAutoSync??1)!==0;
   const p=paymentSummary();
+  const setTxt=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+  setTxt('cardNavAu',yen(payments.auNextBill||0));
+  setTxt('cardNavAeon',yen(payments.aeonNextBill||0));
+  setTxt('cardNavApollo',yen(p.apolloReservedBill));
+  setTxt('cardNavApolloNext',yen(p.apolloFollowingBill));
+  setTxt('apolloFuelGrossOut',yen(p.apolloFuelGross));
+  setTxt('apolloDiscountOut','−'+yen(p.apolloDiscount));
+  setTxt('apolloFuelNetOut',yen(p.apolloFuelNet));
+  setTxt('apolloOtherOut',yen(p.apolloOther));
+  setTxt('apolloCalculatedBillOut',yen(p.apolloCalculatedBill));
+  const apolloDiff=p.apolloReservedBill-p.apolloCalculatedBill;
+  const ad=document.getElementById('apolloDiffOut');if(ad){ad.textContent=(apolloDiff===0?yen(0):(apolloDiff>0?'+':'−')+yen(Math.abs(apolloDiff)));ad.className='value '+(apolloDiff===0?'good':'warn')}
+  setTxt('apolloFollowingBillOut',yen(p.apolloFollowingBill));
   const qt=document.getElementById('quickTodayAu'); if(qt){qt.textContent=yen(p.auTodayAvailable);qt.className='kpi '+(p.auTodayOver>0?'bad':p.auTodayAvailable===0?'warn':'blue')}
   const qts=document.getElementById('quickTodayAuSub'); if(qts)qts.textContent='今日予算 '+yen(p.auTodayBudget)+' − 利用済み '+yen(p.auTodaySpent);
   const qstat=document.getElementById('quickTodayStatus'); if(qstat){
@@ -1340,6 +1397,7 @@ document.getElementById('syncStatementUnconfirmed').addEventListener('click',syn
 const statementAutoSync=document.getElementById('statementAutoSync');if(statementAutoSync){statementAutoSync.checked=Number(payments.statementAutoSync??1)!==0;statementAutoSync.addEventListener('change',()=>{payments.statementAutoSync=statementAutoSync.checked?1:0;if(statementAutoSync.checked)syncStatementTotalAutomatic();localStorage.setItem('odyssey_payments',JSON.stringify(payments));renderPayments();renderTodayTransactions();});}
 document.getElementById('autoClassifyExisting').addEventListener('click',autoClassifyExistingTransactions);
 const reclassifyHome=document.getElementById('reclassifyHome');if(reclassifyHome)reclassifyHome.addEventListener('click',autoClassifyExistingTransactions);
+migrateV49Apollo();
 migrateV48Categories();
 document.getElementById('applyTransactionsToMonth').addEventListener('click',applyTransactionsToMonth);
 document.getElementById('monthKey').addEventListener('change',renderMonthlyAuto);
