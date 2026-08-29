@@ -546,7 +546,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.4.0</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.4.1</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -986,7 +986,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.4.0</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.4.1</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1591,7 +1591,8 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
-      <div class="note" style="margin-top:12px"><strong>v7.4.0：</strong>au PAY明細OCRを強化しました。同じ店舗・同じ日に複数回利用していても金額が違えば別明細として保持します。さらに画像内請求額と候補合計に差がある場合、日付・支払回数・店舗の近接情報を使って取りこぼした金額を安全に補完します。既登録判定はOCR表記揺れに強い店舗正規化へ変更し、登録済みは自動OFF、新規だけ自動ONにします。候補画面にも「新規／登録済み／補完」の状態を表示します。ファミリーマートのOCR揺れもコンビニへ確実に分類します。</div>
+      <div class="note" style="margin-top:12px"><strong>v7.4.1：</strong>実機テストで残ったau PAY OCRの3点を修正しました。①「未確定 3,626円」の文字ラベルがOCRで崩れても、画面上部の金額と候補合計から請求額を救済します。②ローソン149円などの日付は、店名+金額がある位置から直後の日付を優先して再固定します。③ファミリーマートの表記揺れ（ファ/フア、長音欠落など）を吸収して必ずコンビニ分類します。今回の3,626円画面では5件認識、新規173円・620円のみON、既登録149円・1,470円・1,214円はOFFになることを回帰テストしています。</div>
+<div class="note" style="margin-top:12px"><strong>v7.4.0：</strong>au PAY明細OCRを強化しました。同じ店舗・同じ日に複数回利用していても金額が違えば別明細として保持します。さらに画像内請求額と候補合計に差がある場合、日付・支払回数・店舗の近接情報を使って取りこぼした金額を安全に補完します。既登録判定はOCR表記揺れに強い店舗正規化へ変更し、登録済みは自動OFF、新規だけ自動ONにします。候補画面にも「新規／登録済み／補完」の状態を表示します。ファミリーマートのOCR揺れもコンビニへ確実に分類します。</div>
 <div class="note" style="margin-top:12px"><strong>v7.3.9：</strong>月末チェックの「カード請求を確認した」を、表示中の請求月ではなく「その月に使ったカード明細が実際に何月請求になるか」で判定する方式へ変更しました。たとえば8月利用分が9月・10月請求に分かれていても、8月の明細をそれぞれの請求月まで追跡して突合します。請求額と登録明細が一致すれば未確定請求も確認対象として扱い、8月の確認済み状態として保存します。9月・10月へ画面を移動しても8月の確認済みは消えません。請求額や明細そのものが変わった場合だけ、その利用月を再確認に戻します。</div>
 <div class="note" style="margin-top:12px"><strong>v7.3.8：</strong>「カード請求を確認した」の状態を月ごとに保存するよう修正しました。これまでは請求突合2/2一致・差額0円をその場で自動判定していたため、利用月/請求月を切り替えた後にチェックが外れる場合がありました。v7.3.8では自動確認できた月について請求額・登録明細の状態をスナップショット保存し、別の月へ移動して戻っても確認済みを維持します。請求額や明細を実際に編集して内容が変わった場合だけ、自動確認を解除して再確認を求めます。</div>
 <div class="note" style="margin-top:12px"><strong>v7.3.7：</strong>請求月の月送りと内部集計月を完全同期しました。前月・次月を押した時は、先に対象月を固定してから「利用月合計・請求月合計・3カード請求・請求突合・月末チェック」を同じ月で再描画します。詳細集計の一部でエラーが起きても旧月の金額を残さないフェイルセーフも追加しました。また月末チェックの「母への振込」は15日振込・手数料管理の母データを直接参照し、同じ対象月で必ず一致させます。月末チェックには対象月も表示します。</div>
@@ -3291,7 +3292,17 @@ function canonicalMerchantKey(memo=''){
   const t=normalizeMerchantName(memo);
   if(!t)return '';
   // v7.4.0: OCRで長音や店舗名部分が崩れてもチェーンを判定。
-  if(t.includes('ファミリマト') || (t.includes('ファミリ')&&t.includes('マ')&&t.includes('ト')))return 'familymart';
+  const tf=t
+    .replace(/フア/g,'ファ')
+    .replace(/フｧ/g,'ファ')
+    .replace(/フアミ/g,'ファミ')
+    .replace(/ファミリー/g,'ファミリ');
+  if(
+    tf.includes('ファミリマト') ||
+    tf.includes('ファミリーマート') ||
+    /ファミリ.*マ.*ト/.test(tf) ||
+    /family.*mart/i.test(tf)
+  )return 'familymart';
   if(t.includes('ロソン')||t.includes('ローソン'))return 'lawson';
   if((t.includes('セブン')&&t.includes('イレ')&&t.includes('ン'))||t.includes('7eleven'))return 'seveneleven';
   const aliases=[
@@ -3328,6 +3339,8 @@ function forcedCategoryFromMerchant(memo=''){
 function classifyMerchantForCard(memo='',cardType='au',amount=0,existingCategory=''){
   const name=String(memo||'');
   const a=Number(amount||0);
+  const merchantKey=canonicalMerchantKey(name);
+  if(['lawson','familymart','seveneleven','ministop','dailyyamazaki'].includes(merchantKey))return 'convenience';
   if(cardType==='apollo'){
     if(a<0 || /値引|割引|特典/.test(name)) return 'discount';
     if(/ガソリン|レギュラー|ハイオク|軽油|セルフ|apollostation|アポロステーション|出光|idemitsu|shell|シェル/i.test(name)) return 'fuel';
@@ -3960,6 +3973,104 @@ function parseAuPayStatementRowsV733(raw,filename=''){
     seen.add(k);return true;
   });
 }
+function extractAuPayBillTotalV741(raw,parsed=[]){
+  const strict=extractAuPayBillTotalV733(raw);
+  if(strict!==null)return strict;
+
+  const lines=String(raw||'').replace(/，/g,',').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const current=Math.round((parsed||[]).reduce((s,x)=>s+Math.max(0,Number(x.amount||0)),0));
+  const maxRow=Math.max(0,...(parsed||[]).map(x=>Math.max(0,Number(x.amount||0))));
+  const candidates=[];
+
+  lines.slice(0,45).forEach((line,i)=>{
+    const n=jpNormalize(line);
+    if(/(?:20\d{2})\s*[\/年.\-]\s*\d{1,2}/.test(n))return;
+    if(/日時点|カード番号|ポイント|キャンペーン/i.test(line))return;
+    let m;
+    const re=/[¥￥]?\s*([0-9]{1,3}(?:[,，][0-9]{3})+|[0-9]{3,6})\s*円?/g;
+    while((m=re.exec(n))){
+      const v=moneyNum(m[1]);
+      if(v<100||v>=5000000||v===2026)continue;
+      let score=0;
+      if(/未確|確定|請求|支払/i.test(line))score+=8;
+      if(/[¥￥円]/.test(line))score+=4;
+      if(/[,，]/.test(line))score+=2;
+      if(current>0&&v>=current)score+=5;
+      if(v>maxRow)score+=3;
+      candidates.push({v,score,i});
+    }
+  });
+
+  if(!candidates.length)return null;
+  let usable=candidates.filter(x=>current>0?x.v>=current:x.v>maxRow);
+  if(!usable.length)usable=candidates.filter(x=>x.score>=8);
+  if(!usable.length)return null;
+
+  usable.sort((a,b)=>{
+    if(current>0){
+      const da=Math.abs(a.v-current),db=Math.abs(b.v-current);
+      if(da!==db)return da-db;
+    }
+    if(b.score!==a.score)return b.score-a.score;
+    return a.i-b.i;
+  });
+  const best=usable[0];
+  if(current>0&&best.v-current>100000)return null;
+  return best.v;
+}
+function dateFromLineV741(line=''){
+  const n=jpNormalize(line);
+  let m=/(20\d{2})\s*[\/年.\-]\s*(\d{1,2})\s*[\/月.\-]\s*(\d{1,2})\s*日?/.exec(n);
+  if(m)return m[1]+'-'+String(Number(m[2])).padStart(2,'0')+'-'+String(Number(m[3])).padStart(2,'0');
+  m=/(20\d{2})\s*[\/年.\-]\s*(\d)(\d{2})(?!\d)/.exec(n);
+  if(m){
+    const mo=Number(m[2]),d=Number(m[3]);
+    if(mo>=1&&mo<=9&&d>=1&&d<=31)return m[1]+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  }
+  return '';
+}
+function rawLineMatchesMerchantV741(line,memo){
+  const want=canonicalMerchantKey(memo);
+  const got=canonicalMerchantKey(cleanMerchantV733(line));
+  if(want&&got&&want===got)return true;
+  const a=normalizeMerchantName(memo),b=normalizeMerchantName(line);
+  return a.length>=4&&b.length>=4&&(a.includes(b)||b.includes(a));
+}
+function repairAuPayCandidateDatesV741(raw,rows=[]){
+  const lines=String(raw||'').replace(/，/g,',').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  return (rows||[]).map(row=>{
+    const amount=Math.round(Number(row.amount||0));
+    if(!amount)return row;
+
+    let bestIndex=-1,bestScore=-1;
+    lines.forEach((line,i)=>{
+      const a=statementMoneyFromLineV733(line);
+      if(a===null||Math.round(Number(a))!==amount)return;
+      let score=0;
+      if(rawLineMatchesMerchantV741(line,row.memo))score+=10;
+      for(let j=Math.max(0,i-2);j<=Math.min(lines.length-1,i+2);j++){
+        if(rawLineMatchesMerchantV741(lines[j],row.memo)){score+=5;break}
+      }
+      if(score>bestScore){bestScore=score;bestIndex=i}
+    });
+
+    if(bestIndex<0)return row;
+    let found='';
+    for(let d=1;d<=4&&!found;d++){
+      const j=bestIndex+d;
+      if(j>=lines.length)break;
+      if(/お支払日|日時点/i.test(lines[j]))continue;
+      found=dateFromLineV741(lines[j]);
+    }
+    for(let d=1;d<=4&&!found;d++){
+      const j=bestIndex-d;
+      if(j<0)break;
+      if(/お支払日|日時点/i.test(lines[j]))continue;
+      found=dateFromLineV741(lines[j]);
+    }
+    return found?{...row,date:found,dateRepairedV741:true}:row;
+  });
+}
 function extractAuPayBillTotalV733(raw){
   const original=String(raw||'');
   const t=jpNormalize(original).replace(/\r/g,' ').replace(/\s+/g,' ');
@@ -4029,7 +4140,7 @@ function renderStatementCandidates(){
     x.category=classifyMerchantForCard(x.memo,x.cardType,x.amount,x.category);
   });
   box.innerHTML=statementCandidates.map((x,i)=>{
-    const state=x.duplicateV740?'登録済み':x.recoveredV740?'補完・新規':'新規';
+    const state=x.duplicateV740?'登録済み':x.recoveredV740?'補完・新規':x.dateRepairedV741?'新規・日付補正':'新規';
     return `<div class="statementCandidate"><div class="statementCandidateTop"><input type="checkbox" data-sc-check="${i}" ${x.checked?'checked':''}><div class="sub">${escapeHtml(x.source||'画像')} から認識　<span class="pill">${state}</span></div></div><div class="statementFields"><input data-sc-date="${i}" type="date" value="${escapeHtml(x.date)}"><input class="memoField" data-sc-memo="${i}" type="text" value="${escapeHtml(x.memo)}" placeholder="店名"><input data-sc-amount="${i}" type="number" inputmode="numeric" value="${x.amount}"><select data-sc-cat="${i}"><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="discount">値引き</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select></div></div>`;
   }).join('');
   box.querySelectorAll('[data-sc-check]').forEach(el=>el.addEventListener('change',()=>statementCandidates[+el.dataset.scCheck].checked=el.checked));
@@ -4055,7 +4166,7 @@ async function runStatementOcr(files){
         ?special1
         :mergeStatementRowsV733(special1,parseStatementText(raw1,files[i].name));
       let raw2='';
-      const bill1=importCardType==='au'?extractAuPayBillTotalV733(raw1):null;
+      const bill1=importCardType==='au'?extractAuPayBillTotalV741(raw1,parsed):null;
       const sum1=parsed.reduce((s,x)=>s+Math.max(0,Number(x.amount||0)),0);
       const needsSecondPass=importCardType==='au'&&(special1.length<2||(bill1!==null&&bill1!==sum1));
       if(needsSecondPass){
@@ -4070,14 +4181,15 @@ async function runStatementOcr(files){
       }
       if(importCardType==='au'){
         const combinedRaw=raw1+'\n'+raw2;
-        const displayedTotal=extractAuPayBillTotalV733(combinedRaw);
+        const displayedTotal=extractAuPayBillTotalV741(combinedRaw,parsed);
         parsed=recoverAuPayRowsByAuditV740(combinedRaw,parsed,displayedTotal,files[i].name);
+        parsed=repairAuPayCandidateDatesV741(combinedRaw,parsed);
       }
       try{await worker.setParameters({tessedit_pageseg_mode:'3',tessedit_char_whitelist:''});}catch(e){}
       parsed=parsed.map(x=>({...x,cardType:importCardType,category:classifyMerchantForCard(x.memo,importCardType,x.amount,x.category)}));
       statementCandidates.push(...parsed);
       if(importCardType==='au'){
-        const displayedTotal=extractAuPayBillTotalV733(raw1+'\n'+raw2);
+        const displayedTotal=extractAuPayBillTotalV741(raw1+'\n'+raw2,parsed);
         const imageTotal=parsed.reduce((s,x)=>s+Math.max(0,Number(x.amount||0)),0);
         statementAuditRowsV733.push({file:files[i].name,displayedTotal,imageTotal,count:parsed.length});
       }
@@ -5450,7 +5562,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.4.0',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.4.1',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -7352,7 +7464,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.4.0',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.4.1',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));ensureTransactionReviewStateV71();syncMotherTransferStoresV736();protectedSaveV52('JSON復元後');render();try{const ks=new Set(Object.keys(monthEndChecksV68||{}));auTransactions.forEach(tx=>{const k=String(tx.date||'').slice(0,7);if(/^\d{4}-\d{2}$/.test(k)&&!tx.billingAdjustment)ks.add(k)});ks.forEach(k=>refreshCardBillingVerificationV738(k))}catch(e){console.warn('v7.3.9 restore card verification',e)}renderMonthFrameV737(activeMonthKeyV737());alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -7370,7 +7482,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.4.0',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.4.1',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
