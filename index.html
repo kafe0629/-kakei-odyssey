@@ -546,7 +546,7 @@
 <div class="app">
   <header>
     <div class="eyebrow">HOUSEHOLD &amp; ODYSSEY PLAN</div>
-    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.4.2</span></h1>
+    <h1>家計・オデッセイ資金管理 <span style="font-size:11px;color:#94a3b8;font-weight:500">v7.4.3</span></h1>
   </header>
   <main>
     <section id="home" class="active">
@@ -759,7 +759,7 @@
               <input class="wideV71" id="txSearchV71" type="search" placeholder="店名・メモを検索">
               <input id="txMonthFilterV71" type="month">
               <select id="txCardFilterV71"><option value="all">全カード</option><option value="au">au PAY</option><option value="aeon">イオン</option><option value="apollo">apollostation</option></select>
-              <select id="txCategoryFilterV71"><option value="all">全カテゴリ</option><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="discount">値引き</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select>
+              <select id="txCategoryFilterV71"><option value="all">全カテゴリ</option><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="highway">高速道路・ETC</option><option value="discount">値引き</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select>
               <select id="txReviewFilterV71"><option value="all">確認状態：すべて</option><option value="pending">要確認のみ</option><option value="reviewed">確認済みのみ</option><option value="split">分割済みのみ</option></select>
               <button class="btn secondary" id="clearTxFilterV71" type="button" style="padding:9px 10px;font-size:11px">条件を解除</button>
             </div>
@@ -972,6 +972,7 @@
           <div class="field"><label>日用品</label><input type="number" id="mDaily" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>コンビニ</label><input type="number" id="mConvenience" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>ガソリン</label><input type="number" id="mFuel" inputmode="numeric" placeholder="0"></div>
+          <div class="field"><label>高速道路・ETC</label><input type="number" id="mHighway" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>光熱費（本人負担）</label><input type="number" id="mUtilities" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>外食・娯楽</label><input type="number" id="mFun" inputmode="numeric" placeholder="0"></div>
           <div class="field"><label>タバコ</label><input type="number" id="mTobacco" inputmode="numeric" placeholder="0"></div>
@@ -986,7 +987,7 @@
           <div class="sub">今までの「その月に何へ使ったか」は利用月としてそのまま維持し、別に「その月にカード会社からいくら請求されるか」を請求月として管理します。2つの金額は混ぜません。</div>
 
           <div class="autoSyncBoxV65">
-            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.4.2</span></div>
+            <div class="sectionTitle" style="margin:0"><h3 style="margin:0">🔄 カード月次 完全自動同期</h3><span class="pill">v7.4.3</span></div>
             <div class="autoSyncGridV65">
               <label class="autoSyncToggleV65"><input id="monthlyUsageAutoSyncV65" type="checkbox"> 読み取った明細 → 利用月へ自動反映</label>
               <label class="autoSyncToggleV65"><input id="billingAutoSyncV65" type="checkbox"> 読み取った請求 → 請求月へ自動反映</label>
@@ -1023,6 +1024,7 @@
                 <div class="monthlyCardStat"><div class="label">コンビニ</div><div class="v" id="autoAuConvenience">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">外食・娯楽</div><div class="v" id="autoAuFun">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">タバコ</div><div class="v" id="autoAuTobacco">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">高速道路・ETC</div><div class="v" id="autoAuHighway">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">その他</div><div class="v" id="autoAuOther">¥0</div></div>
               </div>
             </div>
@@ -1035,6 +1037,7 @@
                 <div class="monthlyCardStat"><div class="label">コンビニ</div><div class="v" id="autoAeonConvenience">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">外食・娯楽</div><div class="v" id="autoAeonFun">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">タバコ</div><div class="v" id="autoAeonTobacco">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">高速道路・ETC</div><div class="v" id="autoAeonHighway">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">その他</div><div class="v" id="autoAeonOther">¥0</div></div>
               </div>
             </div>
@@ -1047,7 +1050,8 @@
                 <div class="monthlyCardStat"><div class="label" id="autoApolloAppliedLabelV732">この月へ反映した値引き</div><div class="v good" id="autoApolloAppliedV732">−¥0</div><div class="apolloMiniV732 good" id="autoApolloAppliedSubV732">月別に正確に紐付けできる分のみ</div></div>
                 <div class="monthlyCardStat"><div class="label" id="autoApolloFuelNetLabelV732">月別ガソリン実質</div><div class="v" id="autoApolloFuelNet">¥0</div><div class="apolloMiniV732" id="autoApolloFuelNetSubV732">値引き確定待ちを含む</div></div>
                 <div class="monthlyCardStat"><div class="label">値引き確定待ち給油</div><div class="v warn" id="autoApolloPendingFuelV732">¥0</div><div class="apolloMiniV732" id="autoApolloPendingSubV732">請求グループ確認待ち</div></div>
-                <div class="monthlyCardStat"><div class="label">ガソリン以外</div><div class="v" id="autoApolloOther">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">高速道路・ETC</div><div class="v" id="autoApolloHighway">¥0</div></div>
+                <div class="monthlyCardStat"><div class="label">その他（ガソリン・ETC以外）</div><div class="v" id="autoApolloOther">¥0</div></div>
                 <div class="monthlyCardStat"><div class="label">登録件数</div><div class="v" id="autoApolloCount">0件</div></div>
                 <div class="monthlyCardStat"><div class="label">カード利用合計</div><div class="v" id="autoApolloTotal2">¥0</div><div class="apolloMiniV732">値引きの月別配分では変えません</div></div>
               </div>
@@ -1061,6 +1065,7 @@
             <div class="row"><div class="name">日用品</div><div class="value" id="autoDaily">¥0</div></div>
             <div class="row"><div class="name">コンビニ</div><div class="value" id="autoConvenience">¥0</div></div>
             <div class="row"><div class="name">ガソリン（月別に確定した値引きのみ反映）</div><div class="value" id="autoFuel">¥0</div></div>
+            <div class="row"><div class="name">高速道路・ETC</div><div class="value" id="autoHighway">¥0</div></div>
             <div class="row"><div class="name">外食・娯楽</div><div class="value" id="autoFun">¥0</div></div>
             <div class="row"><div class="name">タバコ</div><div class="value" id="autoTobacco">¥0</div></div>
             <div class="row"><div class="name">その他</div><div class="value" id="autoOther">¥0</div></div>
@@ -1077,7 +1082,7 @@
             <div class="sub">カード自動同期はそのままONで使えます。現金だけを別に登録し、月の実支出ではカード＋現金を合算します。</div>
             <div class="cashGridV66">
               <div class="field"><label>日付</label><input id="cashDateV66" type="date"></div>
-              <div class="field"><label>カテゴリ</label><select id="cashCategoryV66"><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select></div>
+              <div class="field"><label>カテゴリ</label><select id="cashCategoryV66"><option value="food">食費</option><option value="daily">日用品</option><option value="convenience">コンビニ</option><option value="fuel">ガソリン</option><option value="highway">高速道路・ETC</option><option value="fun">外食・娯楽</option><option value="tobacco">タバコ</option><option value="other">その他</option></select></div>
               <div class="field"><label>内容</label><input id="cashMemoV66" type="text" placeholder="例：現金ランチ"></div>
               <div class="field"><label>金額</label><input id="cashAmountV66" type="number" inputmode="numeric" placeholder="0"></div>
             </div>
@@ -1201,11 +1206,11 @@
                 <div><strong>光熱費を確認した</strong><div class="checkMetaV68" id="checkUtilitiesMetaV68">ガス・電気・水道を確認</div></div>
                 <span class="pill">光熱費</span>
               </label>
-              <div class="checkRowV68">
-                <input id="checkSpouseV68" type="checkbox" disabled>
-                <div><strong>妻との精算が完了</strong><div class="checkMetaV68" id="checkSpouseMetaV68">精算状態から自動判定</div></div>
+              <label class="checkRowV68">
+                <input id="checkSpouseV68" type="checkbox">
+                <div><strong>妻との精算が完了</strong><div class="checkMetaV68" id="checkSpouseMetaV68">家賃振込＋光熱費から自動判定。未完了時はここから完了できます。</div></div>
                 <span class="pill">精算</span>
-              </div>
+              </label>
               <div class="checkRowV68">
                 <input id="checkMizuhoV68" type="checkbox" disabled>
                 <div><strong>みずほ月末残高を入力</strong><div class="checkMetaV68" id="checkMizuhoMetaV68">月末残高から自動判定</div></div>
@@ -1591,7 +1596,8 @@
           <div class="btnRow" style="margin-top:9px"><button class="btn secondary" id="rerunDiagnosticV70" type="button">自己診断を再実行</button></div>
         </div>
       </div>
-      <div class="note" style="margin-top:12px"><strong>v7.4.2：</strong>OCRが1件を完全に読み落とした場合の安全策を追加しました。画像内請求額と認識候補合計に正の差額が残った場合、その差額を「⚠️ OCR未読・要手動確認」候補として自動生成します。金額だけを補完し、日付・店名・カテゴリは推測しません。候補は初期OFFなので、画像を見ながら日付・店名・カテゴリを入力してからチェックONにして登録できます。今回の3,626円画面では、既存4件3,453円に対し差額173円の手動確認候補を1件追加し、候補5件・合計3,626円まで照合できるようにしています。</div>
+      <div class="note" style="margin-top:12px"><strong>v7.4.3：</strong>3点を修正しました。①8月の妻への家賃振込が振込済みで、入力済みのガス・電気・水道がすべて「精算済」なら「妻との精算が完了」を自動判定します。未完了時はチェック欄から直接完了操作もできます。②apollostation明細のETC表記を整形し、「ETC東日本（岩槻→館林）」等の読みやすい表記へ補正します。③手動で選んだカテゴリを自動分類が上書きしないよう変更し、「高速道路・ETC」カテゴリを追加しました。ETCは高速道路、セルフ/レギュラー等はガソリンへ自動分類します。</div>
+<div class="note" style="margin-top:12px"><strong>v7.4.2：</strong>OCRが1件を完全に読み落とした場合の安全策を追加しました。画像内請求額と認識候補合計に正の差額が残った場合、その差額を「⚠️ OCR未読・要手動確認」候補として自動生成します。金額だけを補完し、日付・店名・カテゴリは推測しません。候補は初期OFFなので、画像を見ながら日付・店名・カテゴリを入力してからチェックONにして登録できます。今回の3,626円画面では、既存4件3,453円に対し差額173円の手動確認候補を1件追加し、候補5件・合計3,626円まで照合できるようにしています。</div>
 <div class="note" style="margin-top:12px"><strong>v7.4.1：</strong>実機テストで残ったau PAY OCRの3点を修正しました。①「未確定 3,626円」の文字ラベルがOCRで崩れても、画面上部の金額と候補合計から請求額を救済します。②ローソン149円などの日付は、店名+金額がある位置から直後の日付を優先して再固定します。③ファミリーマートの表記揺れ（ファ/フア、長音欠落など）を吸収して必ずコンビニ分類します。今回の3,626円画面では5件認識、新規173円・620円のみON、既登録149円・1,470円・1,214円はOFFになることを回帰テストしています。</div>
 <div class="note" style="margin-top:12px"><strong>v7.4.0：</strong>au PAY明細OCRを強化しました。同じ店舗・同じ日に複数回利用していても金額が違えば別明細として保持します。さらに画像内請求額と候補合計に差がある場合、日付・支払回数・店舗の近接情報を使って取りこぼした金額を安全に補完します。既登録判定はOCR表記揺れに強い店舗正規化へ変更し、登録済みは自動OFF、新規だけ自動ONにします。候補画面にも「新規／登録済み／補完」の状態を表示します。ファミリーマートのOCR揺れもコンビニへ確実に分類します。</div>
 <div class="note" style="margin-top:12px"><strong>v7.3.9：</strong>月末チェックの「カード請求を確認した」を、表示中の請求月ではなく「その月に使ったカード明細が実際に何月請求になるか」で判定する方式へ変更しました。たとえば8月利用分が9月・10月請求に分かれていても、8月の明細をそれぞれの請求月まで追跡して突合します。請求額と登録明細が一致すれば未確定請求も確認対象として扱い、8月の確認済み状態として保存します。9月・10月へ画面を移動しても8月の確認済みは消えません。請求額や明細そのものが変わった場合だけ、その利用月を再確認に戻します。</div>
@@ -3281,7 +3287,7 @@ function updateImportCardUI(){
       :'au PAYカード明細を取り込みます。登録したau PAY明細だけ未確定利用額へ反映します。';
   }
 }
-const txCategoryLabels={food:'食費',daily:'日用品',convenience:'コンビニ',fuel:'ガソリン',discount:'値引き',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
+const txCategoryLabels={food:'食費',daily:'日用品',convenience:'コンビニ',fuel:'ガソリン',highway:'高速道路・ETC',discount:'値引き',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
 let merchantCategoryMemory=JSON.parse(localStorage.getItem('odyssey_merchant_category_memory')||'{}');
 function normalizeMerchantName(memo=''){
   return String(memo||'').toLowerCase().normalize('NFKC')
@@ -3306,6 +3312,7 @@ function canonicalMerchantKey(memo=''){
   )return 'familymart';
   if(t.includes('ロソン')||t.includes('ローソン'))return 'lawson';
   if((t.includes('セブン')&&t.includes('イレ')&&t.includes('ン'))||t.includes('7eleven'))return 'seveneleven';
+  if(/etc.*東.*日.*本/i.test(t)||/nexco/i.test(t)||t.includes('高速道路')||t.includes('首都高速'))return 'etc_highway';
   const aliases=[
     ['lawson',['ローソン','ロー ソン','lawson']],
     ['familymart',['ファミリーマート','ファミマ','familymart']],
@@ -3326,7 +3333,7 @@ function canonicalMerchantKey(memo=''){
 function merchantLearningKey(memo=''){return canonicalMerchantKey(memo)}
 const merchantCategoryDictionary={
   lawson:'convenience',familymart:'convenience',seveneleven:'convenience',ministop:'convenience',dailyyamazaki:'convenience',
-  apollostation:'fuel',eneos:'fuel'
+  apollostation:'fuel',eneos:'fuel',etc_highway:'highway'
 };
 function rememberMerchantCategory(memo,category){
   const key=canonicalMerchantKey(memo); if(!key||!txCategoryLabels[category]||category==='other')return;
@@ -3342,6 +3349,7 @@ function classifyMerchantForCard(memo='',cardType='au',amount=0,existingCategory
   const a=Number(amount||0);
   const merchantKey=canonicalMerchantKey(name);
   if(['lawson','familymart','seveneleven','ministop','dailyyamazaki'].includes(merchantKey))return 'convenience';
+  if(merchantKey==='etc_highway'||/\bETC\b|ETC東日本|NEXCO|高速道路|首都高速/i.test(name))return 'highway';
   if(cardType==='apollo'){
     if(a<0 || /値引|割引|特典/.test(name)) return 'discount';
     if(/ガソリン|レギュラー|ハイオク|軽油|セルフ|apollostation|アポロステーション|出光|idemitsu|shell|シェル/i.test(name)) return 'fuel';
@@ -3362,6 +3370,7 @@ function classifyMerchant(memo='',existingCategory=''){
   const t=normalizeMerchantName(memo);
   const rules=[
     ['tobacco',['タバコ','たばこ','煙草']],
+    ['highway',['ETC','NEXCO','高速道路','首都高速','東日本高速','中日本高速','西日本高速']],
     ['fuel',['コスモ石油','昭和シェル','shell']],
     ['daily',['マツモトキヨシ','マツキヨ','ウエルシア','welcia','サンドラッグ','スギ薬局','ドラッグ','薬局','ダイソー','daiso','セリア','seria','ホームセンター','カインズ','ニトリ']],
     ['food',['業務スーパー','ベルク','イオン','aeon','マルエツ','西友','seiyu','ヤオコー','ライフ','カスミ','ロピア','イトーヨーカドー','スーパー','まいばすけっと']],
@@ -3371,7 +3380,10 @@ function classifyMerchant(memo='',existingCategory=''){
   return 'other';
 }
 function autoCategoryFromMerchant(memo='',existingCategory=''){return classifyMerchant(memo,existingCategory)}
-function effectiveTxCategory(tx){return classifyMerchant(tx?.memo||'',tx?.category||'')}
+function effectiveTxCategory(tx){
+  if(tx?.categoryManualV743&&txCategoryLabels[tx.category])return tx.category;
+  return classifyMerchantForCard(tx?.memo||'',tx?.cardType||'au',tx?.amount||0,tx?.category||'');
+}
 function validTransactionSplitsV702(tx){
   if(!tx||!Array.isArray(tx.splits)||Number(tx.amount||0)<0)return [];
   const parts=tx.splits
@@ -3383,10 +3395,7 @@ function validTransactionSplitsV702(tx){
 function transactionCategoryPartsV702(tx){
   const splits=validTransactionSplitsV702(tx);
   if(splits.length)return splits;
-  const cardType=tx?.cardType||'au';
-  const category=cardType==='apollo'
-    ?classifyMerchantForCard(tx?.memo||'','apollo',tx?.amount||0,tx?.category||'')
-    :effectiveTxCategory(tx);
+  const category=effectiveTxCategory(tx);
   return [{category,amount:Number(tx?.amount||0)}];
 }
 function transactionSplitLabelV702(tx){
@@ -3396,10 +3405,7 @@ function transactionSplitLabelV702(tx){
 }
 let txFilterStateV71={search:'',month:'',card:'all',category:'all',review:'all'};
 function transactionBaseCategoryV71(tx){
-  const cardType=tx?.cardType||'au';
-  return cardType==='apollo'
-    ?classifyMerchantForCard(tx?.memo||'','apollo',tx?.amount||0,tx?.category||'')
-    :effectiveTxCategory(tx);
+  return effectiveTxCategory(tx);
 }
 function transactionReviewInfoV71(tx){
   const reasons=[];
@@ -3674,7 +3680,7 @@ function renderTodayTransactions(){
 
   list.innerHTML=items.map(x=>{
     const cardType=x.cardType||'au';
-    const cat=(cardType==='apollo')?classifyMerchantForCard(x.memo,'apollo',x.amount,x.category):effectiveTxCategory(x);
+    const cat=effectiveTxCategory(x);
     const splitLabel=transactionSplitLabelV702(x);
     const currentSplitCategory=transactionBaseCategoryV71(x);
     const canSplit=Number(x.amount||0)>0&&!x.billingAdjustment&&(!!splitLabel||currentSplitCategory==='convenience');
@@ -3709,7 +3715,8 @@ function renderTodayTransactions(){
       if(!t)return;
       snapshotV52('明細カード変更前');
       t.cardType=el.value;
-      t.category=classifyMerchantForCard(t.memo,t.cardType,t.amount,t.category);
+      t.memo=normalizeStatementMerchantV743(t.memo,t.cardType);
+      if(!t.categoryManualV743)t.category=classifyMerchantForCard(t.memo,t.cardType,t.amount,t.category);
       t.reviewed=false;t.reviewedAt='';
       saveAuTransactions();
       syncTodaySpentFromTransactions();
@@ -3723,8 +3730,8 @@ function renderTodayTransactions(){
   list.querySelectorAll('[data-tx-cat]').forEach(el=>{
     const tx=auTransactions.find(x=>String(x.id)===String(el.dataset.txCat));
     if(tx){
-      const c=(tx.cardType||'au')==='apollo'?classifyMerchantForCard(tx.memo,'apollo',tx.amount,tx.category):effectiveTxCategory(tx);
-      if(tx.category!==c){tx.category=c;saveAuTransactions()}
+      const c=effectiveTxCategory(tx);
+      if(!tx.categoryManualV743&&tx.category!==c){tx.category=c;saveAuTransactions()}
       el.value=c;
     }
     el.addEventListener('change',()=>{
@@ -3732,6 +3739,7 @@ function renderTodayTransactions(){
       if(!t)return;
       snapshotV52('明細カテゴリ変更前');
       t.category=el.value;
+      t.categoryManualV743=true;
       t.reviewed=true;t.reviewedAt=new Date().toISOString();
       rememberMerchantCategory(t.memo,t.category);
       saveAuTransactions();
@@ -3786,6 +3794,30 @@ function normalizeOcrMerchantDisplayV735(memo=''){
 
   if(/apollostation/i.test(compact) || /アポロステーション/.test(compact))return 'apollostation';
   return s;
+}
+function normalizeApolloMerchantV743(memo=''){
+  let s=String(memo||'').normalize('NFKC').replace(/[　\t]+/g,' ').replace(/\s+/g,' ').trim();
+  if(!s)return s;
+  // OCRで明細金額の末尾「0円」や句点が店名に混ざることがある。
+  s=s.replace(/\s*0\s*円\s*$/,'').replace(/[。．.]\s*$/,'').trim();
+  const compact=s.replace(/[\s・･._\-—–/\\]/g,'');
+  if(/ETC.*東.*日.*本/i.test(s)||/ETC東日本/i.test(compact)){
+    let body=s.replace(/^.*?ETC\s*東\s*日\s*本\s*/i,'').trim();
+    body=body.replace(/^[\(（]\s*/,'').replace(/\s*[\)）]\s*$/,'');
+    body=body.replace(/\s*[っつｯ→＞>]\s*/g,'→');
+    body=body.replace(/\s+/g,'');
+    body=body.replace(/岩(?:浅|機|付)/g,'岩槻');
+    body=body.replace(/浦和本線/g,'浦和本線').replace(/川口jct/ig,'川口JCT').replace(/草加第二/g,'草加第二');
+    body=body.replace(/^[-ー]+|[-ー]+$/g,'');
+    return body?'ETC東日本（'+body+'）':'ETC東日本';
+  }
+  if(/セルフ.*草.*加.*弁天町|草加.*弁天町/i.test(s)){
+    return 'セルフ草加弁天町 レギュラーガソリン';
+  }
+  return normalizeOcrMerchantDisplayV735(s);
+}
+function normalizeStatementMerchantV743(memo='',cardType='au'){
+  return cardType==='apollo'?normalizeApolloMerchantV743(memo):normalizeOcrMerchantDisplayV735(memo);
 }
 function cleanMerchantV733(s){
   let x=String(s||'');
@@ -3938,7 +3970,7 @@ function appendUnresolvedDifferenceCandidateV742(parsed,billTotal,filename=''){
     memo:'OCR未読候補',
     amount:diff,
     category:'other',
-    cardType:'au',
+    cardType:importCardType||'au',
     checked:false,
     source:filename,
     unresolvedDifferenceV742:true,
@@ -4163,8 +4195,8 @@ function renderStatementCandidates(){
   if(btns)btns.style.display='flex';
   statementCandidates.forEach(x=>{
     x.cardType=x.cardType||importCardType;
-    if(x.cardType==='au')x.memo=normalizeOcrMerchantDisplayV735(x.memo);
-    x.category=classifyMerchantForCard(x.memo,x.cardType,x.amount,x.category);
+    x.memo=normalizeStatementMerchantV743(x.memo,x.cardType);
+    if(!x.categoryManualV743)x.category=classifyMerchantForCard(x.memo,x.cardType,x.amount,x.category);
   });
   box.innerHTML=statementCandidates.map((x,i)=>{
     const state=x.duplicateV740
@@ -4180,9 +4212,9 @@ function renderStatementCandidates(){
   }).join('');
   box.querySelectorAll('[data-sc-check]').forEach(el=>el.addEventListener('change',()=>statementCandidates[+el.dataset.scCheck].checked=el.checked));
   box.querySelectorAll('[data-sc-date]').forEach(el=>el.addEventListener('change',()=>{const x=statementCandidates[+el.dataset.scDate];x.date=el.value;x.duplicateV740=isExistingStatementCandidateV740(x);if(x.duplicateV740)x.checked=false;renderStatementCandidates()}));
-  box.querySelectorAll('[data-sc-memo]').forEach(el=>el.addEventListener('change',()=>{const x=statementCandidates[+el.dataset.scMemo];x.memo=el.value;x.category=classifyMerchantForCard(x.memo,x.cardType||importCardType,x.amount,x.category);x.duplicateV740=isExistingStatementCandidateV740(x);if(x.duplicateV740)x.checked=false;renderStatementCandidates()}));
+  box.querySelectorAll('[data-sc-memo]').forEach(el=>el.addEventListener('change',()=>{const x=statementCandidates[+el.dataset.scMemo];x.memo=normalizeStatementMerchantV743(el.value,x.cardType||importCardType);if(!x.categoryManualV743)x.category=classifyMerchantForCard(x.memo,x.cardType||importCardType,x.amount,x.category);x.duplicateV740=isExistingStatementCandidateV740(x);if(x.duplicateV740)x.checked=false;renderStatementCandidates()}));
   box.querySelectorAll('[data-sc-amount]').forEach(el=>el.addEventListener('change',()=>{const x=statementCandidates[+el.dataset.scAmount];x.amount=Number(el.value||0);x.duplicateV740=isExistingStatementCandidateV740(x);if(x.duplicateV740)x.checked=false;renderStatementCandidates()}));
-  box.querySelectorAll('[data-sc-cat]').forEach(el=>{const x=statementCandidates[+el.dataset.scCat];el.value=x.category||'other';el.addEventListener('change',()=>statementCandidates[+el.dataset.scCat].category=el.value)});
+  box.querySelectorAll('[data-sc-cat]').forEach(el=>{const x=statementCandidates[+el.dataset.scCat];el.value=x.category||'other';el.addEventListener('change',()=>{const t=statementCandidates[+el.dataset.scCat];t.category=el.value;t.categoryManualV743=true;})});
 }
 async function runStatementOcr(files){
   const status=document.getElementById('statementStatus'),bar=document.getElementById('statementProgress'); statementCandidates=[];statementAuditRowsV733=[]; renderStatementCandidates();
@@ -4222,7 +4254,10 @@ async function runStatementOcr(files){
         parsed=appendUnresolvedDifferenceCandidateV742(parsed,displayedTotal,files[i].name);
       }
       try{await worker.setParameters({tessedit_pageseg_mode:'3',tessedit_char_whitelist:''});}catch(e){}
-      parsed=parsed.map(x=>({...x,cardType:importCardType,category:classifyMerchantForCard(x.memo,importCardType,x.amount,x.category)}));
+      parsed=parsed.map(x=>{
+        const memo=normalizeStatementMerchantV743(x.memo,importCardType);
+        return {...x,memo,cardType:importCardType,category:classifyMerchantForCard(memo,importCardType,x.amount,x.category)};
+      });
       statementCandidates.push(...parsed);
       if(importCardType==='au'){
         const displayedTotal=extractAuPayBillTotalV741(raw1+'\n'+raw2,parsed);
@@ -4272,13 +4307,17 @@ function importStatementCandidates(){
 
     const cardType=x.cardType||importCardType;
     const rawMemo=(x.memo||'カード利用').trim()||'カード利用';
-    const memo=cardType==='au'?normalizeOcrMerchantDisplayV735(rawMemo):rawMemo;
+    const memo=normalizeStatementMerchantV743(rawMemo,cardType);
     const amount=Math.round(rawAmount);
+    const category=(x.categoryManualV743&&txCategoryLabels[x.category])
+      ?x.category
+      :classifyMerchantForCard(memo,cardType,amount,x.category);
     const clean={
       date:x.date||localDateKey(),
       memo,
       amount,
-      category:classifyMerchantForCard(memo,cardType,amount,x.category),
+      category,
+      categoryManualV743:!!x.categoryManualV743,
       cardType
     };
     if(isExistingStatementCandidateV740(clean,compareRows)){dup++;continue}
@@ -4669,7 +4708,7 @@ function restoreMonthModeV591(){
   setMonthModeV59(mode,true);
 }
 function emptyCardSummaryV57(){
-  return {food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,total:0,count:0};
+  return {food:0,daily:0,convenience:0,fuel:0,highway:0,discount:0,fun:0,tobacco:0,other:0,total:0,count:0};
 }
 
 function apolloDiscountUnitV73(){return Math.max(0,Number(payments.apolloDiscountPerL??2))}
@@ -4742,7 +4781,7 @@ function monthlyTransactionSummary(monthKey){
   const closed=closedSnapshotV68(monthKey);
   if(!buildingClosureSnapshotV68&&closed?.transactionSummary)return deepCloneV68(closed.transactionSummary);
   const sums={
-    food:0,daily:0,convenience:0,fuel:0,discount:0,fun:0,tobacco:0,other:0,
+    food:0,daily:0,convenience:0,fuel:0,highway:0,discount:0,fun:0,tobacco:0,other:0,
     total:0,count:0,au:0,aeon:0,apollo:0,
     cards:{au:emptyCardSummaryV57(),aeon:emptyCardSummaryV57(),apollo:emptyCardSummaryV57()}
   };
@@ -5103,7 +5142,7 @@ function trackedOutflowV69(monthKey){
 }
 function previousMonthKeyV69(k){return addMonthKeyV59(k,-1)}
 function topCategoryV69(monthKey){
-  const a=monthlyActualSummaryV66(monthKey),labels={food:'食費',daily:'日用品',convenience:'コンビニ',fuel:'ガソリン',utilities:'光熱費',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
+  const a=monthlyActualSummaryV66(monthKey),labels={food:'食費',daily:'日用品',convenience:'コンビニ',fuel:'ガソリン',highway:'高速道路・ETC',utilities:'光熱費',fun:'外食・娯楽',tobacco:'タバコ',other:'その他'};
   const e=Object.keys(labels).map(k=>[k,Number(a[k]||0)]).sort((x,y)=>y[1]-x[1]);return e[0]&&e[0][1]>0?{label:labels[e[0][0]],amount:e[0][1]}:null;
 }
 
@@ -5228,7 +5267,7 @@ function monthRecordFromFormV68(monthKey){
   const selected=(document.getElementById('monthKey')?.value||'')===monthKey;
   if(!selected)return deepCloneV68(existing);
   const n=id=>Number(document.getElementById(id)?.value||0);
-  return {...existing,food:n('mFood'),daily:n('mDaily'),convenience:n('mConvenience'),fuel:n('mFuel'),utilities:n('mUtilities'),fun:n('mFun'),tobacco:n('mTobacco'),other:n('mOther'),au:n('mAu'),aeon:n('mAeon'),apollo:n('mApollo'),mizuho:n('mMizuho'),autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};
+  return {...existing,food:n('mFood'),daily:n('mDaily'),convenience:n('mConvenience'),fuel:n('mFuel'),highway:n('mHighway'),utilities:n('mUtilities'),fun:n('mFun'),tobacco:n('mTobacco'),other:n('mOther'),au:n('mAu'),aeon:n('mAeon'),apollo:n('mApollo'),mizuho:n('mMizuho'),autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};
 }
 function usageMonthBillingTraceV739(usageMonth){
   const rows=auTransactions.filter(tx=>
@@ -5426,6 +5465,20 @@ function saveMonthEndCheckV68(){
   localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));
   renderMonthEndV68();
 }
+function utilitySettlementCompleteV743(monthKey){
+  const u=getUtilityRecordV58(monthKey);
+  return ['gas','electric','water'].every(key=>{
+    const x=u[key]||{};
+    const amount=Math.max(0,Number(x.amount||0));
+    return amount<=0 || x.status==='settled';
+  });
+}
+function spouseAutoSettlementV743(monthKey){
+  const ts=transferMonthSummaryV70(monthKey);
+  const wifePaid=ts.wife.status==='paid'&&Math.max(0,Number(ts.wife.principal||0))>0;
+  const utilitiesSettled=utilitySettlementCompleteV743(monthKey);
+  return {wifePaid,utilitiesSettled,ready:wifePaid&&utilitiesSettled,paidAt:ts.wife.paidAt||''};
+}
 function spouseSettlementSummaryV68(monthKey){
   const closed=closedSnapshotV68(monthKey);
   if(!buildingClosureSnapshotV68&&closed?.spouseSummary)return deepCloneV68(closed.spouseSummary);
@@ -5434,12 +5487,15 @@ function spouseSettlementSummaryV68(monthKey){
   const utilityNet=Number(util.netSettlement||0);
   const net=rent+utilityNet;
   const rec=spouseSettlementsV68[monthKey]||{};
+  const auto=spouseAutoSettlementV743(monthKey);
   const exact=rec.status==='settled'&&Math.round(Number(rec.settledNet||0))===Math.round(net);
   const changed=rec.status==='settled'&&!exact;
+  const autoSettled=!changed&&auto.ready&&Math.round(utilityNet)===0;
   return {
     monthKey,rent,utilityNet,net,toWife:Math.max(0,net),fromWife:Math.max(0,-net),
-    status:exact?'settled':changed?'changed':'pending',
-    settledAt:rec.settledAt||'',settledNet:Number(rec.settledNet||0)
+    status:(exact||autoSettled)?'settled':changed?'changed':'pending',
+    autoSettledV743:autoSettled,
+    settledAt:exact?(rec.settledAt||''):(autoSettled?(auto.paidAt||''):''),settledNet:exact?Number(rec.settledNet||0):(autoSettled?net:Number(rec.settledNet||0))
   };
 }
 function markSpouseSettlementV68(){
@@ -5497,7 +5553,7 @@ function monthEndStateV68(monthKey){
   return {checks,spouse,reconciliation,cardBillingTraceV739,mizuhoValue,mizuhoOk,spouseOk,family,familyRequired,familyOk,reviewSummary,cardReviewOk,transferSummary,transferFeesOk,done:items.filter(Boolean).length,total:items.length,ready:items.every(Boolean),closed};
 }
 function setMonthEditingStateV68(closed){
-  ['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo','mMizuho','billAuAmountV59','billAuStatusV59','billAeonAmountV59','billAeonStatusV59','billApolloAmountV59','billApolloStatusV59','cashDateV66','cashCategoryV66','cashMemoV66','cashAmountV66'].forEach(id=>{
+  ['mFood','mDaily','mConvenience','mFuel','mHighway','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo','mMizuho','billAuAmountV59','billAuStatusV59','billAeonAmountV59','billAeonStatusV59','billApolloAmountV59','billApolloStatusV59','cashDateV66','cashCategoryV66','cashMemoV66','cashAmountV66'].forEach(id=>{
     const e=document.getElementById(id);if(e)e.disabled=closed;
   });
   ['applyTransactionsToMonth','saveMonth','saveBillingMonthV59','clearBillingMonthV59','addCashV66'].forEach(id=>{
@@ -5535,7 +5591,7 @@ function renderMonthEndV68(){
     spPill.classList.toggle('closedPillV68',sp.status==='settled');
   }
   set('spouseSettlementStatusV68',sp.status==='settled'
-      ?'精算済み：'+(sp.settledAt?new Date(sp.settledAt).toLocaleString('ja-JP'):'日時不明')
+      ?(sp.autoSettledV743?'✅ 家賃振込済み＋光熱費精算済みのため自動完了':'精算済み：'+(sp.settledAt?new Date(sp.settledAt).toLocaleString('ja-JP'):'日時不明'))
       :sp.status==='changed'
       ?'精算後に金額が変わりました。現在額でもう一度精算してください。'
       :'家賃と光熱費差額を確認してから精算済みにしてください。');
@@ -5544,7 +5600,7 @@ function renderMonthEndV68(){
   const cards=document.getElementById('checkCardsV68');if(cards){cards.checked=c.cardsReviewed;cards.disabled=st.closed||c.cardsReviewedAuto}
   const cash=document.getElementById('checkCashV68');if(cash){cash.checked=c.cashReviewed;cash.disabled=st.closed}
   const utilCheck=document.getElementById('checkUtilitiesV68');if(utilCheck){utilCheck.checked=c.utilitiesReviewed;utilCheck.disabled=st.closed}
-  const spouseCheck=document.getElementById('checkSpouseV68');if(spouseCheck)spouseCheck.checked=st.spouseOk;
+  const spouseCheck=document.getElementById('checkSpouseV68');if(spouseCheck){spouseCheck.checked=st.spouseOk;spouseCheck.disabled=st.closed||!!sp.autoSettledV743}
   const mzCheck=document.getElementById('checkMizuhoV68');if(mzCheck)mzCheck.checked=st.mizuhoOk;
   const familyRow=document.getElementById('checkFamilyTransferRowV69'),familyCheck=document.getElementById('checkFamilyTransferV69');
   if(familyRow)familyRow.style.display=st.familyRequired?'':'none';if(familyCheck)familyCheck.checked=st.familyOk;
@@ -5570,7 +5626,7 @@ function renderMonthEndV68(){
   set('checkCardsTraceV739',trace.traceText);
   const ca=cashSummaryV66(k);set('checkCashMetaV68','現金 '+ca.count+'件 / '+yen(ca.total));
   const us=utilitySummaryV58(k);set('checkUtilitiesMetaV68','本人負担 '+yen(us.selfShare)+' / 差額 '+(us.netSettlement>0?'妻へ '+yen(us.netSettlement):us.netSettlement<0?'妻から '+yen(-us.netSettlement):'なし'));
-  set('checkSpouseMetaV68',st.spouseOk?'精算済み':'未精算');
+  set('checkSpouseMetaV68',st.spouseOk?(sp.autoSettledV743?'家賃振込＋光熱費精算から自動完了':'精算済み'):'未精算（チェックまたは上のボタンで完了）');
   set('checkMizuhoMetaV68',st.mizuhoOk?'月末残高 '+yen(st.mizuhoValue):'「みずほ月末残高」を入力してください');
 
   set('monthEndProgressTextV68',st.done+'/'+st.total);
@@ -5591,8 +5647,8 @@ function renderMonthEndV68(){
 
   const closeBtn=document.getElementById('closeMonthV68');if(closeBtn){closeBtn.disabled=st.closed||!st.ready;closeBtn.style.display=st.closed?'none':''}
   const reopenBtn=document.getElementById('reopenMonthV68');if(reopenBtn)reopenBtn.style.display=st.closed?'':'none';
-  const settleBtn=document.getElementById('settleSpouseV68');if(settleBtn)settleBtn.disabled=st.closed||sp.status==='settled';
-  const unsettleBtn=document.getElementById('unsettleSpouseV68');if(unsettleBtn)unsettleBtn.disabled=st.closed||sp.status==='pending';
+  const settleBtn=document.getElementById('settleSpouseV68');if(settleBtn){settleBtn.disabled=st.closed||sp.status==='settled';settleBtn.textContent=sp.autoSettledV743?'家賃・光熱費から自動完了済み':'この金額で精算済みにする'}
+  const unsettleBtn=document.getElementById('unsettleSpouseV68');if(unsettleBtn)unsettleBtn.disabled=st.closed||sp.status==='pending'||!!sp.autoSettledV743;
   setMonthEditingStateV68(st.closed);
 }
 function closeMonthV68(){
@@ -5611,7 +5667,7 @@ function closeMonthV68(){
   buildingClosureSnapshotV68=true;
   try{
     monthClosuresV68[k]={
-      version:'7.4.2',monthKey:k,closedAt:new Date().toISOString(),
+      version:'7.4.3',monthKey:k,closedAt:new Date().toISOString(),
       monthRecord:deepCloneV68(record),
       transactionSummary:deepCloneV68(monthlyTransactionSummary(k)),
       cashSummary:deepCloneV68(cashSummaryV66(k)),
@@ -5660,6 +5716,7 @@ function renderMonthlyAuto(){
   set('autoAuConvenience',yen(s.cards.au.convenience));
   set('autoAuFun',yen(s.cards.au.fun));
   set('autoAuTobacco',yen(s.cards.au.tobacco));
+  set('autoAuHighway',yen(s.cards.au.highway));
   set('autoAuOther',yen(s.cards.au.other+s.cards.au.fuel+s.cards.au.discount));
 
   // イオン
@@ -5669,6 +5726,7 @@ function renderMonthlyAuto(){
   set('autoAeonConvenience',yen(s.cards.aeon.convenience));
   set('autoAeonFun',yen(s.cards.aeon.fun));
   set('autoAeonTobacco',yen(s.cards.aeon.tobacco));
+  set('autoAeonHighway',yen(s.cards.aeon.highway));
   set('autoAeonOther',yen(s.cards.aeon.other+s.cards.aeon.fuel+s.cards.aeon.discount));
 
   // apollostation（v7.3.2: 計算は変えず、月別配分の意味を明示）
@@ -5676,7 +5734,7 @@ function renderMonthlyAuto(){
   const apDisplayedDiscount=Math.max(0,Number(apInfo.exactDiscount||0))+Math.max(0,Number(apInfo.mixedGroupDiscount||0));
   const apAppliedDiscount=Math.max(0,Number(apInfo.exactDiscount||0));
   const apFuelNet=Math.max(0,ap.fuel-apAppliedDiscount);
-  const apOther=ap.total-ap.fuel;
+  const apOther=ap.total-ap.fuel-ap.highway;
   const monthNum=Number(String(k||'').slice(5,7))||0;
   const monthLabel=monthNum?monthNum+'月':'この月';
   const fmtShortDateV732=v=>{const s=String(v||'');return /^\d{4}-\d{2}-\d{2}$/.test(s)?Number(s.slice(5,7))+'/'+Number(s.slice(8,10)):s};
@@ -5696,6 +5754,7 @@ function renderMonthlyAuto(){
   set('autoApolloAppliedV732','−'+yen(apAppliedDiscount));
   set('autoApolloFuelNet',yen(apFuelNet));
   set('autoApolloPendingFuelV732',yen(apInfo.pendingFuel||0));
+  set('autoApolloHighway',yen(ap.highway));
   set('autoApolloOther',yen(apOther));
   set('autoApolloCount',ap.count+'件');
   set('autoApolloAppliedLabelV732',monthLabel+'へ反映した値引き');
@@ -5720,6 +5779,7 @@ function renderMonthlyAuto(){
   set('autoDaily',yen(s.daily));
   set('autoConvenience',yen(s.convenience));
   set('autoFuel',yen(apolloFuelNetForUsageMonthV73(k,s)));
+  set('autoHighway',yen(s.highway));
   set('autoFun',yen(s.fun));
   set('autoTobacco',yen(s.tobacco));
   set('autoOther',yen(s.other));
@@ -5749,6 +5809,7 @@ function applyTransactionsToMonth(){
   document.getElementById('mDaily').value=s.daily;
   document.getElementById('mConvenience').value=s.convenience;
   document.getElementById('mFuel').value=apolloFuelNetForUsageMonthV73(k,s);
+  document.getElementById('mHighway').value=s.highway;
   document.getElementById('mFun').value=s.fun;
   document.getElementById('mTobacco').value=s.tobacco;
   document.getElementById('mOther').value=s.other;
@@ -5779,7 +5840,7 @@ function saveCashTransactionsV66(){
 function cashSummaryV66(monthKey){
   const closed=closedSnapshotV68(monthKey);
   if(!buildingClosureSnapshotV68&&closed?.cashSummary)return deepCloneV68(closed.cashSummary);
-  const out={food:0,daily:0,convenience:0,fuel:0,fun:0,tobacco:0,other:0,total:0,count:0};
+  const out={food:0,daily:0,convenience:0,fuel:0,highway:0,fun:0,tobacco:0,other:0,total:0,count:0};
   cashTransactionsV66.filter(x=>String(x.date||'').slice(0,7)===monthKey).forEach(x=>{
     const c=Object.prototype.hasOwnProperty.call(out,x.category)?x.category:'other';
     const a=Math.max(0,Number(x.amount||0));
@@ -5835,14 +5896,14 @@ function deleteCashV66(id){
 function monthlyActualSummaryV66(monthKey){
   const cash=cashSummaryV66(monthKey),rec=months[monthKey]||{},selected=(document.getElementById('monthKey')?.value||'')===monthKey;
   const field=(id,key)=>selected?Number(document.getElementById(id)?.value||rec[key]||0):Number(rec[key]||0);
-  const base={food:field('mFood','food'),daily:field('mDaily','daily'),convenience:field('mConvenience','convenience'),fuel:field('mFuel','fuel'),utilities:field('mUtilities','utilities'),fun:field('mFun','fun'),tobacco:field('mTobacco','tobacco'),other:field('mOther','other')};
-  const actual={food:base.food+cash.food,daily:base.daily+cash.daily,convenience:base.convenience+cash.convenience,fuel:base.fuel+cash.fuel,utilities:base.utilities,fun:base.fun+cash.fun,tobacco:base.tobacco+cash.tobacco,other:base.other+cash.other};
+  const base={food:field('mFood','food'),daily:field('mDaily','daily'),convenience:field('mConvenience','convenience'),fuel:field('mFuel','fuel'),highway:field('mHighway','highway'),utilities:field('mUtilities','utilities'),fun:field('mFun','fun'),tobacco:field('mTobacco','tobacco'),other:field('mOther','other')};
+  const actual={food:base.food+cash.food,daily:base.daily+cash.daily,convenience:base.convenience+cash.convenience,fuel:base.fuel+cash.fuel,highway:base.highway+cash.highway,utilities:base.utilities,fun:base.fun+cash.fun,tobacco:base.tobacco+cash.tobacco,other:base.other+cash.other};
   actual.living=actual.food+actual.daily+actual.convenience+actual.fun+actual.tobacco+actual.other;
-  actual.total=actual.living+actual.fuel+actual.utilities;
+  actual.total=actual.living+actual.fuel+actual.highway+actual.utilities;
   actual.cashTotal=cash.total;actual.cardTotal=monthlyTransactionSummary(monthKey).total;
   return actual;
 }
-function budgetConfigV66(){return {food:Number(settings.budgetFood||0),daily:Number(settings.budgetDaily||0),convenience:Number(settings.budgetConvenience||0),fuel:Number(settings.budgetFuel||0),utilities:Number(settings.budgetUtilities||0),fun:Number(settings.budgetFun||0),tobacco:Number(settings.budgetTobacco||0),other:Number(settings.budgetOther||0)}}
+function budgetConfigV66(){return {food:Number(settings.budgetFood||0),daily:Number(settings.budgetDaily||0),convenience:Number(settings.budgetConvenience||0),fuel:Number(settings.budgetFuel||0),highway:0,utilities:Number(settings.budgetUtilities||0),fun:Number(settings.budgetFun||0),tobacco:Number(settings.budgetTobacco||0),other:Number(settings.budgetOther||0)}}
 function renderBudgetVsActualV66(){
   const k=document.getElementById('monthKey')?.value||currentYM(),a=monthlyActualSummaryV66(k),b=budgetConfigV66();
   const overall=Math.max(0,Number(payments.auLivingBudget||0)),remain=overall-a.living,pct=overall>0?a.living/overall*100:0;
@@ -5851,7 +5912,7 @@ function renderBudgetVsActualV66(){
   const re=document.getElementById('budgetRemainV66');if(re){re.classList.toggle('good',remain>=0);re.classList.toggle('warn',remain<0)}
   const bar=document.getElementById('budgetProgressV66');if(bar)bar.style.width=Math.min(100,Math.max(0,pct))+'%';
   const rows=document.getElementById('budgetRowsV66');if(!rows)return;
-  const order=[['food','食費'],['daily','日用品'],['convenience','コンビニ'],['fun','外食・娯楽'],['tobacco','タバコ'],['other','その他'],['fuel','ガソリン（別枠）'],['utilities','光熱費（別枠）']];
+  const order=[['food','食費'],['daily','日用品'],['convenience','コンビニ'],['fun','外食・娯楽'],['tobacco','タバコ'],['other','その他'],['fuel','ガソリン（別枠）'],['highway','高速道路・ETC（別枠）'],['utilities','光熱費（別枠）']];
   rows.innerHTML=order.map(([key,label])=>{const bud=Math.max(0,b[key]||0),act=Math.max(0,a[key]||0),rem=bud>0?bud-act:null;return `<div class="budgetRowV66"><strong>${label}</strong><span>予算 ${bud>0?yen(bud):'未設定'}</span><span>実績 ${yen(act)}</span><strong class="${rem===null?'':rem>=0?'good':'warn'}">${rem===null?'—':rem>=0?'残 '+yen(rem):'超 '+yen(Math.abs(rem))}</strong></div>`}).join('');
 }
 function billingMonthForTransactionV66(tx){
@@ -5899,6 +5960,7 @@ function syncUsageMonthRecordV65(monthKey){
     daily:s.daily,
     convenience:s.convenience,
     fuel:apolloFuelNetForUsageMonthV73(monthKey,s),
+    highway:s.highway,
     fun:s.fun,
     tobacco:s.tobacco,
     other:s.other,
@@ -5943,6 +6005,7 @@ function fillMonthlyFormV65(monthKey){
     val('mDaily',s.daily);
     val('mConvenience',s.convenience);
     val('mFuel',apolloFuelNetForUsageMonthV73(monthKey,s));
+    val('mHighway',s.highway);
     val('mFun',s.fun);
     val('mTobacco',s.tobacco);
     val('mOther',s.other);
@@ -5954,6 +6017,7 @@ function fillMonthlyFormV65(monthKey){
     val('mDaily',rec.daily);
     val('mConvenience',rec.convenience);
     val('mFuel',rec.fuel);
+    val('mHighway',rec.highway);
     val('mFun',rec.fun);
     val('mTobacco',rec.tobacco);
     val('mOther',rec.other);
@@ -6038,12 +6102,29 @@ function renderMonthlyMerchantRank(){
 }
 function autoClassifyExistingTransactions(silent=false){
   let changed=0;
-  auTransactions=auTransactions.map(x=>{const c=classifyMerchant(x.memo,x.category);if(x.category!==c){changed++;return {...x,category:c}}return x});
+  auTransactions=auTransactions.map(x=>{if(x.categoryManualV743)return x;const c=classifyMerchantForCard(x.memo,x.cardType||'au',x.amount,x.category);if(x.category!==c){changed++;return {...x,category:c}}return x});
   saveAuTransactions();renderTodayTransactions();renderMonthlyAuto();renderSpendInsights();renderMonthlyMerchantRank();
   if(!silent)alert(changed?changed+'件を最新の分類エンジンで再分類しました':'分類はすでに最新です');
   return changed;
 }
 
+function repairApolloOcrAndCategoriesV743(){
+  const migrationKey='odyssey_apollo_ocr_category_v743';
+  if(localStorage.getItem(migrationKey)==='done')return 0;
+  let changed=0;
+  auTransactions.forEach(tx=>{
+    if((tx.cardType||'au')!=='apollo')return;
+    const memo=normalizeApolloMerchantV743(tx.memo||'');
+    if(memo&&memo!==tx.memo){tx.memo=memo;changed++}
+    if(!tx.categoryManualV743){
+      const cat=classifyMerchantForCard(tx.memo,'apollo',tx.amount,tx.category);
+      if(cat!==tx.category){tx.category=cat;tx.reviewed=false;tx.reviewedAt='';changed++}
+    }
+  });
+  if(changed)localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));
+  localStorage.setItem(migrationKey,'done');
+  return changed;
+}
 function restoreKnownApolloTransactionsV582(){
   if(localStorage.getItem('odyssey_v582_apollo_merge_done'))return {added:0,skipped:true};
 
@@ -7206,7 +7287,7 @@ function render(){
   updateMonthNavigationV591();
 }
 function renderHistory(){const h=document.getElementById('history');const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort().reverse();if(!keys.length){h.innerHTML='<div class="empty">まだ月次記録がありません。</div>';return}h.innerHTML=keys.map(k=>{const m=months[k]||{},cash=cashSummaryV66(k);const base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);const total=base+cash.total;return `<div class="historyItem"><div>${k}${isMonthClosedV68(k)?' <span class="pill closedPillV68">締め済</span>':''}</div><div><div style="font-weight:700">変動費 ${yen(total)}</div><div class="sub">現金 ${yen(cash.total)} / タバコ ${yen(Number(m.tobacco||0)+cash.tobacco)} / カード合計 ${yen((m.au||0)+(m.aeon||0)+(m.apollo||0))}</div></div><div class="value">${yen(m.mizuho||0)}</div></div>`}).join('')}
-function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther'];const base=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const k=document.getElementById('monthKey')?.value||currentYM(),cash=cashSummaryV66(k);const tobacco=Number(document.getElementById('mTobacco')?.value||0)+cash.tobacco;const total=base+cash.total;const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards);if(typeof renderBudgetVsActualV66==='function')renderBudgetVsActualV66()}
+function updateMonthTotals(){const ids=['mFood','mDaily','mConvenience','mFuel','mHighway','mUtilities','mFun','mTobacco','mOther'];const base=ids.reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);const k=document.getElementById('monthKey')?.value||currentYM(),cash=cashSummaryV66(k);const tobacco=Number(document.getElementById('mTobacco')?.value||0)+cash.tobacco;const total=base+cash.total;const cards=['mAu','mAeon','mApollo'].reduce((s,id)=>s+Number(document.getElementById(id)?.value||0),0);document.getElementById('monthlyVariable').textContent=yen(total);document.getElementById('monthlyWithoutTobacco').textContent=yen(total-tobacco);document.getElementById('monthlyTobacco').textContent=yen(tobacco);document.getElementById('monthlyCards').textContent=yen(cards);if(typeof renderBudgetVsActualV66==='function')renderBudgetVsActualV66()}
 const pageIdsV56=['home','monthly','car','schedule','settings'];
 
 function repairPageStructureV56(){
@@ -7307,7 +7388,7 @@ if(achievementOverlayV671)achievementOverlayV671.addEventListener('click',e=>{
 // 初回または不明な値ならホーム。
 const savedPageV56=localStorage.getItem('odyssey_active_page');
 showPageV56(pageIdsV56.includes(savedPageV56)?savedPageV56:'home',false);
-['mFood','mDaily','mConvenience','mFuel','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
+['mFood','mDaily','mConvenience','mFuel','mHighway','mUtilities','mFun','mTobacco','mOther','mAu','mAeon','mApollo'].forEach(id=>document.getElementById(id).addEventListener('input',updateMonthTotals));
 const now=new Date();
 document.getElementById('monthKey').value=
   localStorage.getItem('odyssey_usage_month_v591')||
@@ -7341,6 +7422,14 @@ const runFullAutoSyncV65Btn=document.getElementById('runFullAutoSyncV65');
 if(runFullAutoSyncV65Btn)runFullAutoSyncV65Btn.addEventListener('click',()=>runFullAutoSyncV65(true));
 ['checkCardsV68','checkCashV68','checkUtilitiesV68'].forEach(id=>{
   const e=document.getElementById(id);if(e)e.addEventListener('change',saveMonthEndCheckV68);
+});
+const spouseCheckV743=document.getElementById('checkSpouseV68');
+if(spouseCheckV743)spouseCheckV743.addEventListener('change',()=>{
+  const k=document.getElementById('monthKey')?.value||currentYM();
+  const sp=spouseSettlementSummaryV68(k);
+  if(sp.autoSettledV743){renderMonthEndV68();return}
+  if(spouseCheckV743.checked)markSpouseSettlementV68();
+  else unsettleSpouseV68();
 });
 const settleSpouseV68Btn=document.getElementById('settleSpouseV68');
 if(settleSpouseV68Btn)settleSpouseV68Btn.addEventListener('click',markSpouseSettlementV68);
@@ -7502,7 +7591,7 @@ document.getElementById('savePayments').addEventListener('click',()=>{
   renderPayments();renderMonthlyAuto();
   alert('支払管理を保存しました。'+(Number(payments.billingAutoSyncV65??1)!==0?'請求月も自動同期しました。':'請求月自動同期はOFFです。')+' 正常バックアップも更新しました');
 });
-document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;if(blockClosedEditV68(k,'月次を保存'))return;months[k]={...(months[k]||{}),food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0,autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
+document.getElementById('saveMonth').addEventListener('click',()=>{const k=document.getElementById('monthKey').value;if(!k)return;if(blockClosedEditV68(k,'月次を保存'))return;months[k]={...(months[k]||{}),food:+mFood.value||0,daily:+mDaily.value||0,convenience:+mConvenience.value||0,fuel:+mFuel.value||0,highway:+mHighway.value||0,utilities:+mUtilities.value||0,fun:+mFun.value||0,tobacco:+mTobacco.value||0,other:+mOther.value||0,au:+mAu.value||0,aeon:+mAeon.value||0,apollo:+mApollo.value||0,mizuho:+mMizuho.value||0,autoCardSyncedV65:Number(payments.monthlyUsageAutoSyncV65??1)!==0};localStorage.setItem('odyssey_months',JSON.stringify(months));if(months[k].mizuho){settings.mizuho=months[k].mizuho;localStorage.setItem('odyssey_settings',JSON.stringify(settings))}protectedSaveV52('月次保存');render();alert('保存しました')});
 document.getElementById('saveSettings').addEventListener('click',()=>{
   snapshotV52('設定変更前');
   document.querySelectorAll('[data-setting]').forEach(el=>settings[el.dataset.setting]=Number(el.value||0));
@@ -7513,7 +7602,7 @@ document.getElementById('saveSettings').addEventListener('click',()=>{
   alert('設定を保存しました。みずほ総目標と15日の予定手数料を再計算しました。');
 });
 document.getElementById('resetApp').addEventListener('click',()=>{if(confirm('設定を初期値に戻しますか？月次記録は残します。')){settings={...defaults};localStorage.setItem('odyssey_settings',JSON.stringify(settings));render()}});
-document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.4.2',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
+document.getElementById('exportJson').addEventListener('click',()=>{const exportedAt=new Date().toISOString();const blob=new Blob([JSON.stringify({version:'7.4.3',exportedAt,settings,months,payments,auTransactions,cashTransactionsV66,utilityMonths,billingMonths,monthClosuresV68,spouseSettlementsV68,monthEndChecksV68,familyTransfersV69,transferRecordsV70,adoptedLoanPlanV631},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_オデッセイ_バックアップ.json';a.click();URL.revokeObjectURL(a.href);localStorage.setItem('odyssey_last_json_export_v69',exportedAt);localStorage.setItem('odyssey_last_json_export_v70',exportedAt);renderBackupHealthV69();renderSelfDiagnosisV70();});
 document.getElementById('importJson').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{snapshotV52('JSON復元前');const d=JSON.parse(r.result);settings={...defaults,...(d.settings||{})};months=d.months||{};payments={...paymentDefaults,...(d.payments||{})};auTransactions=Array.isArray(d.auTransactions)?d.auTransactions:[];cashTransactionsV66=Array.isArray(d.cashTransactionsV66)?d.cashTransactionsV66:[];utilityMonths=d.utilityMonths||{};billingMonths=d.billingMonths||{};monthClosuresV68=d.monthClosuresV68||{};spouseSettlementsV68=d.spouseSettlementsV68||{};monthEndChecksV68=d.monthEndChecksV68||{};familyTransfersV69=d.familyTransfersV69||familyTransfersV69||{};transferRecordsV70=d.transferRecordsV70||transferRecordsV70||{};adoptedLoanPlanV631=d.adoptedLoanPlanV631||null;localStorage.setItem('odyssey_au_transactions',JSON.stringify(auTransactions));localStorage.setItem('odyssey_cash_transactions_v66',JSON.stringify(cashTransactionsV66));localStorage.setItem('odyssey_utilities',JSON.stringify(utilityMonths));localStorage.setItem('odyssey_billing_months',JSON.stringify(billingMonths));localStorage.setItem('odyssey_month_closures_v68',JSON.stringify(monthClosuresV68));localStorage.setItem('odyssey_spouse_settlements_v68',JSON.stringify(spouseSettlementsV68));localStorage.setItem('odyssey_month_end_checks_v68',JSON.stringify(monthEndChecksV68));localStorage.setItem('odyssey_family_transfers_v69',JSON.stringify(familyTransfersV69));localStorage.setItem('odyssey_transfer_records_v70',JSON.stringify(transferRecordsV70));if(adoptedLoanPlanV631)localStorage.setItem('odyssey_adopted_loan_v631',JSON.stringify(adoptedLoanPlanV631));else localStorage.removeItem('odyssey_adopted_loan_v631');localStorage.setItem('odyssey_settings',JSON.stringify(settings));localStorage.setItem('odyssey_months',JSON.stringify(months));localStorage.setItem('odyssey_payments',JSON.stringify(payments));ensureTransactionReviewStateV71();syncMotherTransferStoresV736();protectedSaveV52('JSON復元後');render();try{const ks=new Set(Object.keys(monthEndChecksV68||{}));auTransactions.forEach(tx=>{const k=String(tx.date||'').slice(0,7);if(/^\d{4}-\d{2}$/.test(k)&&!tx.billingAdjustment)ks.add(k)});ks.forEach(k=>refreshCardBillingVerificationV738(k))}catch(e){console.warn('v7.3.9 restore card verification',e)}renderMonthFrameV737(activeMonthKeyV737());alert('復元しました')}catch{alert('読み込めないファイルです')}};r.readAsText(f)});
 document.getElementById('exportCsv').addEventListener('click',()=>{const rows=[['月','食費（カード等）','日用品（カード等）','コンビニ（カード等）','ガソリン（カード等）','光熱費（本人負担）','外食・娯楽（カード等）','タバコ（カード等）','その他（カード等）','現金支出合計','実支出合計','母への振込','振込手数料','記録分の月支出','au PAY利用','イオン利用','apollostation利用','みずほ月末残高']];const keys=Array.from(new Set([...Object.keys(months),...cashTransactionsV66.map(x=>String(x.date||'').slice(0,7)).filter(k=>/^\d{4}-\d{2}$/.test(k))])).sort();keys.forEach(k=>{const m=months[k]||{},c=cashSummaryV66(k),base=['food','daily','convenience','fuel','utilities','fun','tobacco','other'].reduce((s,x)=>s+Number(m[x]||0),0);rows.push([k,m.food||0,m.daily||0,m.convenience||0,m.fuel||0,m.utilities||0,m.fun||0,m.tobacco||0,m.other||0,c.total,base+c.total,familyTransferPaidAmountV69(k),transferMonthSummaryV70(k).actualFeesTotal,trackedOutflowV69(k).total,m.au||0,m.aeon||0,m.apollo||0,m.mizuho||0])});const csv='\uFEFF'+rows.map(r=>r.map(x=>`"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='家計_月次履歴.csv';a.click();URL.revokeObjectURL(a.href)});
 
@@ -7531,7 +7620,7 @@ if(exportBillingCsvV59)exportBillingCsvV59.addEventListener('click',()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', async ()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=7.4.2',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('./sw.js?v=7.4.3',{updateViaCache:'none'});
       await reg.update();
       if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
     }catch(e){}
@@ -7549,6 +7638,7 @@ if(startupSavedMonthV591)document.getElementById('monthKey').value=startupSavedM
 ensureTransactionReviewStateV71();
 initializeMotivationBadgeBaselineV671();
 syncMotherTransferStoresV736();
+try{repairApolloOcrAndCategoriesV743()}catch(e){console.warn('repairApolloOcrAndCategoriesV743',e)}
 migrateMerchantNamesV735();
 render();
 try{
